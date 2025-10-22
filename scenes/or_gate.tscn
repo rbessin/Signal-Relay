@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8rvfy35xupa0"]
+
+[ext_resource type="Script" uid="uid://ijttilg8daad" path="res://scripts/gates/or_gate.gd" id="1_o1n8t"]
+
+[node name="OrGate" type="Node2D"]
+script = ExtResource("1_o1n8t")
