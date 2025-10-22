@@ -8,6 +8,4 @@ func _ready():
 	output_value = true
 
 func evaluate() -> void:
-	if input_values[0] and input_values[1]:
-		output_value = false
-	else: output_value = true
+	output_value = not(input_values[0] and input_values[1])

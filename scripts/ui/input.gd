@@ -10,3 +10,5 @@ extends Button
 func _on_pressed():
 	state = !state
 	target.set_input(target_input, state)
+	if state == true: modulate = Color.GREEN
+	else: modulate = Color.RED

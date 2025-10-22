@@ -1,12 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=9 format=3 uid="uid://m3qhfvy2no0e"]
 
-[ext_resource type="PackedScene" uid="uid://bbaoduu3plf8a" path="res://scenes/and_gate.tscn" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://b3j3tkgatdsro" path="res://scenes/input.tscn" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://qninfqw0upps" path="res://scenes/label.tscn" id="3_sugp2"]
-[ext_resource type="PackedScene" uid="uid://bayd4duudho8b" path="res://scenes/not_gate.tscn" id="4_jyhfs"]
-[ext_resource type="PackedScene" uid="uid://b8rvfy35xupa0" path="res://scenes/or_gate.tscn" id="5_tbgi4"]
-[ext_resource type="PackedScene" uid="uid://d2amq10o3d6hg" path="res://scenes/nand_gate.tscn" id="6_tefeu"]
-[ext_resource type="PackedScene" uid="uid://bq6a1ucf7mkcw" path="res://scenes/nor_gate.tscn" id="7_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://bbaoduu3plf8a" path="res://scenes/gates/and_gate.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://b3j3tkgatdsro" path="res://scenes/ui/input.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://qninfqw0upps" path="res://scenes/ui/label.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://bayd4duudho8b" path="res://scenes/gates/not_gate.tscn" id="4_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://b8rvfy35xupa0" path="res://scenes/gates/or_gate.tscn" id="5_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://d2amq10o3d6hg" path="res://scenes/gates/nand_gate.tscn" id="6_tefeu"]
+[ext_resource type="PackedScene" uid="uid://bq6a1ucf7mkcw" path="res://scenes/gates/nor_gate.tscn" id="7_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://pxb805rtun0a" path="res://scenes/gates/xor_gate.tscn" id="8_tipki"]
 
 [node name="Main" type="Node2D"]
 
@@ -17,14 +18,14 @@ offset_left = 122.0
 offset_top = 108.0
 offset_right = 130.0
 offset_bottom = 116.0
-target = NodePath("../AndGate")
+target = NodePath("../XorGate")
 
 [node name="Input2" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_0wfyh")]
 offset_left = 124.0
 offset_top = 95.0
 offset_right = 132.0
 offset_bottom = 103.0
-target = NodePath("../AndGate")
+target = NodePath("../XorGate")
 target_input = 1
 
 [node name="Label" parent="." node_paths=PackedStringArray("source_gate") instance=ExtResource("3_sugp2")]
@@ -32,7 +33,7 @@ offset_left = 205.0
 offset_top = 100.0
 offset_right = 245.0
 offset_bottom = 123.0
-source_gate = NodePath("../AndGate")
+source_gate = NodePath("../XorGate")
 
 [node name="NotGate" parent="." instance=ExtResource("4_jyhfs")]
 
@@ -41,3 +42,5 @@ source_gate = NodePath("../AndGate")
 [node name="NandGate" parent="." instance=ExtResource("6_tefeu")]
 
 [node name="NorGate" parent="." instance=ExtResource("7_o6xl0")]
+
+[node name="XorGate" parent="." instance=ExtResource("8_tipki")]
