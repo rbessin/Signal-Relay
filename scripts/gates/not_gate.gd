@@ -7,6 +7,8 @@ func _ready():
 	num_inputs = 1
 	input_values = [false]
 	output_value = true
+	color = Color.ORANGE
+	super._ready()
 
 func evaluate() -> void:
 	output_value = not input_values[0]
