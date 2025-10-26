@@ -17,15 +17,6 @@ var gate_to_place: PackedScene = preload("res://scenes/gates/and_gate.tscn")  # 
 var selected_gate_instance: Gate = null  									  # Which gate is selected
 var current_uid: int = 0
 
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			if current_mode == Mode.PLACE:
-				instantiate_gate()
-			elif current_mode == Mode.INTERACT:
-				selected_gate_instance = null
-
-
 func instantiate_gate():
 	if gate_to_place == null: return
 	
@@ -40,14 +31,23 @@ func _select_place(gate_name: String):
 	if gate_name in gate_prefabs: 
 		gate_to_place = gate_prefabs[gate_name]
 	current_mode = Mode.PLACE
-	selected_gate_instance = null
+	if selected_gate_instance != null:
+		selected_gate_instance.set_selected(false)
+		selected_gate_instance = null
 
 func _select_interact():
 	current_mode = Mode.INTERACT
 
 func _select_gate_instance(gate_instance: Gate):
 	if current_mode == Mode.INTERACT:
+		if selected_gate_instance != null:
+			selected_gate_instance.set_selected(false)
 		selected_gate_instance = gate_instance
+		gate_instance.set_selected(true)
+
+func delete_gate_instance():
+	selected_gate_instance.queue_free()
+	selected_gate_instance = null
 
 func _on_mode_selected(mode_selection: Mode):
 	current_mode = mode_selection
@@ -55,3 +55,17 @@ func _on_mode_selected(mode_selection: Mode):
 func _generate_uid():
 	current_uid += 1
 	return current_uid
+
+func _unhandled_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			if current_mode == Mode.PLACE:
+				instantiate_gate()
+			elif current_mode == Mode.INTERACT:
+				if selected_gate_instance != null:
+					selected_gate_instance.set_selected(false)
+					selected_gate_instance = null
+	if event is InputEventKey:
+		if (event.keycode == KEY_BACKSPACE or event.keycode == KEY_DELETE) and event.pressed:
+			if current_mode == Mode.INTERACT:
+				delete_gate_instance()
