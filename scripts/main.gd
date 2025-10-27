@@ -1,8 +1,9 @@
 extends Node2D
 
-# Cursor configurations (mode)
+# Cursor configurations (mode, label)
 enum Mode { INTERACT, PLACE }
 var current_mode: Mode = Mode.INTERACT
+@onready var mode_label: Label = get_node("Toolbar/Current_Mode")
 
 # Gate selection (prefabs, selected, uid counter)
 var gate_prefabs: Dictionary = {
@@ -17,6 +18,14 @@ var gate_to_place: PackedScene = preload("res://scenes/gates/and_gate.tscn")  # 
 var selected_gate_instance: Gate = null  									  # Which gate is selected
 var current_uid: int = 0
 
+# Gate dragging
+var is_dragging: bool = false
+var drag_offset: Vector2
+
+func _process(_delta):
+	if is_dragging and selected_gate_instance != null:
+		selected_gate_instance.global_position = get_global_mouse_position() + drag_offset 
+
 func instantiate_gate():
 	if gate_to_place == null: return
 	
@@ -30,13 +39,10 @@ func instantiate_gate():
 func _select_place(gate_name: String):
 	if gate_name in gate_prefabs: 
 		gate_to_place = gate_prefabs[gate_name]
-	current_mode = Mode.PLACE
+	_on_mode_selected(Mode.PLACE)
 	if selected_gate_instance != null:
 		selected_gate_instance.set_selected(false)
 		selected_gate_instance = null
-
-func _select_interact():
-	current_mode = Mode.INTERACT
 
 func _select_gate_instance(gate_instance: Gate):
 	if current_mode == Mode.INTERACT:
@@ -44,6 +50,8 @@ func _select_gate_instance(gate_instance: Gate):
 			selected_gate_instance.set_selected(false)
 		selected_gate_instance = gate_instance
 		gate_instance.set_selected(true)
+		is_dragging = true
+		drag_offset = selected_gate_instance.global_position - get_global_mouse_position()
 
 func delete_gate_instance():
 	selected_gate_instance.queue_free()
@@ -51,20 +59,23 @@ func delete_gate_instance():
 
 func _on_mode_selected(mode_selection: Mode):
 	current_mode = mode_selection
+	mode_label.text = str(current_mode)
 
 func _generate_uid():
 	current_uid += 1
 	return current_uid
 
 func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
 			if current_mode == Mode.PLACE:
 				instantiate_gate()
 			elif current_mode == Mode.INTERACT:
 				if selected_gate_instance != null:
 					selected_gate_instance.set_selected(false)
 					selected_gate_instance = null
+		if not event.pressed:
+			is_dragging = false
 	if event is InputEventKey:
 		if (event.keycode == KEY_BACKSPACE or event.keycode == KEY_DELETE) and event.pressed:
 			if current_mode == Mode.INTERACT:
