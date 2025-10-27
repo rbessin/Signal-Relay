@@ -34,17 +34,22 @@ text = "OR"
 layout_mode = 2
 text = "XOR"
 
-[node name="Selection" type="Button" parent="Toolbar"]
+[node name="Interact" type="Button" parent="Toolbar"]
 layout_mode = 2
-text = "Select"
+text = "Interact"
+
+[node name="Wire" type="Button" parent="Toolbar"]
+layout_mode = 2
+text = "Wire"
 
 [node name="Current_Mode" type="Label" parent="Toolbar"]
 layout_mode = 2
 
-[connection signal="pressed" from="Toolbar/ANDButton" to="." method="_select_place" binds= ["AND"]]
-[connection signal="pressed" from="Toolbar/NANDButton" to="." method="_select_place" binds= ["NAND"]]
-[connection signal="pressed" from="Toolbar/NORButton" to="." method="_select_place" binds= ["NOR"]]
-[connection signal="pressed" from="Toolbar/NOTButton" to="." method="_select_place" binds= ["NOT"]]
-[connection signal="pressed" from="Toolbar/ORButton" to="." method="_select_place" binds= ["OR"]]
-[connection signal="pressed" from="Toolbar/XORButton" to="." method="_select_place" binds= ["XOR"]]
-[connection signal="pressed" from="Toolbar/Selection" to="." method="_on_mode_selected" binds= [0]]
+[connection signal="pressed" from="Toolbar/ANDButton" to="." method="select_place" binds= ["AND"]]
+[connection signal="pressed" from="Toolbar/NANDButton" to="." method="select_place" binds= ["NAND"]]
+[connection signal="pressed" from="Toolbar/NORButton" to="." method="select_place" binds= ["NOR"]]
+[connection signal="pressed" from="Toolbar/NOTButton" to="." method="select_place" binds= ["NOT"]]
+[connection signal="pressed" from="Toolbar/ORButton" to="." method="select_place" binds= ["OR"]]
+[connection signal="pressed" from="Toolbar/XORButton" to="." method="select_place" binds= ["XOR"]]
+[connection signal="pressed" from="Toolbar/Interact" to="." method="select_interact"]
+[connection signal="pressed" from="Toolbar/Wire" to="." method="select_wire"]
