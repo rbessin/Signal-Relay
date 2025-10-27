@@ -1,3 +1,4 @@
+class_name Wire
 extends Node2D
 
 var from_pin: Pin = null

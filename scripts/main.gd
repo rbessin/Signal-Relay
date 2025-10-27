@@ -1,11 +1,11 @@
 extends Node2D
 
 # Cursor configurations (mode, label)
-enum Mode { INTERACT, PLACE }
+enum Mode { INTERACT, PLACE, WIRE }
 var current_mode: Mode = Mode.INTERACT
 @onready var mode_label: Label = get_node("Toolbar/Current_Mode")
 
-# Gate selection (prefabs, selected, uid counter)
+# PLACE mode
 var gate_prefabs: Dictionary = {
 	"AND": preload("res://scenes/gates/and_gate.tscn"),
 	"NAND": preload("res://scenes/gates/nand_gate.tscn"),
@@ -15,12 +15,17 @@ var gate_prefabs: Dictionary = {
 	"XOR": preload("res://scenes/gates/xor_gate.tscn")
 }
 var gate_to_place: PackedScene = preload("res://scenes/gates/and_gate.tscn")  # Which gate type to place
-var selected_gate_instance: Gate = null  									  # Which gate is selected
 var current_uid: int = 0
 
-# Gate dragging
+# SELECT mode
 var is_dragging: bool = false
 var drag_offset: Vector2
+var selected_gate_instance: Gate = null
+
+# WIRE mode
+var is_creating_wire: bool = false
+var wire_start_pin: Pin = null
+var wire_preview: Wire = null
 
 func _process(_delta):
 	if is_dragging and selected_gate_instance != null:
