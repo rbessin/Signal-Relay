@@ -17,7 +17,7 @@ var gate_prefabs: Dictionary = {
 var gate_to_place: PackedScene = preload("res://scenes/gates/and_gate.tscn")  # Which gate type to place
 var current_uid: int = 0
 
-# SELECT mode
+# INTERACT mode
 var is_dragging: bool = false
 var drag_offset: Vector2
 var selected_gate_instance: Gate = null
@@ -41,14 +41,6 @@ func instantiate_gate():
 	new_gate.gate_clicked.connect(_select_gate_instance)
 	new_gate.global_position = get_global_mouse_position()
 
-func _select_place(gate_name: String):
-	if gate_name in gate_prefabs: 
-		gate_to_place = gate_prefabs[gate_name]
-	_on_mode_selected(Mode.PLACE)
-	if selected_gate_instance != null:
-		selected_gate_instance.set_selected(false)
-		selected_gate_instance = null
-
 func _select_gate_instance(gate_instance: Gate):
 	if current_mode == Mode.INTERACT:
 		if selected_gate_instance != null:
@@ -61,10 +53,6 @@ func _select_gate_instance(gate_instance: Gate):
 func delete_gate_instance():
 	selected_gate_instance.queue_free()
 	selected_gate_instance = null
-
-func _on_mode_selected(mode_selection: Mode):
-	current_mode = mode_selection
-	mode_label.text = str(current_mode)
 
 func _generate_uid():
 	current_uid += 1
@@ -85,3 +73,54 @@ func _unhandled_input(event):
 		if (event.keycode == KEY_BACKSPACE or event.keycode == KEY_DELETE) and event.pressed:
 			if current_mode == Mode.INTERACT:
 				delete_gate_instance()
+
+# Enter / Exit / Select Modes
+
+func _enter_interact():
+	pass
+
+func _enter_place(gate_name: String = ""):
+	if gate_name != "" and gate_name in gate_prefabs:
+		gate_to_place = gate_prefabs[gate_name]
+
+func _enter_wire():
+	pass
+
+func _exit_interact():
+	if selected_gate_instance != null:
+		selected_gate_instance.set_selected(false)
+		selected_gate_instance = null
+	is_dragging = false
+
+func _exit_place():
+	gate_to_place = null
+
+func _exit_wire():
+	if wire_preview != null:
+		wire_preview.queue_free()
+		wire_preview = null
+	is_creating_wire = false
+	wire_start_pin = null
+
+func _set_mode(new_mode: Mode, gate_name: String = ''):
+	match current_mode:
+		Mode.INTERACT: _exit_interact()
+		Mode.PLACE: _exit_place()
+		Mode.WIRE: _exit_wire()
+	
+	current_mode = new_mode
+	mode_label.text = str(current_mode)
+
+	match new_mode:
+		Mode.INTERACT: _enter_interact()
+		Mode.PLACE: _enter_place(gate_name)
+		Mode.WIRE: _enter_wire()
+
+func select_interact():
+	_set_mode(Mode.INTERACT)
+
+func select_place(gate_name: String):
+	_set_mode(Mode.PLACE, gate_name)
+
+func select_wire():
+	_set_mode(Mode.WIRE)
