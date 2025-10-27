@@ -33,6 +33,7 @@ signal gate_clicked(gate_instance)
 func _ready() -> void:
 	set_visuals()
 	set_collisions()
+	create_pins()
 
 # Get input states to set output state
 func evaluate() -> void:
@@ -100,3 +101,22 @@ func _on_area_input_event(_viewport, event, _shape_idx) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			gate_clicked.emit(self)
+
+func create_pins():
+	for i in range(num_inputs): # Create input pins
+		var pin = Pin.new()
+		pin.pin_type = Pin.PinType.INPUT
+		pin.parent_gate = self
+		var x_pos = -size.x / 2
+		var y_pos = -size.y / 2 + (size.y / (num_inputs + 1)) * (i + 1)
+		pin.position = Vector2(x_pos, y_pos)
+		add_child(pin)
+
+	for i in range(num_outputs): # Create output pins
+		var pin = Pin.new()
+		pin.pin_type = Pin.PinType.OUTPUT
+		pin.parent_gate = self
+		var x_pos = size.x / 2
+		var y_pos = -size.y / 2 + (size.y / (num_outputs + 1)) * (i + 1)
+		pin.position = Vector2(x_pos, y_pos)
+		add_child(pin)

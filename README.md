@@ -1,84 +1,59 @@
 # Signal Relay
 
-A digital logic circuit simulator built in Godot for exploring computer architecture fundamentals through interactive circuit design and hierarchical abstraction.
+A digital logic circuit simulator built in Godot for exploring computer architecture fundamentals through interactive circuit design.
 
-**Current Status:** Early Development - Phase 3
+**Current Status:** Phase 2 Complete - Starting Phase 3 (Wire Connections)
 
 ---
 
 ## Overview
 
-Signal Relay is an educational logic simulator that enables users to build digital circuits from fundamental logic gates and progressively abstract them into custom components. Starting with basic gates, users can construct increasingly complex systems—from simple logic to arithmetic circuits, and potentially even simple processors.
-
-The project emphasizes incremental learning through hands-on experimentation, allowing users to understand how computers work from first principles by building up layers of abstraction.
+Signal Relay is an educational logic simulator that lets you build digital circuits from basic logic gates. The goal is to create increasingly complex systems through hierarchical abstraction - starting with simple gates and eventually building up to custom components and complex circuits.
 
 ---
 
-## Key Features (Planned)
+## Features
 
-### Core Functionality
-- **Interactive Circuit Design**: Place and connect logic gates on an infinite canvas
-- **Signal Simulation**: Real-time propagation of binary signals through circuit networks  
-- **Custom Chip Abstraction**: Convert any circuit into a reusable custom component
-- **Hierarchical Design**: Nest custom chips within other chips for complex systems
-- **Circuit Persistence**: Save and load circuit designs
+### Current (Working)
+- **6 Logic Gates**: AND, OR, NOT, NAND, NOR, XOR
+- **Interactive Canvas**: Place, select, and move gates on an infinite canvas
+- **Visual Feedback**: Selection highlighting with borders and mode indicators
+- **Delete Gates**: Remove unwanted gates with Backspace/Delete keys
+- **Drag & Drop**: Click and drag to reposition gates
+- **Mode System**: Switch between Interact and Place modes
 
-### User Experience
-- **Intuitive Gate Library**: Visual catalog of available gates and custom chips
-- **Wire Routing**: Click-and-drag wire creation with automatic connection detection
-- **Visual Feedback**: Color-coded signal states for debugging
-- **Clean Interface**: Minimalist design focused on circuit clarity
+### Planned
+- Wire connections between gate pins
+- Real-time signal propagation and simulation
+- Save and load circuit designs
+- Custom chip creation from existing circuits
+- Hierarchical design (use custom chips within other circuits)
+- Undo/redo functionality
 
 ---
 
 ## Tech Stack
 
-| Technology | Purpose | Rationale |
-|------------|---------|-----------|
-| **Godot 4.x** | Game engine | Scene system, 2D rendering, cross-platform support |
-| **GDScript** | Scripting language | Native Godot integration, type safety, fast iteration |
-| **JSON** | Data serialization | Human-readable circuit format, easy debugging |
+- **Godot 4.x** - Game engine for 2D rendering and scene management
+- **GDScript** - Scripting language with type safety and fast iteration
+- **JSON** - Human-readable circuit save format (planned)
 
 ---
 
-## Technical Highlights
+## Installation
 
-### Architecture
-
-**Object-Oriented Design**
-- Base `Gate` class defines common interface (inputs, outputs, evaluation)
-- Concrete gate classes (`AndGate`, `OrGate`, etc.) extend base with specific logic
-- Clean separation between gate logic and visual representation
-
-**Component-Based Structure**
-- Modular scene files (`.tscn`) paired with logic scripts (`.gd`)
-- Reusable UI components (input toggles, output displays)
-- Scalable architecture supporting future custom chip system
-
-### Current Implementation (Phase 1) ✅
-
-- `Gate` base class with polymorphic `evaluate()` method
-- `AndGate` implementation with correct truth table logic
-- `InputToggle` component for manual gate control
-- `OutputDisplay` component for visual signal feedback
-- Type-safe development with comprehensive type hints
-
----
-
-## Installation & Usage
-
-### Prerequisites
-- Godot 4.x or later
-- Basic understanding of digital logic (AND, OR, NOT gates)
-
-### Running the Project
 ```bash
 # Clone the repository
 git clone https://github.com/rbessin/Signal-Relay.git
 
-# Open in Godot: File → Import → Select project.godot
-# Run main scene: Press F5
+# Open in Godot 4.x
+# File → Import → Select project.godot
+# Press F5 to run
 ```
+
+**Requirements:**
+- Godot 4.x or later
+- Basic understanding of digital logic gates
 
 ---
 
@@ -86,72 +61,90 @@ git clone https://github.com/rbessin/Signal-Relay.git
 
 ```
 Signal-Relay/
-├── scenes/                    # Godot scene files
-│   ├── main.tscn             # Main circuit canvas
-│   ├── ui/                   # UI components
-│   └── gates/                # Gate visual templates
-├── scripts/                   # GDScript files
-│   ├── core/                 # Base classes (Gate, Pin, Wire, Circuit)
-│   ├── gates/                # Gate implementations (and_gate.gd, or_gate.gd, etc.)
-│   ├── simulation/           # Simulation engine
-│   ├── persistence/          # Save/load functionality
-│   └── ui/                   # UI interaction handlers
-├── assets/                    # Visual assets (icons, sprites, fonts)
-├── data/                      # User circuits and custom chips
-└── project.godot             # Godot project configuration
+├── scenes/
+│   ├── main.tscn           # Main circuit canvas
+│   ├── ui/                 # UI components and toolbar
+│   └── gates/              # Gate scene templates
+├── scripts/
+│   ├── main.gd             # Main scene controller
+│   ├── core/
+│   │   └── gate.gd         # Base gate class
+│   └── gates/              # Individual gate implementations
+│       ├── and_gate.gd
+│       ├── or_gate.gd
+│       ├── not_gate.gd
+│       └── ...
+└── project.godot           # Godot project config
 ```
 
 ---
 
 ## Development Roadmap
 
-### ✅ Phase 1: Basic Gate Implementation (Current)
-- [x] `Gate` base class architecture
-- [x] `AndGate` with correct logic evaluation
-- [x] `InputToggle` and `OutputDisplay` components
-- [X] Complete gate library (NOT, OR, NAND, NOR, XOR, XNOR)
+### ✅ Phase 1: Basic Gates (Complete)
+- [x] Gate base class with polymorphic evaluate() method
+- [x] All 6 basic logic gates (AND, OR, NOT, NAND, NOR, XOR)
+- [x] Input toggle and output display components
+- [x] Type-safe GDScript with comprehensive type hints
+- [x] Dynamic visual generation (ColorRect + Label)
+- [x] Collision detection system (Area2D)
 
-### Phase 2: Interactive Canvas
-- [X] Gate placement and deletion tools
-- [ ] Pan and zoom navigation
-- [X] Multiple gate instances on canvas
+### ✅ Phase 2: Interactive Canvas (Complete)
+- [x] Gate placement system with toolbar buttons
+- [x] Visual selection feedback with colored borders
+- [x] Drag and drop gate positioning
+- [x] Delete functionality (Backspace/Delete keys)
+- [x] Two-mode system (INTERACT/PLACE modes)
+- [x] Mode indicator in UI
+- [x] Select tool button for mode switching
+- [x] Signal-based communication between gates and main scene
 
-### Phase 3: Wire Connection System
-- [ ] Click-and-drag wire creation
+### 🔄 Phase 3: Wire Connection System (In Progress)
+- [X] Pin class for gate input/output connection points
+- [ ] Wire class for connections between pins
+- [X] Visual pin indicators on gates
+- [ ] Click-and-drag wire creation interface
+- [ ] Wire rendering with curves or lines
+- [ ] Connection validation (prevent invalid connections)
+- [ ] Wire deletion functionality
 - [ ] Signal propagation through wire network
-- [ ] Topological sorting for evaluation order
+- [ ] Topological sorting for correct evaluation order
+- [ ] Visual feedback for signal states (high/low)
 
 ### Phase 4: Circuit Persistence
-- [ ] Save/load circuits to JSON
-- [ ] File management UI
+- [ ] Circuit serialization to JSON format
+- [ ] Save current circuit to file
+- [ ] Load circuit from file
+- [ ] File picker UI integration
+- [ ] Circuit validation on load
+- [ ] Handle missing or invalid gate types
+- [ ] Auto-save functionality (optional)
 
 ### Phase 5: Custom Chip Abstraction
-- [ ] Define external interface (exposed pins)
-- [ ] Save circuits as custom chip definitions
-- [ ] Instantiate custom chips as gates
-- [ ] Nested simulation (chips within chips)
+- [ ] Define custom chip interface (which pins are exposed)
+- [ ] Convert existing circuits into reusable chip definitions
+- [ ] Save custom chips as separate files
+- [ ] Custom chip library/catalog UI
+- [ ] Instantiate custom chips as gates on canvas
+- [ ] Nested simulation engine (chips within chips)
+- [ ] Custom chip editing (modify existing chips)
+- [ ] Visual distinction between basic gates and custom chips
 
 ### Phase 6: Polish & Advanced Features
-- [ ] Undo/redo system
-- [ ] Performance optimization
-- [ ] Advanced components (displays, memory, clocks)
-
----
-
-## Development Philosophy
-
-**Incremental Development**: Each phase must be fully functional before progressing to the next.
-
-**Separation of Concerns**: Logic scripts independent of visual scenes. Data structures separate from UI.
-
-**Clean Architecture**: Base classes provide structure. Child classes implement specific behavior.
+- [ ] Undo/redo system with command pattern
+- [ ] Pan and zoom canvas navigation
+- [ ] Grid snapping for neat circuit layouts
+- [ ] Wire routing improvements (avoid overlaps)
+- [ ] Performance optimization for large circuits
+- [ ] Advanced components (7-segment displays, memory, clock signals)
+- [ ] Circuit testing tools (truth tables, timing diagrams)
+- [ ] Dark/light theme toggle
+- [ ] Keyboard shortcuts reference
 
 ---
 
 ## Acknowledgments
 
-Inspired by Sebastian Lague's *Digital Logic Sim* and "Exploring How Computers Work" video series.
+Inspired by Sebastian Lague's *Digital Logic Sim* and his "Exploring How Computers Work" video series.
 
 ---
-
-**Current Focus**: Completing the basic gate library (NOT, OR, NAND, NOR, XOR, XNOR) before implementing canvas interaction and wire connections.
