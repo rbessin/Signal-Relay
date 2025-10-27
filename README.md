@@ -101,10 +101,10 @@ Signal-Relay/
 
 ### 🔄 Phase 3: Wire Connection System (In Progress)
 - [X] Pin class for gate input/output connection points
-- [ ] Wire class for connections between pins
+- [X] Wire class for connections between pins
 - [X] Visual pin indicators on gates
 - [ ] Click-and-drag wire creation interface
-- [ ] Wire rendering with curves or lines
+- [X] Wire rendering with curves or lines
 - [ ] Connection validation (prevent invalid connections)
 - [ ] Wire deletion functionality
 - [ ] Signal propagation through wire network

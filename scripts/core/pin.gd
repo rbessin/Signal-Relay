@@ -1,22 +1,27 @@
 class_name Pin
 extends Node2D
 
+# Identity parameters (type, state)
 enum PinType { INPUT, OUTPUT }
 var pin_type: PinType = PinType.INPUT
 var signal_state: bool = false
 
+# Connection parameters (parents, wires)
 var parent_gate: Gate
 var connected_wires: Array = []
 
+# Visual parameters (color, size, refs)
 var color_rect: ColorRect
 var colors: Dictionary = { PinType.INPUT: Color.BLUE, PinType.OUTPUT: Color.RED }
 var size: Vector2 = Vector2(8, 8)
 
+# Collision parameters
 var area_2d: Area2D
 var collision_shape_2d: CollisionShape2D
 var rectangle_shape_2d: RectangleShape2D
 signal pin_clicked(pin_instance)
 
+# Runs on instantiation
 func _ready() -> void:
 	set_visuals()
 	set_collisions()
