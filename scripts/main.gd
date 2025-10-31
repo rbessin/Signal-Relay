@@ -21,6 +21,7 @@ var current_uid: int = 0
 var is_dragging: bool = false
 var drag_offset: Vector2
 var selected_gate_instance: Gate = null
+var selected_wire_instance: Wire = null
 
 # WIRE mode
 var is_creating_wire: bool = false
@@ -40,15 +41,36 @@ func _drag(): # Drag gate instance
 		selected_gate_instance.global_position = get_global_mouse_position() + drag_offset
 
 func _select_gate_instance(gate_instance: Gate): # Select gate instance
+	print("Gate selected")
 	if current_mode == Mode.INTERACT:
 		if selected_gate_instance != null:
 			selected_gate_instance.set_selected(false)
+		if selected_wire_instance != null:
+			selected_wire_instance.set_selected(false)
+			selected_wire_instance = null
+
 		selected_gate_instance = gate_instance
 		gate_instance.set_selected(true)
 		is_dragging = true
 		drag_offset = selected_gate_instance.global_position - get_global_mouse_position()
 
-func delete_gate_instance(): # Delete gate instance
+func _select_wire_instance(wire_instance: Wire):
+	print("Wire selected!")
+	if current_mode == Mode.INTERACT:
+		if selected_gate_instance != null:
+			selected_gate_instance.set_selected(false)
+			selected_gate_instance = null
+		if selected_wire_instance != null:
+			selected_wire_instance.set_selected(false)
+		
+		selected_wire_instance = wire_instance
+		wire_instance.set_selected(true)
+
+func _delete_gate_instance(): # Delete gate instance
+	for child in selected_gate_instance.get_children():
+		if child is Pin:
+			for wire in child.connected_wires.duplicate():
+				_delete_wire(wire)
 	selected_gate_instance.queue_free()
 	selected_gate_instance = null
 
@@ -93,8 +115,23 @@ func _start_wire_creation(start_pin: Pin):
 	add_child(wire_preview)
 
 func _complete_wire_creation(end_pin: Pin):
+	if _is_duplicate_wire(wire_start_pin, end_pin):
+		_cancel_wire_creation()
+		return
+	if end_pin.parent_gate == wire_start_pin.parent_gate: 
+		_cancel_wire_creation()
+		return
+	if end_pin.connected_wires.size() > 0:
+		_cancel_wire_creation()
+		return
+
 	wire_preview.to_pin = end_pin
 	wire_preview.is_preview = false
+
+	wire_preview.wire_clicked.connect(_select_wire_instance)
+	wire_start_pin.connected_wires.append(wire_preview)
+	end_pin.connected_wires.append(wire_preview)
+
 	is_creating_wire = false
 	wire_start_pin = null
 	wire_preview = null
@@ -106,9 +143,26 @@ func _cancel_wire_creation():
 	wire_start_pin = null
 	wire_preview = null
 
+func _delete_wire_instance():
+	_delete_wire(selected_wire_instance)
+	selected_wire_instance = null
+
+func _delete_wire(wire: Wire):
+	if wire.from_pin != null:
+		wire.from_pin.connected_wires.erase(wire)
+	if wire.to_pin != null:
+		wire.to_pin.connected_wires.erase(wire)
+	wire.queue_free()
+
 func _position_wire_preview():
 	if is_creating_wire and wire_preview != null:
 		wire_preview.preview_end_position = get_global_mouse_position()
+
+func _is_duplicate_wire(from_pin: Pin, to_pin: Pin) -> bool:
+	for wire in from_pin.connected_wires:
+		if wire.from_pin == from_pin and wire.to_pin == to_pin:
+			return true
+	return false
 
 # Handle events
 func _unhandled_input(event): # Handle inputs
@@ -130,7 +184,9 @@ func _handle_click(): # Handle click
 func _handle_click_release(): # Handle click release
 	is_dragging = false
 func _handle_delete(): # Handle delete
-	if current_mode == Mode.INTERACT: delete_gate_instance()
+	if current_mode == Mode.INTERACT: 
+		if selected_gate_instance != null: _delete_gate_instance()
+		if selected_wire_instance != null: _delete_wire_instance()
 func _handle_stop(): # Handle stop
 	if current_mode == Mode.WIRE: _cancel_wire_creation()
 	elif current_mode == Mode.INTERACT: selected_gate_instance = null
@@ -175,9 +231,6 @@ func _set_mode(new_mode: Mode, gate_name: String = ''):
 		Mode.WIRE: _enter_wire()
 
 # Select mode
-func select_interact():
-	_set_mode(Mode.INTERACT)
-func select_place(gate_name: String):
-	_set_mode(Mode.PLACE, gate_name)
-func select_wire():
-	_set_mode(Mode.WIRE)
+func select_interact(): _set_mode(Mode.INTERACT)
+func select_place(gate_name: String): _set_mode(Mode.PLACE, gate_name)
+func select_wire(): _set_mode(Mode.WIRE)
