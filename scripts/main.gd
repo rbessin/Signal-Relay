@@ -31,6 +31,7 @@ var wire_start_pin: Pin = null
 var wire_preview: Wire = null
 
 ## SIMULATE mode
+### Nothing to show for now.
 
 # Default functions which run on instantiation and every frame
 func _ready():

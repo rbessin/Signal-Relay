@@ -21,6 +21,7 @@ var rectangle_shape: RectangleShape2D
 signal wire_clicked(wire_instance)
 var selected: bool = false
 
+# Runs on wire instantiation
 func _ready():
 	line = Line2D.new()
 	line.default_color = color
@@ -30,24 +31,25 @@ func _ready():
 	set_collisions()
 	update_visuals()
 
+# Runs on every frame
 func _process(_delta):
 	update_visuals()
+	update_collision()
 
+# Updates the visuals (accounts for gate movements)
 func update_visuals():
 	if from_pin == null: return
 	
 	var start_position = to_local(from_pin.global_position)
 	var end_position: Vector2
 
-	if is_preview:
-		end_position = to_local(preview_end_position)
-	elif to_pin != null:
-		end_position = to_local(to_pin.global_position)
+	if is_preview: end_position = to_local(preview_end_position)
+	elif to_pin != null: end_position = to_local(to_pin.global_position)
 	else: return
 
 	line.points = [start_position, end_position]
-	update_collision()
 
+# Sets the collisions
 func set_collisions():
 	area_2d = Area2D.new()
 	area_2d.input_pickable = true
@@ -62,6 +64,7 @@ func set_collisions():
 	area_2d.input_event.connect(_on_area_input_event)
 	update_collision()
 
+# Updates collisions (accounts for gate movements)
 func update_collision():
 	if from_pin == null: return
 
@@ -84,6 +87,7 @@ func update_collision():
 	collision_shape.position = line_center
 	collision_shape.rotation = line_angle
 
+# Sets wire selection state
 func set_selected(is_selected: bool):
 	selected = is_selected
 	if selected: 
@@ -93,11 +97,7 @@ func set_selected(is_selected: bool):
 		line.default_color = color
 		line.width = width
 
-func _on_area_input_event(_viewport, event, _shape_idx):
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			wire_clicked.emit(self)
-
+# Propagates signal from start pin to end pin
 func propagate():
 	if from_pin.signal_state == true: 
 		line.default_color = Color.LIGHT_YELLOW
@@ -106,3 +106,9 @@ func propagate():
 	to_pin.update_visuals()
 	to_pin.get_parent().evaluate_with_propagation()
 	print("Wire propagating from ", from_pin.parent_gate.type, " to ", to_pin.parent_gate.type)
+
+# Handles click events
+func _on_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			wire_clicked.emit(self) # Emits signal when wire is clicked
