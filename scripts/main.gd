@@ -14,6 +14,7 @@ var gate_prefabs: Dictionary = {
 	"NOT": preload("res://scenes/gates/not_gate.tscn"),
 	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
 	"INPUT": preload("res://scenes/ui/input.tscn"),
+	"OUTPUT": preload("res://scenes/ui/output_display.tscn"),
 }
 var gate_to_place: PackedScene = null # Which gate type to place
 var current_uid: int = 0

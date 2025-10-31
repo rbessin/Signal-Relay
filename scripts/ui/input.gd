@@ -11,6 +11,8 @@ func toggle():
 	print("Toggled.")
 	output_value = !output_value
 	update_visual()
+	write_output_to_pin()
+	propagate_to_wires()
 
 func update_visual():
 	if output_value:

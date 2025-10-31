@@ -12,7 +12,7 @@ var connected_wires: Array = []
 
 # Visual parameters (color, size, refs)
 var color_rect: ColorRect
-var colors: Dictionary = { PinType.INPUT: Color.BLUE, PinType.OUTPUT: Color.RED }
+var color: Color = Color.GRAY
 var size: Vector2 = Vector2(8, 8)
 
 # Collision parameters
@@ -29,11 +29,16 @@ func _ready() -> void:
 # Set visuals
 func set_visuals():
 	color_rect = ColorRect.new()
-	color_rect.color = colors[pin_type]
+	color_rect.color = color
 	color_rect.size = size
 	color_rect.position = -size / 2
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(color_rect)
+
+# Update visuals
+func update_visuals():
+	if signal_state == true: color_rect.color = Color.YELLOW
+	else: color_rect.color = Color.GRAY
 
 # Set collisions
 func set_collisions() -> void:

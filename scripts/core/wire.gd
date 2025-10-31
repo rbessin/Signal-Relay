@@ -97,3 +97,12 @@ func _on_area_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			wire_clicked.emit(self)
+
+func propagate():
+	if from_pin.signal_state == true: 
+		line.default_color = Color.LIGHT_YELLOW
+	else: line.default_color = Color.BLACK
+	to_pin.signal_state = from_pin.signal_state
+	to_pin.update_visuals()
+	to_pin.get_parent().evaluate_with_propagation()
+	print("Wire propagating from ", from_pin.parent_gate.type, " to ", to_pin.parent_gate.type)

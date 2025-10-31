@@ -8,6 +8,7 @@ extends Node2D
 
 # State parameters (input, output)
 @export var input_values: Array[bool] = []
+var previous_output_value: bool = false
 @export var output_value: bool = false
 
 # Structure parameters (# of inputs, # of outputs)
@@ -38,6 +39,15 @@ func _ready() -> void:
 # Get input states to set output state
 func evaluate() -> void:
 	pass
+
+func evaluate_with_propagation():
+	var old_output = output_value
+	read_inputs_from_pins()
+	evaluate()
+	write_output_to_pin()
+	if output_value != old_output:
+		propagate_to_wires()
+	print(type, " evaluating, output: ", output_value)
 
 # Set input state
 func set_input(index, value):
@@ -102,6 +112,7 @@ func _on_area_input_event(_viewport, event, _shape_idx) -> void:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			gate_clicked.emit(self)
 
+# Create pins
 func create_pins():
 	for i in range(num_inputs): # Create input pins
 		var pin = Pin.new()
@@ -120,3 +131,29 @@ func create_pins():
 		var y_pos = -size.y / 2 + (size.y / (num_outputs + 1)) * (i + 1)
 		pin.position = Vector2(x_pos, y_pos)
 		add_child(pin)
+
+# Read inputs
+func read_inputs_from_pins():
+	var input_num: int = 0
+	for child in get_children():
+		if child is Pin:
+			if child.pin_type == Pin.PinType.INPUT:
+				input_values[input_num] = child.signal_state
+				input_num += 1
+
+# Write output
+func write_output_to_pin():
+	for child in get_children():
+		if child is Pin:
+			if child.pin_type == Pin.PinType.OUTPUT:
+				child.signal_state = output_value
+				child.update_visuals()
+				return
+
+# Propagate output
+func propagate_to_wires():
+	for child in get_children():
+		if child is Pin:
+			if child.pin_type == Pin.PinType.OUTPUT:
+				for wire in child.connected_wires:
+					wire.propagate()
