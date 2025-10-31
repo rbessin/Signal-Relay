@@ -1,8 +1,8 @@
 extends Node2D
 
 # Cursor configurations (mode, label)
-enum Mode { INTERACT, PLACE, WIRE }
-var current_mode: Mode = Mode.INTERACT
+enum Mode { SELECT, PLACE, WIRE, SIMULATE }
+var current_mode: Mode = Mode.SELECT
 @onready var mode_label: Label = get_node("Toolbar/Current_Mode")
 
 # PLACE mode
@@ -12,12 +12,13 @@ var gate_prefabs: Dictionary = {
 	"OR": preload("res://scenes/gates/or_gate.tscn"),
 	"NOR": preload("res://scenes/gates/nor_gate.tscn"),
 	"NOT": preload("res://scenes/gates/not_gate.tscn"),
-	"XOR": preload("res://scenes/gates/xor_gate.tscn")
+	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
+	"INPUT": preload("res://scenes/ui/input.tscn"),
 }
-var gate_to_place: PackedScene = preload("res://scenes/gates/and_gate.tscn")  # Which gate type to place
+var gate_to_place: PackedScene = null # Which gate type to place
 var current_uid: int = 0
 
-# INTERACT mode
+# SELECT mode
 var is_dragging: bool = false
 var drag_offset: Vector2
 var selected_gate_instance: Gate = null
@@ -28,6 +29,8 @@ var is_creating_wire: bool = false
 var wire_start_pin: Pin = null
 var wire_preview: Wire = null
 
+## SIMULATE mode
+
 # Default functions which run on instantiation and every frame
 func _ready():
 	pass
@@ -35,14 +38,16 @@ func _process(_delta):
 	_drag()
 	_position_wire_preview()
 
-# INTERACT helpers
+# SELECT helpers
 func _drag(): # Drag gate instance
 	if is_dragging and selected_gate_instance != null:
 		selected_gate_instance.global_position = get_global_mouse_position() + drag_offset
 
 func _select_gate_instance(gate_instance: Gate): # Select gate instance
-	print("Gate selected")
-	if current_mode == Mode.INTERACT:
+	if current_mode == Mode.SIMULATE:
+		if gate_instance.type == "INPUT": gate_instance.toggle()
+		return
+	elif current_mode == Mode.SELECT:
 		if selected_gate_instance != null:
 			selected_gate_instance.set_selected(false)
 		if selected_wire_instance != null:
@@ -55,8 +60,7 @@ func _select_gate_instance(gate_instance: Gate): # Select gate instance
 		drag_offset = selected_gate_instance.global_position - get_global_mouse_position()
 
 func _select_wire_instance(wire_instance: Wire):
-	print("Wire selected!")
-	if current_mode == Mode.INTERACT:
+	if current_mode == Mode.SELECT:
 		if selected_gate_instance != null:
 			selected_gate_instance.set_selected(false)
 			selected_gate_instance = null
@@ -164,6 +168,8 @@ func _is_duplicate_wire(from_pin: Pin, to_pin: Pin) -> bool:
 			return true
 	return false
 
+## SIMULATE helpers
+
 # Handle events
 func _unhandled_input(event): # Handle inputs
 	if event.is_action_pressed("Click"):
@@ -177,31 +183,33 @@ func _unhandled_input(event): # Handle inputs
 
 func _handle_click(): # Handle click
 	if current_mode == Mode.PLACE: instantiate_gate()
-	elif current_mode == Mode.INTERACT:
+	elif current_mode == Mode.SELECT:
 		if selected_gate_instance != null:
 			selected_gate_instance.set_selected(false)
 			selected_gate_instance = null
 func _handle_click_release(): # Handle click release
 	is_dragging = false
 func _handle_delete(): # Handle delete
-	if current_mode == Mode.INTERACT: 
+	if current_mode == Mode.SELECT: 
 		if selected_gate_instance != null: _delete_gate_instance()
 		if selected_wire_instance != null: _delete_wire_instance()
 func _handle_stop(): # Handle stop
 	if current_mode == Mode.WIRE: _cancel_wire_creation()
-	elif current_mode == Mode.INTERACT: selected_gate_instance = null
+	elif current_mode == Mode.SELECT: selected_gate_instance = null
 
 # Enter mode
-func _enter_interact():
+func _enter_select():
 	pass
 func _enter_place(gate_name: String = ""):
 	if gate_name != "" and gate_name in gate_prefabs:
 		gate_to_place = gate_prefabs[gate_name]
 func _enter_wire():
 	pass
+func _enter_simulate():
+	pass
 
 # Exit mode
-func _exit_interact():
+func _exit_select():
 	if selected_gate_instance != null:
 		selected_gate_instance.set_selected(false)
 		selected_gate_instance = null
@@ -214,23 +222,28 @@ func _exit_wire():
 		wire_preview = null
 	is_creating_wire = false
 	wire_start_pin = null
+func _exit_simulate():
+	pass
 
 # Set mode by exiting old mode and entering new mode
 func _set_mode(new_mode: Mode, gate_name: String = ''):
 	match current_mode:
-		Mode.INTERACT: _exit_interact()
+		Mode.SELECT: _exit_select()
 		Mode.PLACE: _exit_place()
 		Mode.WIRE: _exit_wire()
+		Mode.SIMULATE: _exit_simulate()
 	
 	current_mode = new_mode
 	mode_label.text = str(current_mode)
 
 	match new_mode:
-		Mode.INTERACT: _enter_interact()
+		Mode.SELECT: _enter_select()
 		Mode.PLACE: _enter_place(gate_name)
 		Mode.WIRE: _enter_wire()
+		Mode.SIMULATE: _enter_simulate()
 
 # Select mode
-func select_interact(): _set_mode(Mode.INTERACT)
+func select_select(): _set_mode(Mode.SELECT)
 func select_place(gate_name: String): _set_mode(Mode.PLACE, gate_name)
 func select_wire(): _set_mode(Mode.WIRE)
+func select_simulate(): _set_mode(Mode.SIMULATE)

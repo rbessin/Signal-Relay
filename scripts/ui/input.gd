@@ -1,14 +1,19 @@
-extends Button
+extends Gate
 
-# Identity parameters (uid)
-@export var uid: int
-# State parameters (state, target)
-@export var state: bool = false
-@export var target: Gate = null
-@export var target_input: int = 0
+func _ready() -> void:
+	type = "INPUT"
+	num_inputs = 0
+	output_value = false
+	color = Color.GRAY
+	super._ready()
 
-func _on_pressed():
-	state = !state
-	target.set_input(target_input, state)
-	if state == true: modulate = Color.GREEN
-	else: modulate = Color.RED
+func toggle():
+	print("Toggled.")
+	output_value = !output_value
+	update_visual()
+
+func update_visual():
+	if output_value:
+		color_rect.color = Color.YELLOW
+	else:
+		color_rect.color = Color.GRAY
