@@ -1,9 +1,16 @@
 extends Node2D
 
+# General configurations (camera)
+@onready var camera: Camera2D = get_node("Camera2D")
+@onready var pan_speed: int = 300
+@onready var zoom_speed: float = 1
+@onready var max_zoom: float = 3.0
+@onready var min_zoom: float = 0.5
+
 # Cursor configurations (mode, label)
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
-@onready var mode_label: Label = get_node("Toolbar/Current_Mode")
+@onready var mode_label: Label = get_node("Camera2D/Toolbar/Current_Mode")
 
 # PLACE mode
 var gate_prefabs: Dictionary = {
@@ -36,9 +43,10 @@ var wire_preview: Wire = null
 # Default functions which run on instantiation and every frame
 func _ready():
 	pass
-func _process(_delta):
+func _process(delta):
 	_drag()
 	_position_wire_preview()
+	_move_camera(delta)
 
 # SELECT helpers
 func _drag(): # Drag gate instance
@@ -174,14 +182,10 @@ func _is_duplicate_wire(from_pin: Pin, to_pin: Pin) -> bool:
 
 # Handle events
 func _unhandled_input(event): # Handle inputs
-	if event.is_action_pressed("Click"):
-		_handle_click()
-	elif event.is_action_released("Click"):
-		_handle_click_release()
-	elif event.is_action_pressed("Delete"):
-		_handle_delete()
-	elif event.is_action_pressed("Stop"):
-		_handle_stop()
+	if event.is_action_pressed("Click"): _handle_click()
+	elif event.is_action_released("Click"): _handle_click_release()
+	elif event.is_action_pressed("Delete"): _handle_delete()
+	elif event.is_action_pressed("Stop"): _handle_stop()
 
 func _handle_click(): # Handle click
 	if current_mode == Mode.PLACE: instantiate_gate()
@@ -249,3 +253,19 @@ func select_select(): _set_mode(Mode.SELECT)
 func select_place(gate_name: String): _set_mode(Mode.PLACE, gate_name)
 func select_wire(): _set_mode(Mode.WIRE)
 func select_simulate(): _set_mode(Mode.SIMULATE)
+
+# UX helpers
+func _move_camera(delta):
+	if Input.is_key_pressed(KEY_Q):
+		if camera.zoom <= Vector2(max_zoom, max_zoom): camera.zoom += Vector2(zoom_speed, zoom_speed) * delta
+	if Input.is_key_pressed(KEY_E):
+		if camera.zoom >= Vector2(min_zoom, min_zoom): camera.zoom -= Vector2(zoom_speed, zoom_speed) * delta
+
+	if Input.is_key_pressed(KEY_S):
+		camera.position.y += pan_speed * delta
+	if Input.is_key_pressed(KEY_W):
+		camera.position.y -= pan_speed * delta
+	if Input.is_key_pressed(KEY_D):
+		camera.position.x += pan_speed * delta
+	if Input.is_key_pressed(KEY_A):
+		camera.position.x -= pan_speed * delta

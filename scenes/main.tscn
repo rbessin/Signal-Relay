@@ -5,66 +5,69 @@
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
 
-[node name="Toolbar" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(200, 350)
-offset_right = 278.0
-offset_bottom = 350.0
+[node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="Select" type="Button" parent="Toolbar"]
+[node name="Toolbar" type="HBoxContainer" parent="Camera2D"]
+offset_left = -942.0
+offset_top = 466.0
+offset_right = -335.0
+offset_bottom = 516.0
+
+[node name="Select" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "Select"
 
-[node name="ANDButton" type="Button" parent="Toolbar"]
+[node name="ANDButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "AND"
 
-[node name="NANDButton" type="Button" parent="Toolbar"]
+[node name="NANDButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "NAND"
 
-[node name="NORButton" type="Button" parent="Toolbar"]
+[node name="NORButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "NOR"
 
-[node name="NOTButton" type="Button" parent="Toolbar"]
+[node name="NOTButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "NOT"
 
-[node name="ORButton" type="Button" parent="Toolbar"]
+[node name="ORButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "OR"
 
-[node name="XORButton" type="Button" parent="Toolbar"]
+[node name="XORButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "XOR"
 
-[node name="INPUTButton" type="Button" parent="Toolbar"]
+[node name="INPUTButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "INPUT"
 
-[node name="OUTPUTButton" type="Button" parent="Toolbar"]
+[node name="OUTPUTButton" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "OUTPUT"
 
-[node name="Wire" type="Button" parent="Toolbar"]
+[node name="Wire" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "Wire"
 
-[node name="Simulate" type="Button" parent="Toolbar"]
+[node name="Simulate" type="Button" parent="Camera2D/Toolbar"]
 layout_mode = 2
 text = "Simulate"
 
-[node name="Current_Mode" type="Label" parent="Toolbar"]
+[node name="Current_Mode" type="Label" parent="Camera2D/Toolbar"]
 layout_mode = 2
 
-[connection signal="pressed" from="Toolbar/Select" to="." method="select_select"]
-[connection signal="pressed" from="Toolbar/ANDButton" to="." method="select_place" binds= ["AND"]]
-[connection signal="pressed" from="Toolbar/NANDButton" to="." method="select_place" binds= ["NAND"]]
-[connection signal="pressed" from="Toolbar/NORButton" to="." method="select_place" binds= ["NOR"]]
-[connection signal="pressed" from="Toolbar/NOTButton" to="." method="select_place" binds= ["NOT"]]
-[connection signal="pressed" from="Toolbar/ORButton" to="." method="select_place" binds= ["OR"]]
-[connection signal="pressed" from="Toolbar/XORButton" to="." method="select_place" binds= ["XOR"]]
-[connection signal="pressed" from="Toolbar/INPUTButton" to="." method="select_place" binds= ["INPUT"]]
-[connection signal="pressed" from="Toolbar/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
-[connection signal="pressed" from="Toolbar/Wire" to="." method="select_wire"]
-[connection signal="pressed" from="Toolbar/Simulate" to="." method="select_simulate"]
+[connection signal="pressed" from="Camera2D/Toolbar/Select" to="." method="select_select"]
+[connection signal="pressed" from="Camera2D/Toolbar/ANDButton" to="." method="select_place" binds= ["AND"]]
+[connection signal="pressed" from="Camera2D/Toolbar/NANDButton" to="." method="select_place" binds= ["NAND"]]
+[connection signal="pressed" from="Camera2D/Toolbar/NORButton" to="." method="select_place" binds= ["NOR"]]
+[connection signal="pressed" from="Camera2D/Toolbar/NOTButton" to="." method="select_place" binds= ["NOT"]]
+[connection signal="pressed" from="Camera2D/Toolbar/ORButton" to="." method="select_place" binds= ["OR"]]
+[connection signal="pressed" from="Camera2D/Toolbar/XORButton" to="." method="select_place" binds= ["XOR"]]
+[connection signal="pressed" from="Camera2D/Toolbar/INPUTButton" to="." method="select_place" binds= ["INPUT"]]
+[connection signal="pressed" from="Camera2D/Toolbar/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
+[connection signal="pressed" from="Camera2D/Toolbar/Wire" to="." method="select_wire"]
+[connection signal="pressed" from="Camera2D/Toolbar/Simulate" to="." method="select_simulate"]

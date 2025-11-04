@@ -32,6 +32,13 @@ Signal Relay is an educational logic simulator that lets you build digital circu
 
 ---
 
+## Next Steps
+- **Zooming**: Implement zoom in and out
+- **Panning**: Implement camera movement
+- **Improved UI**: Modify the UI to be more pleasing
+
+---
+
 ## Tech Stack
 
 - **Godot 4.x** - Game engine for 2D rendering and scene management
@@ -79,6 +86,24 @@ Signal-Relay/
 
 ---
 
+## JSON File Structure
+
+```
+{
+    "circuit_name": "HALF ADDER",
+    "gates": [
+        {"uid": 1, "type": "INPUT", "x": 100, "y": 200},
+        {"uid": 2, "type": "AND", "x": 300, "y": 150},
+        {"uid": 3, "type": "OUTPUT", "x": 230, "y": 160},
+    ],
+    "wires": [
+        {"from_gate": 1, "from_pin": 0, "to_gate": 2, "to_pin": 1}
+    ]
+}
+```
+
+---
+
 ## Development Roadmap
 
 ### ✅ Phase 1: Basic Gates (Complete)
@@ -103,13 +128,13 @@ Signal-Relay/
 - [X] Pin class for gate input/output connection points
 - [X] Wire class for connections between pins
 - [X] Visual pin indicators on gates
-- [ ] Click-and-drag wire creation interface
+- [X] Click-and-drag wire creation interface
 - [X] Wire rendering with curves or lines
-- [ ] Connection validation (prevent invalid connections)
-- [ ] Wire deletion functionality
-- [ ] Signal propagation through wire network
+- [X] Connection validation (prevent invalid connections)
+- [X] Wire deletion functionality
+- [X] Signal propagation through wire network
 - [ ] Topological sorting for correct evaluation order
-- [ ] Visual feedback for signal states (high/low)
+- [X] Visual feedback for signal states (high/low)
 
 ### Phase 4: Circuit Persistence
 - [ ] Circuit serialization to JSON format
