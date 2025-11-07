@@ -24,7 +24,7 @@ var color_rect: ColorRect
 var border_rect: ColorRect
 var label: Label
 
-# Collisions
+# Collision parameters (area, shapes, signal)
 var area_2d: Area2D
 var collision_shape_2d: CollisionShape2D
 var rectangle_shape_2d: RectangleShape2D
