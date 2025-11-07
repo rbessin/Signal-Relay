@@ -132,6 +132,25 @@ func create_pins():
 		pin.position = Vector2(x_pos, y_pos)
 		add_child(pin)
 
+# Get pin index with instance
+func get_pin_by_index(pin_type: Pin.PinType, index: int) -> Pin:
+	var counter = 0
+	for child in get_children():
+		if child is Pin and child.pin_type == pin_type:
+			if counter == index:
+				return child
+			counter += 1
+	return null
+# Get pin index with instance (for saving)
+func get_pin_index(pin: Pin) -> int:
+	var counter = 0
+	for child in get_children():
+		if child is Pin and child.pin_type == pin.pin_type:
+			if child == pin:
+				return counter
+			counter += 1
+	return -1
+
 # Read inputs
 func read_inputs_from_pins():
 	var input_num: int = 0

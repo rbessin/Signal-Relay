@@ -24,6 +24,7 @@ var gate_prefabs: Dictionary = {
 	"OUTPUT": preload("res://scenes/ui/output_display.tscn"),
 }
 var gate_to_place: PackedScene = null # Which gate type to place
+var gate_type_to_place: String = ""
 var current_uid: int = 0
 
 # SELECT mode
@@ -39,6 +40,10 @@ var wire_preview: Wire = null
 
 ## SIMULATE mode
 ### Nothing to show for now.
+
+## Scene
+var gates: Array[Gate] = []
+var wires: Array[Wire] = []
 
 # Default functions which run on instantiation and every frame
 func _ready():
@@ -58,11 +63,7 @@ func _select_gate_instance(gate_instance: Gate): # Select gate instance
 		if gate_instance.type == "INPUT": gate_instance.toggle()
 		return
 	elif current_mode == Mode.SELECT:
-		if selected_gate_instance != null:
-			selected_gate_instance.set_selected(false)
-		if selected_wire_instance != null:
-			selected_wire_instance.set_selected(false)
-			selected_wire_instance = null
+		_clear_selection()
 
 		selected_gate_instance = gate_instance
 		gate_instance.set_selected(true)
@@ -71,34 +72,49 @@ func _select_gate_instance(gate_instance: Gate): # Select gate instance
 
 func _select_wire_instance(wire_instance: Wire):
 	if current_mode == Mode.SELECT:
-		if selected_gate_instance != null:
-			selected_gate_instance.set_selected(false)
-			selected_gate_instance = null
-		if selected_wire_instance != null:
-			selected_wire_instance.set_selected(false)
+		_clear_selection()
 		
 		selected_wire_instance = wire_instance
 		wire_instance.set_selected(true)
 
-func _delete_gate_instance(): # Delete gate instance
-	for child in selected_gate_instance.get_children():
+func _delete_gate_instance(gate: Gate): # Delete gate instance
+	for child in gate.get_children():
 		if child is Pin:
 			for wire in child.connected_wires.duplicate():
 				_delete_wire(wire)
-	selected_gate_instance.queue_free()
-	selected_gate_instance = null
+	gates.erase(gate)
+	gate.queue_free()
+
+func _clear_selection():
+	if selected_gate_instance != null:
+		selected_gate_instance.set_selected(false)
+		selected_gate_instance = null
+	if selected_wire_instance != null:
+		selected_wire_instance.set_selected(false)
+		selected_wire_instance = null
 
 # PLACE helpers
 func instantiate_gate(): # Create gate instance
-	if gate_to_place == null: return
+	if gate_type_to_place == "": return
+	_create_gate(gate_type_to_place, get_global_mouse_position())
+
+func _create_gate(gate_type: String, pos: Vector2, uid: int = -1) -> Gate:
+	if gate_type not in gate_prefabs: return null
 	
-	var new_gate = gate_to_place.instantiate()
+	var new_gate = gate_prefabs[gate_type].instantiate()
 	add_child(new_gate)
-	new_gate.uid = _generate_uid()
+	
+	if uid == -1: new_gate.uid = _generate_uid()
+	else:
+		new_gate.uid = uid
+		current_uid = max(current_uid, uid)  # Keep UID counter in sync
+	
 	new_gate.name = new_gate.type + '_' + str(new_gate.uid)
-	new_gate.global_position = get_global_mouse_position()
+	new_gate.global_position = pos
 	new_gate.gate_clicked.connect(_select_gate_instance)
 	call_deferred("_connect_gate_pins", new_gate)
+	gates.append(new_gate)
+	return new_gate
 
 func _connect_gate_pins(gate: Gate):
 	for child in gate.get_children():
@@ -146,6 +162,8 @@ func _complete_wire_creation(end_pin: Pin):
 	wire_start_pin.connected_wires.append(wire_preview)
 	end_pin.connected_wires.append(wire_preview)
 
+	wires.append(wire_preview)
+
 	is_creating_wire = false
 	wire_start_pin = null
 	wire_preview = null
@@ -166,6 +184,7 @@ func _delete_wire(wire: Wire):
 		wire.from_pin.connected_wires.erase(wire)
 	if wire.to_pin != null:
 		wire.to_pin.connected_wires.erase(wire)
+	wires.erase(wire)
 	wire.queue_free()
 
 func _position_wire_preview():
@@ -186,6 +205,8 @@ func _unhandled_input(event): # Handle inputs
 	elif event.is_action_released("Click"): _handle_click_release()
 	elif event.is_action_pressed("Delete"): _handle_delete()
 	elif event.is_action_pressed("Stop"): _handle_stop()
+	elif event.is_action_pressed("Save_Circuit"): _handle_save()
+	elif event.is_action_pressed("Load_Circuit"): _handle_load()
 
 func _handle_click(): # Handle click
 	if current_mode == Mode.PLACE: instantiate_gate()
@@ -197,7 +218,9 @@ func _handle_click_release(): # Handle click release
 	is_dragging = false
 func _handle_delete(): # Handle delete
 	if current_mode == Mode.SELECT: 
-		if selected_gate_instance != null: _delete_gate_instance()
+		if selected_gate_instance != null: 
+			_delete_gate_instance(selected_gate_instance)
+			selected_gate_instance = null
 		if selected_wire_instance != null: _delete_wire_instance()
 func _handle_stop(): # Handle stop
 	if current_mode == Mode.WIRE: _cancel_wire_creation()
@@ -209,6 +232,7 @@ func _enter_select():
 func _enter_place(gate_name: String = ""):
 	if gate_name != "" and gate_name in gate_prefabs:
 		gate_to_place = gate_prefabs[gate_name]
+		gate_type_to_place = gate_name
 func _enter_wire():
 	pass
 func _enter_simulate():
@@ -216,9 +240,7 @@ func _enter_simulate():
 
 # Exit mode
 func _exit_select():
-	if selected_gate_instance != null:
-		selected_gate_instance.set_selected(false)
-		selected_gate_instance = null
+	_clear_selection()
 	is_dragging = false
 func _exit_place():
 	gate_to_place = null
@@ -269,3 +291,41 @@ func _move_camera(delta):
 		camera.position.x += pan_speed * delta
 	if Input.is_key_pressed(KEY_A):
 		camera.position.x -= pan_speed * delta
+
+# Loading & Saving helpers
+func _handle_save(): # Collect gates and wires
+	var circuit_name = "my_circuit"
+	CircuitSerializer.save_to_json(gates, wires, circuit_name)
+	print("Circuit saved!")
+func _handle_load(): # Load circuit
+	_load_circuit("my_circuit")
+	print("Circuit loaded!")
+
+func _load_circuit(circuit_name):
+	var circuit_dict = CircuitSerializer.load_from_json(circuit_name)
+	if circuit_dict == null: return
+	var gates_by_uid: Dictionary = {}
+
+	for gate in circuit_dict["gates"]:
+		var new_gate = _create_gate(gate["type"], Vector2(gate["x"], gate["y"]), gate["uid"])
+		if new_gate != null: gates_by_uid[gate["uid"]] = new_gate
+	
+	await get_tree().process_frame
+	
+	for wire in circuit_dict["wires"]:
+		var source_gate = gates_by_uid[wire["from_gate"]]
+		var destination_gate = gates_by_uid[wire["to_gate"]]
+		var source_pin = source_gate.get_pin_by_index(Pin.PinType.OUTPUT, wire["from_pin"])
+		var destination_pin = destination_gate.get_pin_by_index(Pin.PinType.INPUT, wire["to_pin"])
+
+		var new_wire = Wire.new()
+		new_wire.from_pin = source_pin
+		new_wire.to_pin = destination_pin
+		add_child(new_wire)
+		wires.append(new_wire)
+
+		source_pin.connected_wires.append(new_wire)
+		destination_pin.connected_wires.append(new_wire)
+
+func _empty_circuit():
+	for child in gates.duplicate(): _delete_gate_instance(child)
