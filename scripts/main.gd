@@ -10,7 +10,7 @@ extends Node2D
 # Cursor configurations (mode, label)
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
-@onready var mode_label: Label = get_node("Camera2D/Toolbar/Current_Mode")
+@onready var mode_label: Label = get_node("UI/Toolbar/Current_Mode")
 
 # PLACE mode
 var gate_prefabs: Dictionary = {
@@ -41,9 +41,10 @@ var wire_preview: Wire = null
 ## SIMULATE mode
 ### Nothing to show for now.
 
-## Scene
+## Loading & Saving
 var gates: Array[Gate] = []
 var wires: Array[Wire] = []
+@onready var file_name_input: LineEdit = get_node("UI/Toolbar/FileNameInput")
 
 # Default functions which run on instantiation and every frame
 func _ready():
@@ -294,12 +295,9 @@ func _move_camera(delta):
 
 # Loading & Saving helpers
 func _handle_save(): # Collect gates and wires
-	var circuit_name = "my_circuit"
-	CircuitSerializer.save_to_json(gates, wires, circuit_name)
-	print("Circuit saved!")
+	_on_save_button_pressed()
 func _handle_load(): # Load circuit
-	_load_circuit("my_circuit")
-	print("Circuit loaded!")
+	_on_load_button_pressed()
 
 func _load_circuit(circuit_name):
 	var circuit_dict = CircuitSerializer.load_from_json(circuit_name)
@@ -329,3 +327,15 @@ func _load_circuit(circuit_name):
 
 func _empty_circuit():
 	for child in gates.duplicate(): _delete_gate_instance(child)
+
+func _on_save_button_pressed():
+	var circuit_name = file_name_input.text
+	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
+	CircuitSerializer.save_to_json(gates, wires, circuit_name)
+	print("Circuit saved as: " + circuit_name)
+
+func _on_load_button_pressed():
+	var circuit_name = file_name_input.text
+	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
+	_load_circuit(circuit_name)
+	print("Circuit loaded: " + circuit_name)
