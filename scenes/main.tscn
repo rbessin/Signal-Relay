@@ -51,9 +51,17 @@ text = "XOR"
 layout_mode = 2
 text = "INPUT"
 
+[node name="CLOCKButton" type="Button" parent="UI/Toolbar"]
+layout_mode = 2
+text = "CLOCK"
+
 [node name="OUTPUTButton" type="Button" parent="UI/Toolbar"]
 layout_mode = 2
 text = "OUTPUT"
+
+[node name="D_FLIPFLOPButton" type="Button" parent="UI/Toolbar"]
+layout_mode = 2
+text = "D_FLIPFLOP"
 
 [node name="Wire" type="Button" parent="UI/Toolbar"]
 layout_mode = 2
@@ -90,7 +98,9 @@ layout_mode = 2
 [connection signal="pressed" from="UI/Toolbar/ORButton" to="." method="select_place" binds= ["OR"]]
 [connection signal="pressed" from="UI/Toolbar/XORButton" to="." method="select_place" binds= ["XOR"]]
 [connection signal="pressed" from="UI/Toolbar/INPUTButton" to="." method="select_place" binds= ["INPUT"]]
+[connection signal="pressed" from="UI/Toolbar/CLOCKButton" to="." method="select_place" binds= ["CLOCK"]]
 [connection signal="pressed" from="UI/Toolbar/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
+[connection signal="pressed" from="UI/Toolbar/D_FLIPFLOPButton" to="." method="select_place" binds= ["D_FLIPFLOP"]]
 [connection signal="pressed" from="UI/Toolbar/Wire" to="." method="select_wire"]
 [connection signal="pressed" from="UI/Toolbar/Simulate" to="." method="select_simulate"]
 [connection signal="pressed" from="UI/Toolbar/Clear Scene" to="." method="_empty_circuit"]

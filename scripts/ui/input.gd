@@ -15,7 +15,5 @@ func toggle():
 	propagate_to_wires()
 
 func update_visual():
-	if output_value:
-		color_rect.color = Color.YELLOW
-	else:
-		color_rect.color = Color.GRAY
+	if output_value: color_rect.color = Color.YELLOW
+	else: color_rect.color = Color.GRAY

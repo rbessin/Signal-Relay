@@ -22,6 +22,8 @@ var gate_prefabs: Dictionary = {
 	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
 	"INPUT": preload("res://scenes/ui/input.tscn"),
 	"OUTPUT": preload("res://scenes/ui/output_display.tscn"),
+	"CLOCK": preload("res://scenes/ui/clock.tscn"),
+	"D_FLIPFLOP": preload("res://scenes/ui/d_flipflop.tscn"),
 }
 var gate_to_place: PackedScene = null # Which gate type to place
 var gate_type_to_place: String = ""
@@ -237,7 +239,8 @@ func _enter_place(gate_name: String = ""):
 func _enter_wire():
 	pass
 func _enter_simulate():
-	pass
+	for gate in gates:
+		if gate.type == "CLOCK": gate.start_clock()
 
 # Exit mode
 func _exit_select():
@@ -252,7 +255,8 @@ func _exit_wire():
 	is_creating_wire = false
 	wire_start_pin = null
 func _exit_simulate():
-	pass
+	for gate in gates:
+		if gate.type == "CLOCK": gate.stop_clock()
 
 # Set mode by exiting old mode and entering new mode
 func _set_mode(new_mode: Mode, gate_name: String = ''):
@@ -300,6 +304,8 @@ func _handle_load(): # Load circuit
 	_on_load_button_pressed()
 
 func _load_circuit(circuit_name):
+	_empty_circuit()
+
 	var circuit_dict = CircuitSerializer.load_from_json(circuit_name)
 	if circuit_dict == null: return
 	var gates_by_uid: Dictionary = {}
