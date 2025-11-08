@@ -239,6 +239,10 @@ func _enter_place(gate_name: String = ""):
 func _enter_wire():
 	pass
 func _enter_simulate():
+	await get_tree().process_frame
+	for gate in gates: # Initialize all gates and connected wires
+		gate.write_output_to_pin()
+		gate.propagate_to_wires()
 	for gate in gates:
 		if gate.type == "CLOCK": gate.start_clock()
 
@@ -319,8 +323,14 @@ func _load_circuit(circuit_name):
 	for wire in circuit_dict["wires"]:
 		var source_gate = gates_by_uid[wire["from_gate"]]
 		var destination_gate = gates_by_uid[wire["to_gate"]]
+		print("Loading wire from ", source_gate.type, " to ", destination_gate.type)
 		var source_pin = source_gate.get_pin_by_index(Pin.PinType.OUTPUT, wire["from_pin"])
 		var destination_pin = destination_gate.get_pin_by_index(Pin.PinType.INPUT, wire["to_pin"])
+		print("  source_pin:", source_pin, " dest_pin:", destination_pin)
+
+		if source_pin == null or destination_pin == null:
+			print("  ERROR: Pin lookup failed!")
+			continue
 
 		var new_wire = Wire.new()
 		new_wire.from_pin = source_pin
