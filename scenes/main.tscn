@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=6 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
+[ext_resource type="Texture2D" uid="uid://41qqq5hsseb3" path="res://assets/art/button_normal_48x72.png" id="2_tbgi4"]
+[ext_resource type="Texture2D" uid="uid://bnogbcp61fbhu" path="res://assets/art/button_pressed_48x72.png" id="3_tefeu"]
+[ext_resource type="Texture2D" uid="uid://bf6fvkrxuefsj" path="res://assets/art/button_hover_48x72.png" id="4_o6xl0"]
+[ext_resource type="FontFile" uid="uid://cgx0y6mhjsptv" path="res://assets/fonts/DigitalDisco.ttf" id="5_tipki"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
@@ -19,9 +23,62 @@ offset_right = 617.0
 offset_bottom = -10.0
 grow_vertical = 0
 
-[node name="Select" type="Button" parent="UI/Toolbar"]
+[node name="Select" type="TextureButton" parent="UI/Toolbar"]
 layout_mode = 2
+texture_normal = ExtResource("2_tbgi4")
+texture_pressed = ExtResource("3_tefeu")
+texture_hover = ExtResource("4_o6xl0")
+
+[node name="Label" type="Label" parent="UI/Toolbar/Select"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_tipki")
 text = "Select"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Wire" type="TextureButton" parent="UI/Toolbar"]
+layout_mode = 2
+texture_normal = ExtResource("2_tbgi4")
+texture_pressed = ExtResource("3_tefeu")
+texture_hover = ExtResource("4_o6xl0")
+
+[node name="Label" type="Label" parent="UI/Toolbar/Wire"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+text = "Wire"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Simulate" type="TextureButton" parent="UI/Toolbar"]
+layout_mode = 2
+texture_normal = ExtResource("2_tbgi4")
+texture_pressed = ExtResource("3_tefeu")
+texture_hover = ExtResource("4_o6xl0")
+
+[node name="Label" type="Label" parent="UI/Toolbar/Simulate"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+text = "Simulate"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ANDButton" type="Button" parent="UI/Toolbar"]
 layout_mode = 2
@@ -63,14 +120,6 @@ text = "OUTPUT"
 layout_mode = 2
 text = "D_FLIPFLOP"
 
-[node name="Wire" type="Button" parent="UI/Toolbar"]
-layout_mode = 2
-text = "Wire"
-
-[node name="Simulate" type="Button" parent="UI/Toolbar"]
-layout_mode = 2
-text = "Simulate"
-
 [node name="Clear Scene" type="Button" parent="UI/Toolbar"]
 layout_mode = 2
 text = "Clear Scene"
@@ -91,6 +140,8 @@ placeholder_text = "circuit_name"
 layout_mode = 2
 
 [connection signal="pressed" from="UI/Toolbar/Select" to="." method="select_select"]
+[connection signal="pressed" from="UI/Toolbar/Wire" to="." method="select_wire"]
+[connection signal="pressed" from="UI/Toolbar/Simulate" to="." method="select_simulate"]
 [connection signal="pressed" from="UI/Toolbar/ANDButton" to="." method="select_place" binds= ["AND"]]
 [connection signal="pressed" from="UI/Toolbar/NANDButton" to="." method="select_place" binds= ["NAND"]]
 [connection signal="pressed" from="UI/Toolbar/NORButton" to="." method="select_place" binds= ["NOR"]]
@@ -101,8 +152,6 @@ layout_mode = 2
 [connection signal="pressed" from="UI/Toolbar/CLOCKButton" to="." method="select_place" binds= ["CLOCK"]]
 [connection signal="pressed" from="UI/Toolbar/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
 [connection signal="pressed" from="UI/Toolbar/D_FLIPFLOPButton" to="." method="select_place" binds= ["D_FLIPFLOP"]]
-[connection signal="pressed" from="UI/Toolbar/Wire" to="." method="select_wire"]
-[connection signal="pressed" from="UI/Toolbar/Simulate" to="." method="select_simulate"]
 [connection signal="pressed" from="UI/Toolbar/Clear Scene" to="." method="_empty_circuit"]
 [connection signal="pressed" from="UI/Toolbar/Save" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="UI/Toolbar/Load" to="." method="_on_load_button_pressed"]
