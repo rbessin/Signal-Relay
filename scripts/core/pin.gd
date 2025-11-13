@@ -11,9 +11,9 @@ var parent_gate: Gate
 var connected_wires: Array = []
 
 # Visual parameters (color, size, refs)
-var color_rect: ColorRect
+var color_rect: Sprite2D
 var color: Color = Color.GRAY
-var size: Vector2 = Vector2(8, 8)
+var size: Vector2 = Vector2(12, 12)
 
 # Collision parameters (area, shapes, signal)
 var area_2d: Area2D
@@ -28,17 +28,23 @@ func _ready() -> void:
 
 # Set visuals
 func set_visuals():
-	color_rect = ColorRect.new()
-	color_rect.color = color
-	color_rect.size = size
-	color_rect.position = -size / 2
-	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore collisions on visual elements
-	add_child(color_rect)
+	var pin_texture = load("res://assets/art/pin_12x12.png")
+	
+	var sprite = Sprite2D.new()
+	sprite.texture = pin_texture
+	sprite.centered = true
+	add_child(sprite)
+	
+	# Store reference for updating colors
+	color_rect = sprite  # Reusing the variable name to minimize changes
+	update_visuals()
 
 # Update visuals
 func update_visuals(): # Colors reflect signal state
-	if signal_state == true: color_rect.color = Color.YELLOW
-	else: color_rect.color = Color.GRAY
+	if signal_state == true:
+		color_rect.modulate = Color(1.0, 0.72, 0.3)  # Signal ON - bright copper #FFB84D
+	else:
+		color_rect.modulate = Color(0.24, 0.12, 0.1)  # Signal OFF - dark copper #3D1F1A
 
 # Set collisions
 func set_collisions() -> void:

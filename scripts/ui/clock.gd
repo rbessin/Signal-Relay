@@ -2,13 +2,15 @@ extends Gate
 
 var tick_rate: float
 @onready var timer: Timer
+var on_color = Color('#FFB84D')
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	type = "CLOCK"
 	num_inputs = 0
 	output_value = false
-	color = Color.GRAY
+	color = Color('#6F4F2D')
+	border_color = Color('#8FB3A8')
 	super._ready()
 
 	timer = Timer.new()
@@ -37,5 +39,5 @@ func stop_clock():
 	propagate_to_wires()
 
 func update_visual():
-	if output_value: color_rect.color = Color.YELLOW
-	else: color_rect.color = Color.GRAY
+	if output_value: color_rect.modulate = on_color
+	else: color_rect.modulate = color

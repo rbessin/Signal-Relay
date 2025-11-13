@@ -4,7 +4,8 @@ func _ready() -> void:
 	type = "OUTPUT"
 	num_inputs = 1
 	num_outputs = 0
-	color = Color.GRAY
+	color = Color('#1F3D5C')
+	border_color = Color('#8FB3A8')
 	input_values = [false]
 	super._ready()
 
@@ -15,8 +16,8 @@ func evaluate():
 
 func update_visual():
 	if output_value:
-		color_rect.color = Color.GREEN
+		color_rect.modulate = Color('#4A8F6F')
 		label.text = "True"
 	else:
-		color_rect.color = Color.GRAY
+		color_rect.modulate = Color('#5C1F1A')
 		label.text = "False"

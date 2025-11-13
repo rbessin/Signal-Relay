@@ -19,9 +19,10 @@ var previous_output_value: bool = false
 @export var color: Color = Color.BLACK
 @export var size: Vector2 = Vector2(60, 40)
 @export var border_color: Color = Color.WHITE
-@export var border_thickness: Vector2 = Vector2(6, 6)
-var color_rect: ColorRect
-var border_rect: ColorRect
+@export var border_thickness: Vector2 = Vector2(12, 12)
+var color_rect: NinePatchRect
+var border_rect: NinePatchRect
+var selection_rect: NinePatchRect
 var label: Label
 
 # Collision parameters (area, shapes, signal)
@@ -54,34 +55,83 @@ func propagate_to_wires(): # Propagate output to wires
 				for wire in child.connected_wires:
 					wire.propagate()
 
+# Calculate gate size based on text and pin count
+func calculate_gate_size(font: Font) -> void:
+	# Calculate width based on text length
+	var text_size = font.get_string_size(type, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+	var min_width = 96  # Minimum gate width
+	var text_padding = 32  # Padding around text (16px on each side)
+	var calculated_width = text_size.x + text_padding
+	
+	# Use the larger of minimum width or calculated width
+	var final_width = max(min_width, calculated_width)
+	
+	# Calculate height based on number of pins (use the larger of inputs/outputs)
+	var max_pins = max(num_inputs, num_outputs)
+	var final_height = 24 + (20 * max_pins)
+	
+	# Set the size
+	size = Vector2(final_width, final_height)
+
 # Set visuals
 func set_visuals() -> void:
-	# Create selection border
-	border_rect = ColorRect.new()
-	border_rect.color = border_color
-	border_rect.size = size + border_thickness
-	border_rect.position = -(size + border_thickness) / 2
-	border_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(border_rect)
-	border_rect.visible = false
+	# Load assets
+	var border_texture = load("res://assets/art/gate_border_64x64.png")
+	var fill_texture = load("res://assets/art/gate_fill_64x64.png")
+	var font = load("res://assets/fonts/DigitalDisco.ttf")
+	
+	# Calculate dynamic gate size
+	calculate_gate_size(font)
 
-	# Create background
-	color_rect = ColorRect.new()
-	color_rect.color = color
-	color_rect.size = size
+	# Create background (NinePatch)
+	color_rect = NinePatchRect.new()
+	color_rect.texture = fill_texture
+	color_rect.patch_margin_left = 4
+	color_rect.patch_margin_right = 4
+	color_rect.patch_margin_top = 4
+	color_rect.patch_margin_bottom = 4
+	color_rect.custom_minimum_size = size
 	color_rect.position = -size / 2
+	color_rect.self_modulate = color
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(color_rect)
+	
+	# Create border (NinePatch) - always visible
+	border_rect = NinePatchRect.new()
+	border_rect.texture = border_texture
+	border_rect.patch_margin_left = 4
+	border_rect.patch_margin_right = 4
+	border_rect.patch_margin_top = 4
+	border_rect.patch_margin_bottom = 4
+	border_rect.self_modulate = border_color
+	border_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	color_rect.add_child(border_rect)
+	border_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	
+	# Create selection overlay (NinePatch) - only visible when selected
+	selection_rect = NinePatchRect.new()
+	selection_rect.texture = border_texture
+	selection_rect.patch_margin_left = 4
+	selection_rect.patch_margin_right = 4
+	selection_rect.patch_margin_top = 4
+	selection_rect.patch_margin_bottom = 4
+	selection_rect.self_modulate = Color.WHITE
+	selection_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	selection_rect.visible = false  # Hidden by default
+	color_rect.add_child(selection_rect)
+	selection_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	
 	# Create label
 	label = Label.new()
 	label.text = type
-	label.size = size
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_color_override("font_color", Color.WHITE)
+	label.add_theme_font_override("font", font)
+	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_color_override("font_color", Color.BLACK)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	color_rect.add_child(label)
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 # Set collisions
 func set_collisions() -> void:
@@ -101,11 +151,9 @@ func set_collisions() -> void:
 	collision_shape_2d.position = Vector2.ZERO
 	area_2d.add_child(collision_shape_2d)
 
-# Functions to handle gate
 func set_selected(select: bool) -> void: # Set selection
 	selected = select
-	if selected: border_rect.visible = true
-	else: border_rect.visible = false
+	if selection_rect: selection_rect.visible = selected
 
 func _on_area_input_event(_viewport, event, _shape_idx) -> void: # Detect click on area 2d
 	if event is InputEventMouseButton:
@@ -138,23 +186,46 @@ func write_output_to_pin() -> void: # Write output to pin
 
 # Functions to handle pins
 func create_pins(): # Create pins
-	for i in range(num_inputs): # Create input pins
-		var pin = Pin.new()
-		pin.pin_type = Pin.PinType.INPUT
-		pin.parent_gate = self
-		var x_pos = -size.x / 2
-		var y_pos = -size.y / 2 + (size.y / (num_inputs + 1)) * (i + 1)
-		pin.position = Vector2(x_pos, y_pos)
-		add_child(pin)
-
-	for i in range(num_outputs): # Create output pins
-		var pin = Pin.new()
-		pin.pin_type = Pin.PinType.OUTPUT
-		pin.parent_gate = self
-		var x_pos = size.x / 2
-		var y_pos = -size.y / 2 + (size.y / (num_outputs + 1)) * (i + 1)
-		pin.position = Vector2(x_pos, y_pos)
-		add_child(pin)
+	var pin_size = 12.0
+	var pin_spacing = 8.0
+	var border_thickness_val = 4.0  # Your border is 4px
+	var interior_height = size.y - (border_thickness_val * 2)
+	
+	# Create input pins
+	if num_inputs > 0:
+		# Calculate equal top and bottom padding
+		var total_pin_height = num_inputs * pin_size
+		var total_gaps = (num_inputs - 1) * pin_spacing
+		var remaining_space = interior_height - total_pin_height - total_gaps
+		var top_padding = remaining_space / 2.0
+		
+		for i in range(num_inputs):
+			var pin = Pin.new()
+			pin.pin_type = Pin.PinType.INPUT
+			pin.parent_gate = self
+			var x_pos = -size.x / 2
+			# Start from top border, add padding, then position each pin
+			var y_pos = -size.y / 2 + border_thickness_val + top_padding + (pin_size / 2.0) + i * (pin_size + pin_spacing)
+			pin.position = Vector2(x_pos, y_pos)
+			add_child(pin)
+	
+	# Create output pins
+	if num_outputs > 0:
+		# Calculate equal top and bottom padding
+		var total_pin_height = num_outputs * pin_size
+		var total_gaps = (num_outputs - 1) * pin_spacing
+		var remaining_space = interior_height - total_pin_height - total_gaps
+		var top_padding = remaining_space / 2.0
+		
+		for i in range(num_outputs):
+			var pin = Pin.new()
+			pin.pin_type = Pin.PinType.OUTPUT
+			pin.parent_gate = self
+			var x_pos = size.x / 2
+			# Start from top border, add padding, then position each pin
+			var y_pos = -size.y / 2 + border_thickness_val + top_padding + (pin_size / 2.0) + i * (pin_size + pin_spacing)
+			pin.position = Vector2(x_pos, y_pos)
+			add_child(pin)
 
 func get_pin_by_index(pin_type: Pin.PinType, index: int) -> Pin: # Get pin with pin index (loading)
 	var counter = 0

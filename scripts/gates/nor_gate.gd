@@ -6,7 +6,8 @@ func _ready():
 	num_inputs = 2
 	input_values = [false, false]
 	output_value = true
-	color = Color.LIGHT_GREEN
+	color = Color('#3D4F5C')
+	border_color = Color('#8FB3A8')
 	super._ready()
 
 func evaluate() -> void:
