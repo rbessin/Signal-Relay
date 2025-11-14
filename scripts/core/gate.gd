@@ -58,7 +58,7 @@ func propagate_to_wires(): # Propagate output to wires
 # Calculate gate size based on text and pin count
 func calculate_gate_size(font: Font) -> void:
 	# Calculate width based on text length
-	var text_size = font.get_string_size(type, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+	var text_size = font.get_string_size(type, HORIZONTAL_ALIGNMENT_LEFT, -1, 24)
 	var min_width = 96  # Minimum gate width
 	var text_padding = 32  # Padding around text (16px on each side)
 	var calculated_width = text_size.x + text_padding

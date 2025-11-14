@@ -10,7 +10,7 @@ extends Node2D
 # Cursor configurations (mode, label)
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
-@onready var mode_label: Label = get_node("UI Canvas/Toolbar/Current_Mode")
+@onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Current_Mode')
 
 # PLACE mode
 var gate_prefabs: Dictionary = {
@@ -20,10 +20,10 @@ var gate_prefabs: Dictionary = {
 	"NOR": preload("res://scenes/gates/nor_gate.tscn"),
 	"NOT": preload("res://scenes/gates/not_gate.tscn"),
 	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
-	"INPUT": preload("res://scenes/ui/input.tscn"),
-	"OUTPUT": preload("res://scenes/ui/output_display.tscn"),
-	"CLOCK": preload("res://scenes/ui/clock.tscn"),
-	"D_FLIPFLOP": preload("res://scenes/ui/d_flipflop.tscn"),
+	"INPUT": preload("res://scenes/complex/input.tscn"),
+	"OUTPUT": preload("res://scenes/complex/output_display.tscn"),
+	"CLOCK": preload("res://scenes/complex/clock.tscn"),
+	"D_FLIPFLOP": preload("res://scenes/complex/d_flipflop.tscn"),
 }
 var gate_to_place: PackedScene = null # Which gate type to place
 var gate_type_to_place: String = ""
@@ -46,7 +46,7 @@ var wire_preview: Wire = null
 ## Loading & Saving
 var gates: Array[Gate] = []
 var wires: Array[Wire] = []
-@onready var file_name_input: LineEdit = get_node("UI Canvas/Toolbar/FileNameInput")
+@onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
 
 # Default functions which run on instantiation and every frame
 func _ready():
