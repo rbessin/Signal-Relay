@@ -10,7 +10,7 @@ extends Node2D
 # Cursor configurations (mode, label)
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
-@onready var mode_label: Label = get_node("UI/Toolbar/Current_Mode")
+@onready var mode_label: Label = get_node("UI Canvas/Toolbar/Current_Mode")
 
 # PLACE mode
 var gate_prefabs: Dictionary = {
@@ -46,7 +46,7 @@ var wire_preview: Wire = null
 ## Loading & Saving
 var gates: Array[Gate] = []
 var wires: Array[Wire] = []
-@onready var file_name_input: LineEdit = get_node("UI/Toolbar/FileNameInput")
+@onready var file_name_input: LineEdit = get_node("UI Canvas/Toolbar/FileNameInput")
 
 # Default functions which run on instantiation and every frame
 func _ready():

@@ -1,6 +1,6 @@
 extends Gate
 
-var tick_rate: float
+var tick_rate: float = 0.2
 @onready var timer: Timer
 var on_color = Color('#FFB84D')
 
