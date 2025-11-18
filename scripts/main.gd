@@ -32,8 +32,10 @@ var current_uid: int = 0
 # SELECT mode
 var is_dragging: bool = false
 var drag_offset: Vector2
-var selected_gate_instance: Gate = null
+var selected_gates: Array[Gate] = []
+var drag_offsets: Dictionary = {}
 var selected_wire_instance: Wire = null
+@onready var create_component_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton')
 
 # WIRE mode
 var is_creating_wire: bool = false
@@ -57,21 +59,43 @@ func _process(delta):
 	_move_camera(delta)
 
 # SELECT helpers
-func _drag(): # Drag gate instance
-	if is_dragging and selected_gate_instance != null:
-		selected_gate_instance.global_position = get_global_mouse_position() + drag_offset
+func _drag(): # Drag all selected gates together
+	if is_dragging and selected_gates.size() > 0:
+		var mouse_pos = get_global_mouse_position()
+		for gate in selected_gates:
+			if gate in drag_offsets:
+				gate.global_position = mouse_pos + drag_offsets[gate]
 
 func _select_gate_instance(gate_instance: Gate): # Select gate instance
 	if current_mode == Mode.SIMULATE:
 		if gate_instance.type == "INPUT": gate_instance.toggle()
 		return
 	elif current_mode == Mode.SELECT:
-		_clear_selection()
-
-		selected_gate_instance = gate_instance
-		gate_instance.set_selected(true)
-		is_dragging = true
-		drag_offset = selected_gate_instance.global_position - get_global_mouse_position()
+		# Check if Shift is held for multi-select
+		if Input.is_key_pressed(KEY_SHIFT):
+			# Toggle this gate in the selection
+			if gate_instance in selected_gates:
+				# Deselect it
+				gate_instance.set_selected(false)
+				selected_gates.erase(gate_instance)
+			else:
+				# Add to selection
+				gate_instance.set_selected(true)
+				selected_gates.append(gate_instance)
+		else:
+			# Single select - clear previous selections
+			_clear_selection()
+			gate_instance.set_selected(true)
+			selected_gates.append(gate_instance)
+		_update_create_component_button()
+		
+		# Start dragging - store offset for each selected gate
+		if selected_gates.size() > 0:
+			is_dragging = true
+			drag_offsets.clear()
+			var mouse_pos = get_global_mouse_position()
+			for gate in selected_gates:
+				drag_offsets[gate] = gate.global_position - mouse_pos
 
 func _select_wire_instance(wire_instance: Wire):
 	if current_mode == Mode.SELECT:
@@ -89,9 +113,11 @@ func _delete_gate_instance(gate: Gate): # Delete gate instance
 	gate.queue_free()
 
 func _clear_selection():
-	if selected_gate_instance != null:
-		selected_gate_instance.set_selected(false)
-		selected_gate_instance = null
+	for gate in selected_gates:
+		gate.set_selected(false)
+	selected_gates.clear()
+	_update_create_component_button()
+	
 	if selected_wire_instance != null:
 		selected_wire_instance.set_selected(false)
 		selected_wire_instance = null
@@ -216,20 +242,17 @@ func _unhandled_input(event): # Handle inputs
 func _handle_click(): # Handle click
 	if current_mode == Mode.PLACE: instantiate_gate()
 	elif current_mode == Mode.SELECT:
-		if selected_gate_instance != null:
-			selected_gate_instance.set_selected(false)
-			selected_gate_instance = null
+		if not Input.is_key_pressed(KEY_SHIFT): _clear_selection()
 func _handle_click_release(): # Handle click release
 	is_dragging = false
 func _handle_delete(): # Handle delete
 	if current_mode == Mode.SELECT: 
-		if selected_gate_instance != null: 
-			_delete_gate_instance(selected_gate_instance)
-			selected_gate_instance = null
+		for gate in selected_gates.duplicate(): _delete_gate_instance(gate)
+		selected_gates.clear()
 		if selected_wire_instance != null: _delete_wire_instance()
 func _handle_stop(): # Handle stop
 	if current_mode == Mode.WIRE: _cancel_wire_creation()
-	elif current_mode == Mode.SELECT: selected_gate_instance = null
+	elif current_mode == Mode.SELECT: _clear_selection()
 
 # Enter mode
 func _enter_select():
@@ -357,3 +380,73 @@ func _on_load_button_pressed():
 	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
 	_load_circuit(circuit_name)
 	print("Circuit loaded: " + circuit_name)
+
+
+func _on_create_component_button_pressed():
+	if selected_gates.size() < 2: return
+	var pin_data = _detect_external_pins(selected_gates)
+	
+	# Debug print to verify detection
+	print("External Inputs: ", pin_data["inputs"].size())
+	for input in pin_data["inputs"]:
+		print("  - ", input["initial_name"])
+	
+	print("External Outputs: ", pin_data["outputs"].size())
+	for output in pin_data["outputs"]:
+		print("  - ", output["initial_name"])
+
+func _update_create_component_button():
+	if create_component_button:
+		create_component_button.disabled = selected_gates.size() < 2
+
+func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
+	var external_inputs: Array = []  # Array of {gate: Gate, pin_index: int, pin: Pin}
+	var external_outputs: Array = []  # Array of {gate: Gate, pin_index: int, pin: Pin}
+
+	for gate in selected_gate_list:
+		var input_index = 0
+		for child in gate.get_children():
+			if child is Pin and child.pin_type == Pin.PinType.INPUT:
+				var is_external = false
+				
+				if child.connected_wires.size() == 0: is_external = true
+				else:
+					for wire in child.connected_wires:
+						if wire.from_pin and wire.from_pin.parent_gate not in selected_gate_list:
+							is_external = true
+							break
+				
+				if is_external:
+					external_inputs.append({
+						"gate": gate,
+						"pin_index": input_index,
+						"pin": child,
+						"initial_name": gate.type + "_In" + str(input_index)
+					})
+				input_index += 1
+
+		var output_index = 0
+		for child in gate.get_children():
+			if child is Pin and child.pin_type == Pin.PinType.OUTPUT:
+				var is_external = false
+
+				if child.connected_wires.size() == 0: is_external = true
+				else:
+					for wire in child.connected_wires:
+						if wire.to_pin and wire.to_pin.parent_gate not in selected_gate_list:
+							is_external = true
+							break
+				
+				if is_external:
+					external_outputs.append({
+						"gate": gate,
+						"pin_index": output_index,
+						"pin": child,
+						"initial_name": gate.type + "_Out" + str(output_index)
+					})
+				output_index += 1
+
+	return {
+		"inputs": external_inputs,
+		"outputs": external_outputs
+	}

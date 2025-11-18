@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=53 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
@@ -50,6 +50,27 @@ texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_eb6dy"]
+texture = ExtResource("4_o6xl0")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cjqg0"]
+texture = ExtResource("2_tbgi4")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vchkt"]
+texture = ExtResource("3_tefeu")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_txyw0"]
 texture = ExtResource("4_o6xl0")
 texture_margin_left = 4.0
 texture_margin_top = 4.0
@@ -273,6 +294,16 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85g3d"]
+bg_color = Color(0, 0, 0, 0.7)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vc5cj"]
+texture = ExtResource("2_tbgi4")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
 
@@ -386,6 +417,14 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Simulate"
+
+[node name="CreateComponentButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_cjqg0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vchkt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_txyw0")
+disabled = true
+text = "Create Component"
 
 [node name="Current_Mode" type="Label" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
 layout_mode = 2
@@ -505,9 +544,81 @@ text = "Load"
 layout_mode = 2
 placeholder_text = "circuit_name"
 
+[node name="ComponentDialogBackdrop" type="Panel" parent="UICanvas/UIControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_85g3d")
+
+[node name="ComponentDialog" type="PanelContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop"]
+custom_minimum_size = Vector2(400, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_vc5cj")
+
+[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Create Component"
+horizontal_alignment = 1
+
+[node name="ComponentName" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+text = "Component Name :"
+
+[node name="ComponentNameInput" type="LineEdit" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+placeholder_text = "MyComponent"
+
+[node name="ExternalInputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+text = "External Inputs :"
+
+[node name="InputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+
+[node name="InputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/InputsList"]
+layout_mode = 2
+
+[node name="ExternalOutputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+text = "External Outputs :"
+
+[node name="OutputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+
+[node name="OutputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/OutputsList"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="CreateButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+layout_mode = 2
+text = "Create"
+
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Select" to="." method="select_select"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Wire" to="." method="select_wire"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Simulate" to="." method="select_simulate"]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton" to="." method="_on_create_component_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/ANDButton" to="." method="select_place" binds= ["AND"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/NANDButton" to="." method="select_place" binds= ["NAND"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/NORButton" to="." method="select_place" binds= ["NOR"]]
