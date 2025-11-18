@@ -41,3 +41,6 @@ func stop_clock():
 func update_visual():
 	if output_value: color_rect.modulate = on_color
 	else: color_rect.modulate = color
+
+func get_default_output_name(index: int) -> String:
+	return "CLK"

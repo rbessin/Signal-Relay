@@ -21,3 +21,6 @@ func update_visual():
 	else:
 		color_rect.modulate = Color('#5C1F1A')
 		label.text = "False"
+
+func get_default_input_name(_index: int) -> String:
+	return "In_0"

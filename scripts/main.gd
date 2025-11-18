@@ -210,6 +210,8 @@ func _unhandled_input(event): # Handle inputs
 	elif event.is_action_pressed("Stop"): _handle_stop()
 	elif event.is_action_pressed("Save_Circuit"): _handle_save()
 	elif event.is_action_pressed("Load_Circuit"): _handle_load()
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_X: get_tree().quit()
 
 func _handle_click(): # Handle click
 	if current_mode == Mode.PLACE: instantiate_gate()

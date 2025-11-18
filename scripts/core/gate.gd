@@ -203,8 +203,8 @@ func create_pins(): # Create pins
 			var pin = Pin.new()
 			pin.pin_type = Pin.PinType.INPUT
 			pin.parent_gate = self
+			pin.pin_name = get_default_input_name(i)
 			var x_pos = -size.x / 2
-			# Start from top border, add padding, then position each pin
 			var y_pos = -size.y / 2 + border_thickness_val + top_padding + (pin_size / 2.0) + i * (pin_size + pin_spacing)
 			pin.position = Vector2(x_pos, y_pos)
 			add_child(pin)
@@ -221,8 +221,8 @@ func create_pins(): # Create pins
 			var pin = Pin.new()
 			pin.pin_type = Pin.PinType.OUTPUT
 			pin.parent_gate = self
+			pin.pin_name = get_default_output_name(i)
 			var x_pos = size.x / 2
-			# Start from top border, add padding, then position each pin
 			var y_pos = -size.y / 2 + border_thickness_val + top_padding + (pin_size / 2.0) + i * (pin_size + pin_spacing)
 			pin.position = Vector2(x_pos, y_pos)
 			add_child(pin)
@@ -242,3 +242,9 @@ func get_pin_index(pin: Pin) -> int: # Get pin index with instance (saving)
 			if child == pin: return counter
 			counter += 1
 	return -1
+
+func get_default_input_name(index: int) -> String:
+	return "In_" + str(index)
+
+func get_default_output_name(index: int) -> String:
+	return "Out_" + str(index)
