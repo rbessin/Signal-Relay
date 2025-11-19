@@ -35,7 +35,6 @@ var drag_offset: Vector2
 var selected_gates: Array[Gate] = []
 var drag_offsets: Dictionary = {}
 var selected_wire_instance: Wire = null
-@onready var create_component_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton')
 
 # WIRE mode
 var is_creating_wire: bool = false
@@ -50,9 +49,31 @@ var gates: Array[Gate] = []
 var wires: Array[Wire] = []
 @onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
 
+# Component Creation
+@onready var component_dialog_backdrop: Panel = get_node('UICanvas/UIControl/ComponentDialogBackdrop')
+@onready var component_name_input: LineEdit = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/ComponentNameInput')
+@onready var inputs_container: VBoxContainer = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/InputsList/InputsContainer')
+@onready var outputs_container: VBoxContainer = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/OutputsList/OutputsContainer')
+@onready var create_button: Button = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CreateButton')
+@onready var cancel_button: Button = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CancelButton')
+@onready var create_component_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton')
+@onready var components_content: VBoxContainer = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent')
+@onready var browse_components_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton')
+var current_component_pin_data: Dictionary = {}
+
+# Components Accessing
+@onready var browse_backdrop: Panel = get_node('UICanvas/UIControl/BrowseComponentsBackdrop')
+@onready var browse_components_container: VBoxContainer = get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/ComponentsList/ComponentsContainer')
+@onready var browse_close_button: Button = get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/CloseButton')
+@onready var rename_backdrop: Panel = get_node('UICanvas/UIControl/RenameComponentBackdrop')
+@onready var rename_input: LineEdit = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/RenameInput')
+@onready var rename_confirm_button: Button = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameConfirmButton')
+@onready var rename_cancel_button: Button = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameCancelButton')
+var component_being_renamed: String = ""
+
 # Default functions which run on instantiation and every frame
 func _ready():
-	pass
+	_populate_components_section()
 func _process(delta):
 	_drag()
 	_position_wire_preview()
@@ -125,7 +146,21 @@ func _clear_selection():
 # PLACE helpers
 func instantiate_gate(): # Create gate instance
 	if gate_type_to_place == "": return
-	_create_gate(gate_type_to_place, get_global_mouse_position())
+	
+	# Check if it's a custom component
+	var component_file = "user://components/" + gate_type_to_place + ".json"
+	if FileAccess.file_exists(component_file):
+		# Create custom component
+		var new_component = CustomComponent.new()
+		new_component.component_definition_name = gate_type_to_place
+		new_component.global_position = get_global_mouse_position()
+		add_child(new_component)
+		new_component.gate_clicked.connect(_select_gate_instance)
+		call_deferred("_connect_gate_pins", new_component)
+		gates.append(new_component)
+	else:
+		# Create regular gate
+		_create_gate(gate_type_to_place, get_global_mouse_position())
 
 func _create_gate(gate_type: String, pos: Vector2, uid: int = -1) -> Gate:
 	if gate_type not in gate_prefabs: return null
@@ -258,9 +293,13 @@ func _handle_stop(): # Handle stop
 func _enter_select():
 	pass
 func _enter_place(gate_name: String = ""):
-	if gate_name != "" and gate_name in gate_prefabs:
-		gate_to_place = gate_prefabs[gate_name]
-		gate_type_to_place = gate_name
+	if gate_name != "":
+		if gate_name in gate_prefabs: # Base gate
+			gate_to_place = gate_prefabs[gate_name]
+			gate_type_to_place = gate_name
+		else: # Assume it's a custom component
+			gate_to_place = null  # We'll handle this differently
+			gate_type_to_place = gate_name
 func _enter_wire():
 	pass
 func _enter_simulate():
@@ -268,6 +307,9 @@ func _enter_simulate():
 	for gate in gates: # Initialize all gates and connected wires
 		gate.write_output_to_pin()
 		gate.propagate_to_wires()
+	for gate in gates:
+		if gate is CustomComponent:
+			gate._initialize_internal_circuit()
 	for gate in gates:
 		if gate.type == "CLOCK": gate.start_clock()
 
@@ -381,19 +423,11 @@ func _on_load_button_pressed():
 	_load_circuit(circuit_name)
 	print("Circuit loaded: " + circuit_name)
 
-
+# Component Creation Functions
 func _on_create_component_button_pressed():
 	if selected_gates.size() < 2: return
 	var pin_data = _detect_external_pins(selected_gates)
-	
-	# Debug print to verify detection
-	print("External Inputs: ", pin_data["inputs"].size())
-	for input in pin_data["inputs"]:
-		print("  - ", input["initial_name"])
-	
-	print("External Outputs: ", pin_data["outputs"].size())
-	for output in pin_data["outputs"]:
-		print("  - ", output["initial_name"])
+	_show_component_dialog(pin_data)
 
 func _update_create_component_button():
 	if create_component_button:
@@ -450,3 +484,293 @@ func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 		"inputs": external_inputs,
 		"outputs": external_outputs
 	}
+
+func _show_component_dialog(pin_data: Dictionary):
+	current_component_pin_data = pin_data
+
+	for child in inputs_container.get_children():
+		child.queue_free()
+	for child in outputs_container.get_children():
+		child.queue_free()
+	
+	component_name_input.text = "MyComponent"
+
+	for input in pin_data["inputs"]:
+		var pin_entry = HBoxContainer.new()
+
+		var label = Label.new()
+		label.text = input["initial_name"] + ":"
+		label.custom_minimum_size = Vector2(150, 0)
+		pin_entry.add_child(label)
+
+		var name_edit = LineEdit.new()
+		name_edit.text = input["initial_name"]
+		name_edit.custom_minimum_size = Vector2(150, 0)
+		pin_entry.add_child(name_edit)
+
+		inputs_container.add_child(pin_entry)
+		input["name_edit"] = name_edit
+
+	for output in pin_data["outputs"]:
+		var pin_entry = HBoxContainer.new()
+
+		var label = Label.new()
+		label.text = output["initial_name"] + ":"
+		label.custom_minimum_size = Vector2(150, 0)
+		pin_entry.add_child(label)
+
+		var name_edit = LineEdit.new()
+		name_edit.text = output["initial_name"]
+		name_edit.custom_minimum_size = Vector2(150, 0)
+		pin_entry.add_child(name_edit)
+
+		outputs_container.add_child(pin_entry)
+		output["name_edit"] = name_edit
+
+	component_dialog_backdrop.visible = true
+
+func _on_cancel_button_pressed():
+	component_dialog_backdrop.visible = false
+	current_component_pin_data = {}
+
+func _on_create_button_pressed():
+	var component_name = component_name_input.text.strip_edges()
+	
+	if component_name == "":
+		print("Error: Component name cannot be empty")
+		return
+	
+	# Collect renamed pins from the LineEdits
+	for input in current_component_pin_data["inputs"]:
+		input["final_name"] = input["name_edit"].text.strip_edges()
+		if input["final_name"] == "":
+			input["final_name"] = input["initial_name"]
+	
+	for output in current_component_pin_data["outputs"]:
+		output["final_name"] = output["name_edit"].text.strip_edges()
+		if output["final_name"] == "":
+			output["final_name"] = output["initial_name"]
+	
+	# Save the component definition
+	ComponentSerializer.save_component(component_name, selected_gates, wires, current_component_pin_data)
+	
+	print("Component created successfully!")
+	
+	# Calculate center position of selected gates
+	var center_pos = Vector2.ZERO
+	for gate in selected_gates:
+		center_pos += gate.global_position
+	center_pos /= selected_gates.size()
+	
+	# Delete selected gates (and their wires)
+	for gate in selected_gates.duplicate():
+		_delete_gate_instance(gate)
+	selected_gates.clear()
+	
+	# Create an instance of the new component at the center position
+	var new_component = CustomComponent.new()
+	new_component.component_definition_name = component_name
+	new_component.global_position = center_pos
+	add_child(new_component)
+	new_component.gate_clicked.connect(_select_gate_instance)
+	call_deferred("_connect_gate_pins", new_component)
+	gates.append(new_component)
+
+	# Refresh the components list
+	_populate_components_section()
+	
+	# Close dialog
+	component_dialog_backdrop.visible = false
+	current_component_pin_data = {}
+
+func _on_browse_components_button_pressed():
+	_show_browse_dialog()
+
+# Scan components folder and return list of component names
+func _get_available_components() -> Array[String]:
+	var component_names: Array[String] = []
+	var dir = DirAccess.open("user://components/")
+	
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".json"):
+				# Remove .json extension to get component name
+				var component_name = file_name.replace(".json", "")
+				component_names.append(component_name)
+			file_name = dir.get_next()
+	else:
+		print("Components directory doesn't exist yet")
+	
+	return component_names
+
+# Populate the Components section with buttons
+func _populate_components_section():
+	# Clear existing component buttons (keep Browse All button)
+	for child in components_content.get_children():
+		if child != browse_components_button:
+			child.queue_free()
+	
+	# Get available components
+	var components = _get_available_components()
+	
+	# Create a button for each component
+	for component_name in components:
+		var button = Button.new()
+		button.text = component_name
+		
+		# Style the button (copy styling from other gate buttons)
+		# You can apply your NinePatch styling here
+		
+		# Connect to placement function
+		button.pressed.connect(_on_component_button_pressed.bind(component_name))
+		
+		# Add before the Browse All button
+		components_content.add_child(button)
+		components_content.move_child(button, components_content.get_child_count() - 2)
+	
+	print("Loaded ", components.size(), " components")
+
+# Handle component button press
+func _on_component_button_pressed(component_name: String):
+	_set_mode(Mode.PLACE, component_name)
+
+# Show the browse components dialog
+func _show_browse_dialog():
+	_populate_browse_dialog()
+	browse_backdrop.visible = true
+
+# Populate the browse dialog with all components
+func _populate_browse_dialog():
+	# Clear existing entries
+	for child in browse_components_container.get_children():
+		child.queue_free()
+	
+	# Get available components
+	var components = _get_available_components()
+	
+	if components.size() == 0:
+		var label = Label.new()
+		label.text = "No components yet. Create one!"
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		browse_components_container.add_child(label)
+		return
+	
+	# Create an entry for each component
+	for component_name in components:
+		var entry = HBoxContainer.new()
+		entry.add_theme_constant_override("separation", 8)
+		
+		# Component name label
+		var name_label = Label.new()
+		name_label.text = component_name
+		name_label.custom_minimum_size = Vector2(150, 0)
+		entry.add_child(name_label)
+		
+		# Place button
+		var place_btn = Button.new()
+		place_btn.text = "Place"
+		place_btn.custom_minimum_size = Vector2(60, 0)
+		place_btn.pressed.connect(_on_browse_place_pressed.bind(component_name))
+		entry.add_child(place_btn)
+		
+		# Preview button (disabled for now)
+		var preview_btn = Button.new()
+		preview_btn.text = "Preview"
+		preview_btn.custom_minimum_size = Vector2(70, 0)
+		preview_btn.disabled = true  # Will enable when we implement viewing
+		entry.add_child(preview_btn)
+		
+		# Delete button
+		var delete_btn = Button.new()
+		delete_btn.text = "Delete"
+		delete_btn.custom_minimum_size = Vector2(60, 0)
+		delete_btn.pressed.connect(_on_browse_delete_pressed.bind(component_name))
+		entry.add_child(delete_btn)
+		
+		# Rename button
+		var rename_btn = Button.new()
+		rename_btn.text = "Rename"
+		rename_btn.custom_minimum_size = Vector2(70, 0)
+		rename_btn.pressed.connect(_on_browse_rename_pressed.bind(component_name))
+		entry.add_child(rename_btn)
+		
+		browse_components_container.add_child(entry)
+
+# Handle Place button in browse dialog
+func _on_browse_place_pressed(component_name: String):
+	browse_backdrop.visible = false
+	_set_mode(Mode.PLACE, component_name)
+
+# Handle Delete button in browse dialog
+func _on_browse_delete_pressed(component_name: String):
+	var file_path = "user://components/" + component_name + ".json"
+	if FileAccess.file_exists(file_path):
+		DirAccess.remove_absolute(file_path)
+
+		_populate_browse_dialog()
+		_populate_components_section()
+	else: print("Error: Component file not found")
+
+# Handle Rename button in browse dialog
+func _on_browse_rename_pressed(component_name: String):
+	_show_rename_dialog(component_name)
+
+func _on_browse_close_button_pressed():
+	browse_backdrop.visible = false
+
+# Show rename dialog
+func _show_rename_dialog(component_name: String):
+	component_being_renamed = component_name
+	rename_input.text = component_name
+	rename_backdrop.visible = true
+	rename_input.grab_focus()
+	rename_input.select_all()
+
+# Confirm rename
+func _on_rename_confirm_button_pressed():
+	var new_name = rename_input.text.strip_edges()
+	
+	if new_name == "":
+		print("Error: Component name cannot be empty")
+		return
+	
+	if new_name == component_being_renamed:
+		print("Name unchanged")
+		rename_backdrop.visible = false
+		return
+	
+	# Check if new name already exists
+	if FileAccess.file_exists("user://components/" + new_name + ".json"):
+		print("Error: Component with that name already exists")
+		return
+	
+	# Rename the file
+	var old_path = "user://components/" + component_being_renamed + ".json"
+	var new_path = "user://components/" + new_name + ".json"
+	
+	# Load the component data
+	var component_data = ComponentSerializer.load_component(component_being_renamed)
+	if component_data.is_empty():
+		print("Error: Could not load component to rename")
+		return
+
+	component_data["name"] = new_name
+	
+	# Save with new name
+	var file = FileAccess.open(new_path, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(component_data, "\t"))
+		file.close()
+		DirAccess.remove_absolute(old_path)
+		
+		# Refresh UI
+		_populate_browse_dialog()
+		_populate_components_section()
+		
+		rename_backdrop.visible = false
+	else: print("Error: Could not save renamed component")
+
+func _on_rename_cancel_button_pressed(): # Cancel rename
+	rename_backdrop.visible = false

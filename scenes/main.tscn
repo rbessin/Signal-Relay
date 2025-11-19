@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=59 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
@@ -294,6 +294,27 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nvyfr"]
+texture = ExtResource("2_tbgi4")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty1g6"]
+texture = ExtResource("3_tefeu")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j2jfr"]
+texture = ExtResource("4_o6xl0")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85g3d"]
 bg_color = Color(0, 0, 0, 0.7)
 
@@ -303,6 +324,19 @@ texture_margin_left = 4.0
 texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_choun"]
+bg_color = Color(0, 0, 0, 0.7)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bjg73"]
+texture = ExtResource("2_tbgi4")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ya4ey"]
+bg_color = Color(0, 0, 0, 0.7019608)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
@@ -514,6 +548,27 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_5poiv")
 theme_override_styles/hover = SubResource("StyleBoxTexture_2cjbq")
 text = "D_FLIPFLOP"
 
+[node name="ComponentsSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
+layout_mode = 2
+script = ExtResource("8_tipki")
+
+[node name="ComponentsHeader" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+text = "▼ Components"
+flat = true
+
+[node name="ComponentsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BrowseComponentsButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_nvyfr")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ty1g6")
+theme_override_styles/hover = SubResource("StyleBoxTexture_j2jfr")
+text = "Browse All..."
+
 [node name="SimulationSection2" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
 script = ExtResource("8_tipki")
@@ -592,7 +647,9 @@ layout_mode = 2
 text = "External Inputs :"
 
 [node name="InputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="InputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/InputsList"]
 layout_mode = 2
@@ -602,7 +659,9 @@ layout_mode = 2
 text = "External Outputs :"
 
 [node name="OutputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="OutputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/OutputsList"]
 layout_mode = 2
@@ -614,6 +673,97 @@ text = "Cancel"
 [node name="CreateButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
 layout_mode = 2
 text = "Create"
+
+[node name="BrowseComponentsBackdrop" type="Panel" parent="UICanvas/UIControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_choun")
+
+[node name="BrowseDialog" type="PanelContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop"]
+custom_minimum_size = Vector2(500, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bjg73")
+
+[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+layout_mode = 2
+text = "Components Library"
+horizontal_alignment = 1
+
+[node name="ComponentsList" type="ScrollContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+
+[node name="ComponentsContainer" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/ComponentsList"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+layout_mode = 2
+text = "Close"
+
+[node name="RenameComponentBackdrop" type="Panel" parent="UICanvas/UIControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ya4ey")
+
+[node name="RenameDialog" type="PanelContainer" parent="UICanvas/UIControl/RenameComponentBackdrop"]
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
+layout_mode = 2
+text = "Rename Component :"
+
+[node name="RenameInput" type="LineEdit" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
+layout_mode = 2
+
+[node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Confirm"
 
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Select" to="." method="select_select"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Wire" to="." method="select_wire"]
@@ -629,6 +779,12 @@ text = "Create"
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/CLOCKButton" to="." method="select_place" binds= ["CLOCK"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/D_FLIPFLOPButton" to="." method="select_place" binds= ["D_FLIPFLOP"]]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton" to="." method="_on_browse_components_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/Clear Scene" to="." method="_empty_circuit"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/Save" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/Load" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/CloseButton" to="." method="_on_browse_close_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameCancelButton" to="." method="_on_rename_cancel_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameConfirmButton" to="." method="_on_rename_confirm_button_pressed"]
