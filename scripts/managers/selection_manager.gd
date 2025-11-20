@@ -62,7 +62,6 @@ func clear_selection(): # Clear selection of gates and wire
 		selected_wire_instance = null
 
 func update_create_component_button(): # Disable button if there are less than two selected gates
-	if main.create_component_button:
-		main.create_component_button.disabled = selected_gates.size() < 2
+	main.component_creation_manager.update_create_component_button()
 
 func stop_dragging(): is_dragging = false # Update dragging variables

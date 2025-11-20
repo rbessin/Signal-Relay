@@ -24,16 +24,8 @@ var current_mode: Mode = Mode.SELECT
 @onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
 
 # Component Creation
-@onready var component_dialog_backdrop: Panel = get_node('UICanvas/UIControl/ComponentDialogBackdrop')
-@onready var component_name_input: LineEdit = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/ComponentNameInput')
-@onready var inputs_container: VBoxContainer = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/InputsList/InputsContainer')
-@onready var outputs_container: VBoxContainer = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/OutputsList/OutputsContainer')
-@onready var create_button: Button = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CreateButton')
-@onready var cancel_button: Button = get_node('UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CancelButton')
-@onready var create_component_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton')
 @onready var components_content: VBoxContainer = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent')
 @onready var browse_components_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton')
-var current_component_pin_data: Dictionary = {}
 
 # Components Accessing
 @onready var browse_backdrop: Panel = get_node('UICanvas/UIControl/BrowseComponentsBackdrop')
@@ -61,6 +53,8 @@ func _initialize_managers():
 	component_creation_manager = ComponentCreationManager.new(self)
 	component_library_manager = ComponentLibraryManager.new(self)
 	circuit_persistence_manager = CircuitPersistenceManager.new(self)
+
+	component_creation_manager.setup_ui_references()
 
 	print("All managers initialized.")
 
@@ -276,162 +270,22 @@ func _on_load_button_pressed():
 
 # Component Creation Functions
 func _on_create_component_button_pressed():
-	if selection_manager.selected_gates.size() < 2: return
-	var pin_data = _detect_external_pins(selection_manager.selected_gates)
-	_show_component_dialog(pin_data)
+	component_creation_manager.on_create_component_button_pressed()
 
 func _update_create_component_button():
-	selection_manager.update_create_component_button()
+	component_creation_manager.update_create_component_button()
 
 func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
-	var external_inputs: Array = []  # Array of {gate: Gate, pin_index: int, pin: Pin}
-	var external_outputs: Array = []  # Array of {gate: Gate, pin_index: int, pin: Pin}
-
-	for gate in selected_gate_list:
-		var input_index = 0
-		for child in gate.get_children():
-			if child is Pin and child.pin_type == Pin.PinType.INPUT:
-				var is_external = false
-				
-				if child.connected_wires.size() == 0: is_external = true
-				else:
-					for wire in child.connected_wires:
-						if wire.from_pin and wire.from_pin.parent_gate not in selected_gate_list:
-							is_external = true
-							break
-				
-				if is_external:
-					external_inputs.append({
-						"gate": gate,
-						"pin_index": input_index,
-						"pin": child,
-						"initial_name": gate.type + "_In" + str(input_index)
-					})
-				input_index += 1
-
-		var output_index = 0
-		for child in gate.get_children():
-			if child is Pin and child.pin_type == Pin.PinType.OUTPUT:
-				var is_external = false
-
-				if child.connected_wires.size() == 0: is_external = true
-				else:
-					for wire in child.connected_wires:
-						if wire.to_pin and wire.to_pin.parent_gate not in selected_gate_list:
-							is_external = true
-							break
-				
-				if is_external:
-					external_outputs.append({
-						"gate": gate,
-						"pin_index": output_index,
-						"pin": child,
-						"initial_name": gate.type + "_Out" + str(output_index)
-					})
-				output_index += 1
-
-	return {
-		"inputs": external_inputs,
-		"outputs": external_outputs
-	}
+	return component_creation_manager.detect_external_pins(selected_gate_list)
 
 func _show_component_dialog(pin_data: Dictionary):
-	current_component_pin_data = pin_data
-
-	for child in inputs_container.get_children():
-		child.queue_free()
-	for child in outputs_container.get_children():
-		child.queue_free()
-	
-	component_name_input.text = "MyComponent"
-
-	for input in pin_data["inputs"]:
-		var pin_entry = HBoxContainer.new()
-
-		var label = Label.new()
-		label.text = input["initial_name"] + ":"
-		label.custom_minimum_size = Vector2(150, 0)
-		pin_entry.add_child(label)
-
-		var name_edit = LineEdit.new()
-		name_edit.text = input["initial_name"]
-		name_edit.custom_minimum_size = Vector2(150, 0)
-		pin_entry.add_child(name_edit)
-
-		inputs_container.add_child(pin_entry)
-		input["name_edit"] = name_edit
-
-	for output in pin_data["outputs"]:
-		var pin_entry = HBoxContainer.new()
-
-		var label = Label.new()
-		label.text = output["initial_name"] + ":"
-		label.custom_minimum_size = Vector2(150, 0)
-		pin_entry.add_child(label)
-
-		var name_edit = LineEdit.new()
-		name_edit.text = output["initial_name"]
-		name_edit.custom_minimum_size = Vector2(150, 0)
-		pin_entry.add_child(name_edit)
-
-		outputs_container.add_child(pin_entry)
-		output["name_edit"] = name_edit
-
-	component_dialog_backdrop.visible = true
+	component_creation_manager.show_component_dialog(pin_data)
 
 func _on_cancel_button_pressed():
-	component_dialog_backdrop.visible = false
-	current_component_pin_data = {}
+	component_creation_manager.on_cancel_button_pressed()
 
 func _on_create_button_pressed():
-	var component_name = component_name_input.text.strip_edges()
-	
-	if component_name == "":
-		print("Error: Component name cannot be empty")
-		return
-	
-	# Collect renamed pins from the LineEdits
-	for input in current_component_pin_data["inputs"]:
-		input["final_name"] = input["name_edit"].text.strip_edges()
-		if input["final_name"] == "":
-			input["final_name"] = input["initial_name"]
-	
-	for output in current_component_pin_data["outputs"]:
-		output["final_name"] = output["name_edit"].text.strip_edges()
-		if output["final_name"] == "":
-			output["final_name"] = output["initial_name"]
-	
-	# Save the component definition
-	ComponentSerializer.save_component(component_name, selection_manager.selected_gates, wire_manager.wires, current_component_pin_data)
-	
-	print("Component created successfully!")
-	
-	# Calculate center position of selected gates
-	var center_pos = Vector2.ZERO
-	for gate in selection_manager.selected_gates:
-		center_pos += gate.global_position
-	center_pos /= selection_manager.selected_gates.size()
-	
-	# Delete selected gates (and their wires)
-	for gate in selection_manager.selected_gates.duplicate():
-		_delete_gate_instance(gate)
-	selection_manager.selected_gates.clear()
-	
-	# Create an instance of the new component at the center position
-	var new_component = CustomComponent.new()
-	new_component.component_definition_name = component_name
-	new_component.global_position = center_pos
-	add_child(new_component)
-	new_component.gate_clicked.connect(_select_gate_instance)
-	call_deferred("_connect_gate_pins", new_component)
-	gate_manager.gates.append(new_component)
-
-	# Refresh the components list
-	_populate_components_section()
-	
-	# Close dialog
-	component_dialog_backdrop.visible = false
-	current_component_pin_data = {}
+	component_creation_manager.on_create_button_pressed()
 
 func _on_browse_components_button_pressed():
 	_show_browse_dialog()
