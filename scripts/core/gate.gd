@@ -2,7 +2,7 @@ class_name Gate
 extends Node2D
 
 # Identity parameters (uid, type, selected)
-@export var uid: int
+@export var uid: String = ""
 @export var type: String = "BASE"
 @export var selected: bool = false
 

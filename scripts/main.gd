@@ -1,5 +1,13 @@
 extends Node2D
 
+# Managers
+var selection_manager: SelectionManager
+var gate_manager: GateManager
+var wire_manager: WireManager
+var component_creation_manager: ComponentCreationManager
+var component_library_manager: ComponentLibraryManager
+var circuit_persistence_manager: CircuitPersistenceManager
+
 # General configurations (camera)
 @onready var camera: Camera2D = get_node("Camera2D")
 @onready var pan_speed: int = 300
@@ -12,41 +20,7 @@ enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
 @onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Current_Mode')
 
-# PLACE mode
-var gate_prefabs: Dictionary = {
-	"AND": preload("res://scenes/gates/and_gate.tscn"),
-	"NAND": preload("res://scenes/gates/nand_gate.tscn"),
-	"OR": preload("res://scenes/gates/or_gate.tscn"),
-	"NOR": preload("res://scenes/gates/nor_gate.tscn"),
-	"NOT": preload("res://scenes/gates/not_gate.tscn"),
-	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
-	"INPUT": preload("res://scenes/complex/input.tscn"),
-	"OUTPUT": preload("res://scenes/complex/output_display.tscn"),
-	"CLOCK": preload("res://scenes/complex/clock.tscn"),
-	"D_FLIPFLOP": preload("res://scenes/complex/d_flipflop.tscn"),
-}
-var gate_to_place: PackedScene = null # Which gate type to place
-var gate_type_to_place: String = ""
-var current_uid: int = 0
-
-# SELECT mode
-var is_dragging: bool = false
-var drag_offset: Vector2
-var selected_gates: Array[Gate] = []
-var drag_offsets: Dictionary = {}
-var selected_wire_instance: Wire = null
-
-# WIRE mode
-var is_creating_wire: bool = false
-var wire_start_pin: Pin = null
-var wire_preview: Wire = null
-
-## SIMULATE mode
-### Nothing to show for now.
-
 ## Loading & Saving
-var gates: Array[Gate] = []
-var wires: Array[Wire] = []
 @onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
 
 # Component Creation
@@ -73,112 +47,42 @@ var component_being_renamed: String = ""
 
 # Default functions which run on instantiation and every frame
 func _ready():
+	_initialize_managers()
 	_populate_components_section()
 func _process(delta):
-	_drag()
-	_position_wire_preview()
+	selection_manager.drag()
+	wire_manager.position_wire_preview()
 	_move_camera(delta)
 
-# SELECT helpers
-func _drag(): # Drag all selected gates together
-	if is_dragging and selected_gates.size() > 0:
-		var mouse_pos = get_global_mouse_position()
-		for gate in selected_gates:
-			if gate in drag_offsets:
-				gate.global_position = mouse_pos + drag_offsets[gate]
+func _initialize_managers():
+	selection_manager = SelectionManager.new(self)
+	gate_manager = GateManager.new(self)
+	wire_manager = WireManager.new(self)
+	component_creation_manager = ComponentCreationManager.new(self)
+	component_library_manager = ComponentLibraryManager.new(self)
+	circuit_persistence_manager = CircuitPersistenceManager.new(self)
 
+	print("All managers initialized.")
+
+# SELECT helpers
 func _select_gate_instance(gate_instance: Gate): # Select gate instance
-	if current_mode == Mode.SIMULATE:
-		if gate_instance.type == "INPUT": gate_instance.toggle()
-		return
-	elif current_mode == Mode.SELECT:
-		# Check if Shift is held for multi-select
-		if Input.is_key_pressed(KEY_SHIFT):
-			# Toggle this gate in the selection
-			if gate_instance in selected_gates:
-				# Deselect it
-				gate_instance.set_selected(false)
-				selected_gates.erase(gate_instance)
-			else:
-				# Add to selection
-				gate_instance.set_selected(true)
-				selected_gates.append(gate_instance)
-		else:
-			# Single select - clear previous selections
-			_clear_selection()
-			gate_instance.set_selected(true)
-			selected_gates.append(gate_instance)
-		_update_create_component_button()
-		
-		# Start dragging - store offset for each selected gate
-		if selected_gates.size() > 0:
-			is_dragging = true
-			drag_offsets.clear()
-			var mouse_pos = get_global_mouse_position()
-			for gate in selected_gates:
-				drag_offsets[gate] = gate.global_position - mouse_pos
+	selection_manager.select_gate_instance(gate_instance)
 
 func _select_wire_instance(wire_instance: Wire):
-	if current_mode == Mode.SELECT:
-		_clear_selection()
-		
-		selected_wire_instance = wire_instance
-		wire_instance.set_selected(true)
+	selection_manager.select_wire_instance(wire_instance)
 
 func _delete_gate_instance(gate: Gate): # Delete gate instance
-	for child in gate.get_children():
-		if child is Pin:
-			for wire in child.connected_wires.duplicate():
-				_delete_wire(wire)
-	gates.erase(gate)
-	gate.queue_free()
+	gate_manager.delete_gate(gate)
 
 func _clear_selection():
-	for gate in selected_gates:
-		gate.set_selected(false)
-	selected_gates.clear()
-	_update_create_component_button()
-	
-	if selected_wire_instance != null:
-		selected_wire_instance.set_selected(false)
-		selected_wire_instance = null
+	selection_manager.clear_selection()
 
 # PLACE helpers
 func instantiate_gate(): # Create gate instance
-	if gate_type_to_place == "": return
-	
-	# Check if it's a custom component
-	var component_file = "user://components/" + gate_type_to_place + ".json"
-	if FileAccess.file_exists(component_file):
-		# Create custom component
-		var new_component = CustomComponent.new()
-		new_component.component_definition_name = gate_type_to_place
-		new_component.global_position = get_global_mouse_position()
-		add_child(new_component)
-		new_component.gate_clicked.connect(_select_gate_instance)
-		call_deferred("_connect_gate_pins", new_component)
-		gates.append(new_component)
-	else:
-		# Create regular gate
-		_create_gate(gate_type_to_place, get_global_mouse_position())
+	gate_manager.instantiate_gate()
 
-func _create_gate(gate_type: String, pos: Vector2, uid: int = -1) -> Gate:
-	if gate_type not in gate_prefabs: return null
-	
-	var new_gate = gate_prefabs[gate_type].instantiate()
-	add_child(new_gate)
-	
-	if uid == -1: new_gate.uid = _generate_uid()
-	else:
-		new_gate.uid = uid
-		current_uid = max(current_uid, uid)  # Keep UID counter in sync
-	
-	new_gate.name = new_gate.type + '_' + str(new_gate.uid)
-	new_gate.global_position = pos
-	new_gate.gate_clicked.connect(_select_gate_instance)
-	call_deferred("_connect_gate_pins", new_gate)
-	gates.append(new_gate)
-	return new_gate
+func _create_gate(gate_type: String, pos: Vector2, uid: String = "") -> Gate:
+	return gate_manager.create_gate(gate_type, pos, uid)
 
 func _connect_gate_pins(gate: Gate):
 	for child in gate.get_children():
@@ -187,7 +91,7 @@ func _connect_gate_pins(gate: Gate):
 
 func _on_pin_clicked(pin_instance: Pin): # Handle pin clicks
 	if current_mode == Mode.WIRE:
-		if not is_creating_wire:
+		if not wire_manager.is_creating_wire:
 			if pin_instance.pin_type == Pin.PinType.OUTPUT:
 				_start_wire_creation(pin_instance)
 		else:
@@ -195,71 +99,27 @@ func _on_pin_clicked(pin_instance: Pin): # Handle pin clicks
 				_complete_wire_creation(pin_instance)
 			else: _cancel_wire_creation()
 
-func _generate_uid(): # Create unique ID
-	current_uid += 1
-	return current_uid
-
 # WIRE helpers
 func _start_wire_creation(start_pin: Pin):
-	is_creating_wire = true
-	wire_start_pin = start_pin
-	wire_preview = Wire.new()
-	wire_preview.from_pin = wire_start_pin
-	wire_preview.is_preview = true
-	add_child(wire_preview)
+	wire_manager.start_wire_creation(start_pin)
 
 func _complete_wire_creation(end_pin: Pin):
-	if _is_duplicate_wire(wire_start_pin, end_pin):
-		_cancel_wire_creation()
-		return
-	if end_pin.parent_gate == wire_start_pin.parent_gate: 
-		_cancel_wire_creation()
-		return
-	if end_pin.connected_wires.size() > 0:
-		_cancel_wire_creation()
-		return
-
-	wire_preview.to_pin = end_pin
-	wire_preview.is_preview = false
-
-	wire_preview.wire_clicked.connect(_select_wire_instance)
-	wire_start_pin.connected_wires.append(wire_preview)
-	end_pin.connected_wires.append(wire_preview)
-
-	wires.append(wire_preview)
-
-	is_creating_wire = false
-	wire_start_pin = null
-	wire_preview = null
+	wire_manager.complete_wire_creation(end_pin)
 
 func _cancel_wire_creation():
-	if wire_preview != null:
-		wire_preview.queue_free()
-	is_creating_wire = false
-	wire_start_pin = null
-	wire_preview = null
+	wire_manager.cancel_wire_creation()
 
 func _delete_wire_instance():
-	_delete_wire(selected_wire_instance)
-	selected_wire_instance = null
+	wire_manager.delete_selected_wire()
 
 func _delete_wire(wire: Wire):
-	if wire.from_pin != null:
-		wire.from_pin.connected_wires.erase(wire)
-	if wire.to_pin != null:
-		wire.to_pin.connected_wires.erase(wire)
-	wires.erase(wire)
-	wire.queue_free()
+	wire_manager.delete_wire(wire)
 
 func _position_wire_preview():
-	if is_creating_wire and wire_preview != null:
-		wire_preview.preview_end_position = get_global_mouse_position()
+	wire_manager.position_wire_preview()
 
 func _is_duplicate_wire(from_pin: Pin, to_pin: Pin) -> bool:
-	for wire in from_pin.connected_wires:
-		if wire.from_pin == from_pin and wire.to_pin == to_pin:
-			return true
-	return false
+	return wire_manager.is_duplicate_wire(from_pin, to_pin)
 
 ## SIMULATE helpers
 
@@ -279,12 +139,12 @@ func _handle_click(): # Handle click
 	elif current_mode == Mode.SELECT:
 		if not Input.is_key_pressed(KEY_SHIFT): _clear_selection()
 func _handle_click_release(): # Handle click release
-	is_dragging = false
+	selection_manager.stop_dragging()
 func _handle_delete(): # Handle delete
 	if current_mode == Mode.SELECT: 
-		for gate in selected_gates.duplicate(): _delete_gate_instance(gate)
-		selected_gates.clear()
-		if selected_wire_instance != null: _delete_wire_instance()
+		for gate in selection_manager.selected_gates.duplicate(): _delete_gate_instance(gate)
+		selection_manager.selected_gates.clear()
+		if selection_manager.selected_wire_instance != null: _delete_wire_instance()
 func _handle_stop(): # Handle stop
 	if current_mode == Mode.WIRE: _cancel_wire_creation()
 	elif current_mode == Mode.SELECT: _clear_selection()
@@ -294,39 +154,30 @@ func _enter_select():
 	pass
 func _enter_place(gate_name: String = ""):
 	if gate_name != "":
-		if gate_name in gate_prefabs: # Base gate
-			gate_to_place = gate_prefabs[gate_name]
-			gate_type_to_place = gate_name
-		else: # Assume it's a custom component
-			gate_to_place = null  # We'll handle this differently
-			gate_type_to_place = gate_name
+		gate_manager.set_gate_to_place(gate_name)
 func _enter_wire():
 	pass
 func _enter_simulate():
 	await get_tree().process_frame
-	for gate in gates: # Initialize all gates and connected wires
+	for gate in gate_manager.gates: # Initialize all gates and connected wires
 		gate.write_output_to_pin()
 		gate.propagate_to_wires()
-	for gate in gates:
+	for gate in gate_manager.gates:
 		if gate is CustomComponent:
 			gate._initialize_internal_circuit()
-	for gate in gates:
+	for gate in gate_manager.gates:
 		if gate.type == "CLOCK": gate.start_clock()
 
 # Exit mode
 func _exit_select():
 	_clear_selection()
-	is_dragging = false
+	selection_manager.stop_dragging()
 func _exit_place():
-	gate_to_place = null
+	gate_manager.clear_gate_to_place()
 func _exit_wire():
-	if wire_preview != null:
-		wire_preview.queue_free()
-		wire_preview = null
-	is_creating_wire = false
-	wire_start_pin = null
+	wire_manager.clear_preview()
 func _exit_simulate():
-	for gate in gates:
+	for gate in gate_manager.gates:
 		if gate.type == "CLOCK": gate.stop_clock()
 
 # Set mode by exiting old mode and entering new mode
@@ -403,18 +254,18 @@ func _load_circuit(circuit_name):
 		new_wire.from_pin = source_pin
 		new_wire.to_pin = destination_pin
 		add_child(new_wire)
-		wires.append(new_wire)
+		wire_manager.wires.append(new_wire)
 
 		source_pin.connected_wires.append(new_wire)
 		destination_pin.connected_wires.append(new_wire)
 
 func _empty_circuit():
-	for child in gates.duplicate(): _delete_gate_instance(child)
+	for child in gate_manager.gates.duplicate(): _delete_gate_instance(child)
 
 func _on_save_button_pressed():
 	var circuit_name = file_name_input.text
 	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
-	CircuitSerializer.save_to_json(gates, wires, circuit_name)
+	CircuitSerializer.save_to_json(gate_manager.gates, wire_manager.wires, circuit_name)
 	print("Circuit saved as: " + circuit_name)
 
 func _on_load_button_pressed():
@@ -425,13 +276,12 @@ func _on_load_button_pressed():
 
 # Component Creation Functions
 func _on_create_component_button_pressed():
-	if selected_gates.size() < 2: return
-	var pin_data = _detect_external_pins(selected_gates)
+	if selection_manager.selected_gates.size() < 2: return
+	var pin_data = _detect_external_pins(selection_manager.selected_gates)
 	_show_component_dialog(pin_data)
 
 func _update_create_component_button():
-	if create_component_button:
-		create_component_button.disabled = selected_gates.size() < 2
+	selection_manager.update_create_component_button()
 
 func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 	var external_inputs: Array = []  # Array of {gate: Gate, pin_index: int, pin: Pin}
@@ -552,20 +402,20 @@ func _on_create_button_pressed():
 			output["final_name"] = output["initial_name"]
 	
 	# Save the component definition
-	ComponentSerializer.save_component(component_name, selected_gates, wires, current_component_pin_data)
+	ComponentSerializer.save_component(component_name, selection_manager.selected_gates, wire_manager.wires, current_component_pin_data)
 	
 	print("Component created successfully!")
 	
 	# Calculate center position of selected gates
 	var center_pos = Vector2.ZERO
-	for gate in selected_gates:
+	for gate in selection_manager.selected_gates:
 		center_pos += gate.global_position
-	center_pos /= selected_gates.size()
+	center_pos /= selection_manager.selected_gates.size()
 	
 	# Delete selected gates (and their wires)
-	for gate in selected_gates.duplicate():
+	for gate in selection_manager.selected_gates.duplicate():
 		_delete_gate_instance(gate)
-	selected_gates.clear()
+	selection_manager.selected_gates.clear()
 	
 	# Create an instance of the new component at the center position
 	var new_component = CustomComponent.new()
@@ -574,7 +424,7 @@ func _on_create_button_pressed():
 	add_child(new_component)
 	new_component.gate_clicked.connect(_select_gate_instance)
 	call_deferred("_connect_gate_pins", new_component)
-	gates.append(new_component)
+	gate_manager.gates.append(new_component)
 
 	# Refresh the components list
 	_populate_components_section()

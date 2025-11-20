@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=70 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://ngpypq3ap4kc" path="res://assets/art/gate_fill_64x64.png" id="6_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://oygurwf64vgn" path="res://assets/art/gate_border_64x64.png" id="7_tipki"]
 [ext_resource type="Script" uid="uid://c3hkknfkvabqv" path="res://scripts/ui/collapsible_section.gd" id="8_tipki"]
+[ext_resource type="Texture2D" uid="uid://dt4gyqfey1euq" path="res://assets/art/cancel_button_normal_48x72.png" id="10_ya4ey"]
+[ext_resource type="Texture2D" uid="uid://c66wn2n5n7j5y" path="res://assets/art/confirm_button_normal_48x72.png" id="11_eb6dy"]
+[ext_resource type="Texture2D" uid="uid://37b1v6h8jxuc" path="res://assets/art/cancel_button_pressed_48x72.png" id="12_trceg"]
+[ext_resource type="Texture2D" uid="uid://bgawjit3qiwej" path="res://assets/art/cancel_button_hover_48x72.png" id="13_a8y0u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbgi4"]
 expand_margin_left = 4.0
@@ -325,6 +329,12 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bu4jf"]
+texture = ExtResource("10_ya4ey")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o7ddy"]
+texture = ExtResource("11_eb6dy")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_choun"]
 bg_color = Color(0, 0, 0, 0.7)
 
@@ -335,8 +345,34 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0loja"]
+texture = ExtResource("10_ya4ey")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1v6qk"]
+texture = ExtResource("12_trceg")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_augu2"]
+texture = ExtResource("13_a8y0u")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ya4ey"]
 bg_color = Color(0, 0, 0, 0.7019608)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ids8r"]
+texture = ExtResource("10_ya4ey")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dnhof"]
+texture = ExtResource("11_eb6dy")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
@@ -668,10 +704,12 @@ layout_mode = 2
 
 [node name="CancelButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_bu4jf")
 text = "Cancel"
 
 [node name="CreateButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_o7ddy")
 text = "Create"
 
 [node name="BrowseComponentsBackdrop" type="Panel" parent="UICanvas/UIControl"]
@@ -717,6 +755,9 @@ layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_0loja")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1v6qk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_augu2")
 text = "Close"
 
 [node name="RenameComponentBackdrop" type="Panel" parent="UICanvas/UIControl"]
@@ -759,10 +800,12 @@ layout_mode = 2
 
 [node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ids8r")
 text = "Cancel"
 
 [node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_dnhof")
 text = "Confirm"
 
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Select" to="." method="select_select"]
