@@ -175,7 +175,7 @@ func _exit_select():
 func _exit_place():
 	gate_manager.clear_gate_to_place()
 func _exit_wire():
-	wire_manager.clear_preview()
+	wire_manager.cancel_wire_creation()
 func _exit_simulate():
 	for gate in gate_manager.gates:
 		if gate.type == "CLOCK": gate.stop_clock()
