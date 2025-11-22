@@ -3,7 +3,7 @@ extends Node
 
 var main: Node2D # Reference to main script
 
-# UI References
+# UI references
 var component_dialog_backdrop: Panel
 var component_name_input: LineEdit
 var inputs_container: VBoxContainer
@@ -167,6 +167,6 @@ func on_create_button_pressed():
 	main.gate_manager.create_custom_component(component_name, center_pos)
 	
 	# Refresh the UI
-	main._populate_components_section()
+	main.component_library_manager.populate_components_section()
 	component_dialog_backdrop.visible = false
 	current_component_pin_data = {}

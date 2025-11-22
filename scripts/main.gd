@@ -23,24 +23,10 @@ var current_mode: Mode = Mode.SELECT
 ## Loading & Saving
 @onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
 
-# Component Creation
-@onready var components_content: VBoxContainer = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent')
-@onready var browse_components_button: Button = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton')
-
-# Components Accessing
-@onready var browse_backdrop: Panel = get_node('UICanvas/UIControl/BrowseComponentsBackdrop')
-@onready var browse_components_container: VBoxContainer = get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/ComponentsList/ComponentsContainer')
-@onready var browse_close_button: Button = get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/CloseButton')
-@onready var rename_backdrop: Panel = get_node('UICanvas/UIControl/RenameComponentBackdrop')
-@onready var rename_input: LineEdit = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/RenameInput')
-@onready var rename_confirm_button: Button = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameConfirmButton')
-@onready var rename_cancel_button: Button = get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameCancelButton')
-var component_being_renamed: String = ""
-
 # Default functions which run on instantiation and every frame
 func _ready():
 	_initialize_managers()
-	_populate_components_section()
+	component_library_manager.populate_components_section()
 func _process(delta):
 	selection_manager.drag()
 	wire_manager.position_wire_preview()
@@ -55,6 +41,7 @@ func _initialize_managers():
 	circuit_persistence_manager = CircuitPersistenceManager.new(self)
 
 	component_creation_manager.setup_ui_references()
+	component_library_manager.setup_ui_references()
 
 	print("All managers initialized.")
 
@@ -278,8 +265,8 @@ func _update_create_component_button():
 func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 	return component_creation_manager.detect_external_pins(selected_gate_list)
 
-func _show_component_dialog(pin_data: Dictionary):
-	component_creation_manager.show_component_dialog(pin_data)
+func _show_component_dialog():
+	component_creation_manager.show_component_dialog()
 
 func _on_cancel_button_pressed():
 	component_creation_manager.on_cancel_button_pressed()
@@ -288,193 +275,50 @@ func _on_create_button_pressed():
 	component_creation_manager.on_create_button_pressed()
 
 func _on_browse_components_button_pressed():
-	_show_browse_dialog()
+	component_library_manager.on_browse_components_button_pressed()
 
 # Scan components folder and return list of component names
 func _get_available_components() -> Array[String]:
-	var component_names: Array[String] = []
-	var dir = DirAccess.open("user://components/")
-	
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".json"):
-				# Remove .json extension to get component name
-				var component_name = file_name.replace(".json", "")
-				component_names.append(component_name)
-			file_name = dir.get_next()
-	else:
-		print("Components directory doesn't exist yet")
-	
-	return component_names
+	return component_library_manager.get_available_components()
 
 # Populate the Components section with buttons
 func _populate_components_section():
-	# Clear existing component buttons (keep Browse All button)
-	for child in components_content.get_children():
-		if child != browse_components_button:
-			child.queue_free()
-	
-	# Get available components
-	var components = _get_available_components()
-	
-	# Create a button for each component
-	for component_name in components:
-		var button = Button.new()
-		button.text = component_name
-		
-		# Style the button (copy styling from other gate buttons)
-		# You can apply your NinePatch styling here
-		
-		# Connect to placement function
-		button.pressed.connect(_on_component_button_pressed.bind(component_name))
-		
-		# Add before the Browse All button
-		components_content.add_child(button)
-		components_content.move_child(button, components_content.get_child_count() - 2)
-	
-	print("Loaded ", components.size(), " components")
+	component_library_manager.populate_components_section()
 
 # Handle component button press
 func _on_component_button_pressed(component_name: String):
-	_set_mode(Mode.PLACE, component_name)
+	component_library_manager.on_component_button_pressed(component_name)
 
 # Show the browse components dialog
 func _show_browse_dialog():
-	_populate_browse_dialog()
-	browse_backdrop.visible = true
+	component_library_manager.show_browse_dialog()
 
 # Populate the browse dialog with all components
 func _populate_browse_dialog():
-	# Clear existing entries
-	for child in browse_components_container.get_children():
-		child.queue_free()
-	
-	# Get available components
-	var components = _get_available_components()
-	
-	if components.size() == 0:
-		var label = Label.new()
-		label.text = "No components yet. Create one!"
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		browse_components_container.add_child(label)
-		return
-	
-	# Create an entry for each component
-	for component_name in components:
-		var entry = HBoxContainer.new()
-		entry.add_theme_constant_override("separation", 8)
-		
-		# Component name label
-		var name_label = Label.new()
-		name_label.text = component_name
-		name_label.custom_minimum_size = Vector2(150, 0)
-		entry.add_child(name_label)
-		
-		# Place button
-		var place_btn = Button.new()
-		place_btn.text = "Place"
-		place_btn.custom_minimum_size = Vector2(60, 0)
-		place_btn.pressed.connect(_on_browse_place_pressed.bind(component_name))
-		entry.add_child(place_btn)
-		
-		# Preview button (disabled for now)
-		var preview_btn = Button.new()
-		preview_btn.text = "Preview"
-		preview_btn.custom_minimum_size = Vector2(70, 0)
-		preview_btn.disabled = true  # Will enable when we implement viewing
-		entry.add_child(preview_btn)
-		
-		# Delete button
-		var delete_btn = Button.new()
-		delete_btn.text = "Delete"
-		delete_btn.custom_minimum_size = Vector2(60, 0)
-		delete_btn.pressed.connect(_on_browse_delete_pressed.bind(component_name))
-		entry.add_child(delete_btn)
-		
-		# Rename button
-		var rename_btn = Button.new()
-		rename_btn.text = "Rename"
-		rename_btn.custom_minimum_size = Vector2(70, 0)
-		rename_btn.pressed.connect(_on_browse_rename_pressed.bind(component_name))
-		entry.add_child(rename_btn)
-		
-		browse_components_container.add_child(entry)
+	component_library_manager.populate_browse_dialog()
 
 # Handle Place button in browse dialog
 func _on_browse_place_pressed(component_name: String):
-	browse_backdrop.visible = false
-	_set_mode(Mode.PLACE, component_name)
+	component_library_manager.on_browse_place_pressed(component_name)
 
 # Handle Delete button in browse dialog
 func _on_browse_delete_pressed(component_name: String):
-	var file_path = "user://components/" + component_name + ".json"
-	if FileAccess.file_exists(file_path):
-		DirAccess.remove_absolute(file_path)
-
-		_populate_browse_dialog()
-		_populate_components_section()
-	else: print("Error: Component file not found")
+	component_library_manager.on_browse_delete_pressed(component_name)
 
 # Handle Rename button in browse dialog
 func _on_browse_rename_pressed(component_name: String):
-	_show_rename_dialog(component_name)
+	component_library_manager.on_browse_rename_pressed(component_name)
 
 func _on_browse_close_button_pressed():
-	browse_backdrop.visible = false
+	component_library_manager.on_browse_close_button_pressed()
 
 # Show rename dialog
 func _show_rename_dialog(component_name: String):
-	component_being_renamed = component_name
-	rename_input.text = component_name
-	rename_backdrop.visible = true
-	rename_input.grab_focus()
-	rename_input.select_all()
+	component_library_manager.show_rename_dialog(component_name)
 
 # Confirm rename
 func _on_rename_confirm_button_pressed():
-	var new_name = rename_input.text.strip_edges()
-	
-	if new_name == "":
-		print("Error: Component name cannot be empty")
-		return
-	
-	if new_name == component_being_renamed:
-		print("Name unchanged")
-		rename_backdrop.visible = false
-		return
-	
-	# Check if new name already exists
-	if FileAccess.file_exists("user://components/" + new_name + ".json"):
-		print("Error: Component with that name already exists")
-		return
-	
-	# Rename the file
-	var old_path = "user://components/" + component_being_renamed + ".json"
-	var new_path = "user://components/" + new_name + ".json"
-	
-	# Load the component data
-	var component_data = ComponentSerializer.load_component(component_being_renamed)
-	if component_data.is_empty():
-		print("Error: Could not load component to rename")
-		return
-
-	component_data["name"] = new_name
-	
-	# Save with new name
-	var file = FileAccess.open(new_path, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(component_data, "\t"))
-		file.close()
-		DirAccess.remove_absolute(old_path)
-		
-		# Refresh UI
-		_populate_browse_dialog()
-		_populate_components_section()
-		
-		rename_backdrop.visible = false
-	else: print("Error: Could not save renamed component")
+	component_library_manager.on_rename_confirm_button_pressed()
 
 func _on_rename_cancel_button_pressed(): # Cancel rename
-	rename_backdrop.visible = false
+	component_library_manager.on_rename_cancel_button_pressed()
