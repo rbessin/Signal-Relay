@@ -20,9 +20,6 @@ enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
 @onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Current_Mode')
 
-## Loading & Saving
-@onready var file_name_input: LineEdit = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent/FileNameInput')
-
 # Default functions which run on instantiation and every frame
 func _ready():
 	_initialize_managers()
@@ -42,6 +39,7 @@ func _initialize_managers():
 
 	component_creation_manager.setup_ui_references()
 	component_library_manager.setup_ui_references()
+	circuit_persistence_manager.setup_ui_references()
 
 	print("All managers initialized.")
 
@@ -202,58 +200,21 @@ func _move_camera(delta):
 
 # Loading & Saving helpers
 func _handle_save(): # Collect gates and wires
-	_on_save_button_pressed()
+	circuit_persistence_manager.handle_save()
 func _handle_load(): # Load circuit
-	_on_load_button_pressed()
+	circuit_persistence_manager.handle_load()
 
 func _load_circuit(circuit_name):
-	_empty_circuit()
-
-	var circuit_dict = CircuitSerializer.load_from_json(circuit_name)
-	if circuit_dict == null: return
-	var gates_by_uid: Dictionary = {}
-
-	for gate in circuit_dict["gates"]:
-		var new_gate = _create_gate(gate["type"], Vector2(gate["x"], gate["y"]), gate["uid"])
-		if new_gate != null: gates_by_uid[gate["uid"]] = new_gate
-	
-	await get_tree().process_frame
-	
-	for wire in circuit_dict["wires"]:
-		var source_gate = gates_by_uid[wire["from_gate"]]
-		var destination_gate = gates_by_uid[wire["to_gate"]]
-		print("Loading wire from ", source_gate.type, " to ", destination_gate.type)
-		var source_pin = source_gate.get_pin_by_index(Pin.PinType.OUTPUT, wire["from_pin"])
-		var destination_pin = destination_gate.get_pin_by_index(Pin.PinType.INPUT, wire["to_pin"])
-		print("  source_pin:", source_pin, " dest_pin:", destination_pin)
-
-		if source_pin == null or destination_pin == null:
-			print("  ERROR: Pin lookup failed!")
-			continue
-
-		var new_wire = Wire.new()
-		new_wire.from_pin = source_pin
-		new_wire.to_pin = destination_pin
-		add_child(new_wire)
-		wire_manager.wires.append(new_wire)
-
-		source_pin.connected_wires.append(new_wire)
-		destination_pin.connected_wires.append(new_wire)
+	circuit_persistence_manager.load_circuit(circuit_name)
 
 func _empty_circuit():
-	for child in gate_manager.gates.duplicate(): _delete_gate_instance(child)
+	circuit_persistence_manager.empty_circuit()
 
 func _on_save_button_pressed():
-	var circuit_name = file_name_input.text
-	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
-	CircuitSerializer.save_to_json(gate_manager.gates, wire_manager.wires, circuit_name)
-	print("Circuit saved as: " + circuit_name)
+	circuit_persistence_manager.on_save_button_pressed()
 
 func _on_load_button_pressed():
-	var circuit_name = file_name_input.text
-	if circuit_name == "": circuit_name = "my_circuit"  # Default if empty
-	_load_circuit(circuit_name)
-	print("Circuit loaded: " + circuit_name)
+	circuit_persistence_manager.on_load_button_pressed()
 
 # Component Creation Functions
 func _on_create_component_button_pressed():
