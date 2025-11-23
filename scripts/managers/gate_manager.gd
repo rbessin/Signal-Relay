@@ -2,6 +2,8 @@ class_name GateManager
 extends Node
 
 var main: Node2D # Reference to main script
+var selection_manager: SelectionManager # Manager references
+var wire_manager: WireManager
 
 # Hard-coded gate prefabs
 var gate_prefabs: Dictionary = {
@@ -48,7 +50,7 @@ func create_gate(gate_type: String, pos: Vector2, uid: String = "") -> Gate:
 	# Set gate properties
 	new_gate.name = new_gate.type + '_' + str(new_gate.uid)
 	new_gate.global_position = pos
-	new_gate.gate_clicked.connect(main._select_gate_instance)
+	new_gate.gate_clicked.connect(selection_manager.select_gate_instance)
 	main.call_deferred("_connect_gate_pins", new_gate)
 	gates.append(new_gate)
 	return new_gate
@@ -60,7 +62,7 @@ func create_custom_component(component_name: String, pos: Vector2) -> CustomComp
 	new_component.component_definition_name = component_name
 	new_component.global_position = pos
 	main.add_child(new_component)
-	new_component.gate_clicked.connect(main._select_gate_instance)
+	new_component.gate_clicked.connect(selection_manager.select_gate_instance)
 	main.call_deferred("_connect_gate_pins", new_component)
 	gates.append(new_component)
 	return new_component
@@ -69,7 +71,7 @@ func delete_gate(gate: Gate):
 	for child in gate.get_children(): # Loop over gate children to find pins
 		if child is Pin:
 			for wire in child.connected_wires.duplicate(): # Loop over pin wires
-				main.wire_manager.delete_wire(wire) # Delete each wire
+				wire_manager.delete_wire(wire) # Delete each wire
 	
 	gates.erase(gate) # Delete gate
 	gate.queue_free()

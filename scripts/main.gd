@@ -41,66 +41,69 @@ func _initialize_managers():
 	component_library_manager.setup_ui_references()
 	circuit_persistence_manager.setup_ui_references()
 
+	_setup_manager_references()
+	_connect_manager_signals()
+
 	print("All managers initialized.")
 
-# SELECT helpers
-func _select_gate_instance(gate_instance: Gate): # Select gate instance
-	selection_manager.select_gate_instance(gate_instance)
+func _setup_manager_references():
+	# Setup selection manager references
+	selection_manager.component_creation_manager = component_creation_manager
+	# Setup component creation manager references
+	component_creation_manager.selection_manager = selection_manager
+	component_creation_manager.wire_manager = wire_manager
+	component_creation_manager.gate_manager = gate_manager
+	component_creation_manager.component_library_manager = component_library_manager
+	# Setup circuit persistence manager references
+	circuit_persistence_manager.gate_manager = gate_manager
+	circuit_persistence_manager.wire_manager = wire_manager
+	# Setup gate manager references
+	gate_manager.selection_manager = selection_manager
+	gate_manager.wire_manager = wire_manager
+	# Setup wire manager references
+	wire_manager.selection_manager = selection_manager
 
-func _select_wire_instance(wire_instance: Wire):
-	selection_manager.select_wire_instance(wire_instance)
+func _connect_manager_signals():
+	# Component creation signals
+	component_creation_manager.create_component_button.pressed.connect(
+		component_creation_manager.on_create_component_button_pressed)
+	component_creation_manager.create_button.pressed.connect(
+		component_creation_manager.on_create_button_pressed)
+	component_creation_manager.cancel_button.pressed.connect(
+		component_creation_manager.on_cancel_button_pressed)
+	
+	# Component library signals
+	component_library_manager.browse_components_button.pressed.connect(
+		component_library_manager.on_browse_components_button_pressed)
+	component_library_manager.browse_close_button.pressed.connect(
+		component_library_manager.on_browse_close_button_pressed)
+	component_library_manager.rename_confirm_button.pressed.connect(
+		component_library_manager.on_rename_confirm_button_pressed)
+	component_library_manager.rename_cancel_button.pressed.connect(
+		component_library_manager.on_rename_cancel_button_pressed)
 
-func _delete_gate_instance(gate: Gate): # Delete gate instance
-	gate_manager.delete_gate(gate)
-
-func _clear_selection():
-	selection_manager.clear_selection()
-
-# PLACE helpers
-func instantiate_gate(): # Create gate instance
-	gate_manager.instantiate_gate()
-
-func _create_gate(gate_type: String, pos: Vector2, uid: String = "") -> Gate:
-	return gate_manager.create_gate(gate_type, pos, uid)
+	# Circuit persistence signals
+	circuit_persistence_manager.clear_button.pressed.connect(
+		circuit_persistence_manager.empty_circuit)
+	circuit_persistence_manager.save_button.pressed.connect(
+		circuit_persistence_manager.on_save_button_pressed)
+	circuit_persistence_manager.load_button.pressed.connect(
+		circuit_persistence_manager.on_load_button_pressed)
 
 func _connect_gate_pins(gate: Gate):
 	for child in gate.get_children():
 		if child is Pin:
 			child.pin_clicked.connect(_on_pin_clicked)
 
-func _on_pin_clicked(pin_instance: Pin): # Handle pin clicks
+func _on_pin_clicked(pin_instance: Pin):
 	if current_mode == Mode.WIRE:
 		if not wire_manager.is_creating_wire:
 			if pin_instance.pin_type == Pin.PinType.OUTPUT:
-				_start_wire_creation(pin_instance)
+				wire_manager.start_wire_creation(pin_instance)
 		else:
 			if pin_instance.pin_type == Pin.PinType.INPUT:
-				_complete_wire_creation(pin_instance)
-			else: _cancel_wire_creation()
-
-# WIRE helpers
-func _start_wire_creation(start_pin: Pin):
-	wire_manager.start_wire_creation(start_pin)
-
-func _complete_wire_creation(end_pin: Pin):
-	wire_manager.complete_wire_creation(end_pin)
-
-func _cancel_wire_creation():
-	wire_manager.cancel_wire_creation()
-
-func _delete_wire_instance():
-	wire_manager.delete_selected_wire()
-
-func _delete_wire(wire: Wire):
-	wire_manager.delete_wire(wire)
-
-func _position_wire_preview():
-	wire_manager.position_wire_preview()
-
-func _is_duplicate_wire(from_pin: Pin, to_pin: Pin) -> bool:
-	return wire_manager.is_duplicate_wire(from_pin, to_pin)
-
-## SIMULATE helpers
+				wire_manager.complete_wire_creation(pin_instance)
+			else: wire_manager.cancel_wire_creation()
 
 # Handle events
 func _unhandled_input(event): # Handle inputs
@@ -114,19 +117,21 @@ func _unhandled_input(event): # Handle inputs
 		if event.keycode == KEY_X: get_tree().quit()
 
 func _handle_click(): # Handle click
-	if current_mode == Mode.PLACE: instantiate_gate()
+	if current_mode == Mode.PLACE: gate_manager.instantiate_gate()
 	elif current_mode == Mode.SELECT:
-		if not Input.is_key_pressed(KEY_SHIFT): _clear_selection()
+		if not Input.is_key_pressed(KEY_SHIFT): selection_manager.clear_selection()
 func _handle_click_release(): # Handle click release
 	selection_manager.stop_dragging()
 func _handle_delete(): # Handle delete
 	if current_mode == Mode.SELECT: 
-		for gate in selection_manager.selected_gates.duplicate(): _delete_gate_instance(gate)
+		for gate in selection_manager.selected_gates.duplicate(): gate_manager.delete_gate(gate)
 		selection_manager.selected_gates.clear()
-		if selection_manager.selected_wire_instance != null: _delete_wire_instance()
+		if selection_manager.selected_wire_instance != null: wire_manager.delete_selected_wire()
 func _handle_stop(): # Handle stop
-	if current_mode == Mode.WIRE: _cancel_wire_creation()
-	elif current_mode == Mode.SELECT: _clear_selection()
+	if current_mode == Mode.WIRE: wire_manager.cancel_wire_creation()
+	elif current_mode == Mode.SELECT: selection_manager.clear_selection()
+func _handle_save(): circuit_persistence_manager.on_save_button_pressed()
+func _handle_load(): circuit_persistence_manager.on_load_button_pressed()
 
 # Enter mode
 func _enter_select():
@@ -149,7 +154,7 @@ func _enter_simulate():
 
 # Exit mode
 func _exit_select():
-	_clear_selection()
+	selection_manager.clear_selection()
 	selection_manager.stop_dragging()
 func _exit_place():
 	gate_manager.clear_gate_to_place()
@@ -197,89 +202,3 @@ func _move_camera(delta):
 		camera.position.x += pan_speed * delta
 	if Input.is_key_pressed(KEY_A):
 		camera.position.x -= pan_speed * delta
-
-# Loading & Saving helpers
-func _handle_save(): # Collect gates and wires
-	circuit_persistence_manager.handle_save()
-func _handle_load(): # Load circuit
-	circuit_persistence_manager.handle_load()
-
-func _load_circuit(circuit_name):
-	circuit_persistence_manager.load_circuit(circuit_name)
-
-func _empty_circuit():
-	circuit_persistence_manager.empty_circuit()
-
-func _on_save_button_pressed():
-	circuit_persistence_manager.on_save_button_pressed()
-
-func _on_load_button_pressed():
-	circuit_persistence_manager.on_load_button_pressed()
-
-# Component Creation Functions
-func _on_create_component_button_pressed():
-	component_creation_manager.on_create_component_button_pressed()
-
-func _update_create_component_button():
-	component_creation_manager.update_create_component_button()
-
-func _detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
-	return component_creation_manager.detect_external_pins(selected_gate_list)
-
-func _show_component_dialog():
-	component_creation_manager.show_component_dialog()
-
-func _on_cancel_button_pressed():
-	component_creation_manager.on_cancel_button_pressed()
-
-func _on_create_button_pressed():
-	component_creation_manager.on_create_button_pressed()
-
-func _on_browse_components_button_pressed():
-	component_library_manager.on_browse_components_button_pressed()
-
-# Scan components folder and return list of component names
-func _get_available_components() -> Array[String]:
-	return component_library_manager.get_available_components()
-
-# Populate the Components section with buttons
-func _populate_components_section():
-	component_library_manager.populate_components_section()
-
-# Handle component button press
-func _on_component_button_pressed(component_name: String):
-	component_library_manager.on_component_button_pressed(component_name)
-
-# Show the browse components dialog
-func _show_browse_dialog():
-	component_library_manager.show_browse_dialog()
-
-# Populate the browse dialog with all components
-func _populate_browse_dialog():
-	component_library_manager.populate_browse_dialog()
-
-# Handle Place button in browse dialog
-func _on_browse_place_pressed(component_name: String):
-	component_library_manager.on_browse_place_pressed(component_name)
-
-# Handle Delete button in browse dialog
-func _on_browse_delete_pressed(component_name: String):
-	component_library_manager.on_browse_delete_pressed(component_name)
-
-# Handle Rename button in browse dialog
-func _on_browse_rename_pressed(component_name: String):
-	component_library_manager.on_browse_rename_pressed(component_name)
-
-func _on_browse_close_button_pressed():
-	component_library_manager.on_browse_close_button_pressed()
-
-# Show rename dialog
-func _show_rename_dialog(component_name: String):
-	component_library_manager.show_rename_dialog(component_name)
-
-# Confirm rename
-func _on_rename_confirm_button_pressed():
-	component_library_manager.on_rename_confirm_button_pressed()
-
-func _on_rename_cancel_button_pressed(): # Cancel rename
-	component_library_manager.on_rename_cancel_button_pressed()

@@ -2,6 +2,7 @@ class_name WireManager
 extends Node
 
 var main: Node2D # Reference to main script
+var selection_manager: SelectionManager # Reference to selection manager
 
 # Creation
 var is_creating_wire: bool = false
@@ -37,7 +38,7 @@ func complete_wire_creation(end_pin: Pin):
 		wire_preview.to_pin = end_pin # Remove wire preview and convert to real wire
 		wire_preview.is_preview = false
 
-		wire_preview.wire_clicked.connect(main._select_wire_instance) # Add wire signals and add instance to trackers
+		wire_preview.wire_clicked.connect(selection_manager.select_wire_instance) # Add wire signals and add instance to trackers
 		wire_start_pin.connected_wires.append(wire_preview)
 		end_pin.connected_wires.append(wire_preview)
 		wires.append(wire_preview)
@@ -59,9 +60,9 @@ func delete_wire(wire: Wire):
 	wire.queue_free() # Delete wire instance
 
 func delete_selected_wire():
-	if main.selection_manager.selected_wire_instance != null: # Delete selected wire if wire is selected
-		delete_wire(main.selection_manager.select_wire_instance)
-		main.selection_manager.selected_wire_instance = null
+	if selection_manager.selected_wire_instance != null: # Delete selected wire if wire is selected
+		delete_wire(selection_manager.selected_wire_instance)
+		selection_manager.selected_wire_instance = null
 
 func position_wire_preview():
 	if is_creating_wire and wire_preview != null: # Move preview wire end to follow mouse

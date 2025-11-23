@@ -2,6 +2,10 @@ class_name ComponentCreationManager
 extends Node
 
 var main: Node2D # Reference to main script
+var selection_manager: SelectionManager # Manager references
+var wire_manager: WireManager
+var gate_manager: GateManager
+var component_library_manager: ComponentLibraryManager
 
 # UI references
 var component_dialog_backdrop: Panel
@@ -33,7 +37,7 @@ func setup_ui_references():
 	create_component_button = inspector_tools.get_node('CreateComponentButton')
 
 func update_create_component_button():
-	if main.selection_manager.selected_gates.size() >= 2: # Enable button if at least two gates are selected
+	if selection_manager.selected_gates.size() >= 2: # Enable button if at least two gates are selected
 		create_component_button.disabled = false
 		create_component_button.modulate = Color(1, 1, 1, 1)
 	else: # Disable button if less than two gates (0 | 1) are selected
@@ -41,11 +45,11 @@ func update_create_component_button():
 		create_component_button.modulate = Color(1, 1, 1, 0.5)
 
 func on_create_component_button_pressed():
-	if main.selection_manager.selected_gates.size() < 2: # Stop component creation if less than two gates are selected
+	if selection_manager.selected_gates.size() < 2: # Stop component creation if less than two gates are selected
 		print("Need at least 2 gates selected to create a component")
 		return
 	
-	current_component_pin_data = detect_external_pins(main.selection_manager.selected_gates) # Find component pins
+	current_component_pin_data = detect_external_pins(selection_manager.selected_gates) # Find component pins
 	show_component_dialog() # Open component dialog
 
 func detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
@@ -57,7 +61,7 @@ func detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 		for child in gate.get_children():
 			if child is Pin and child.pin_type == Pin.PinType.INPUT:
 				var is_external = true
-				for wire in main.wire_manager.wires:
+				for wire in wire_manager.wires:
 					if wire.to_pin == child:
 						if wire.from_pin.parent_gate in selected_gate_list: # Pin is external if wire comes from outside gate
 							is_external = false
@@ -75,7 +79,7 @@ func detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 				var has_wire_to_outside = false
 				var has_any_wire = false
 				
-				for wire in main.wire_manager.wires:
+				for wire in wire_manager.wires:
 					if wire.from_pin == child:
 						has_any_wire = true # If there is a wire
 						if not (wire.to_pin.parent_gate in selected_gate_list):
@@ -123,9 +127,9 @@ func on_create_button_pressed():
 	
 	# Calculate center position of component
 	var center_pos = Vector2.ZERO
-	for gate in main.selection_manager.selected_gates:
+	for gate in selection_manager.selected_gates:
 		center_pos += gate.global_position
-	center_pos /= main.selection_manager.selected_gates.size()
+	center_pos /= selection_manager.selected_gates.size()
 	
 	# Transform pin data to match ComponentSerializer's expected format
 	var pin_mappings = {"inputs": [], "outputs": []}
@@ -154,19 +158,19 @@ func on_create_button_pressed():
 	
 	ComponentSerializer.save_component( # Save component using helper functions
 		component_name,
-		main.selection_manager.selected_gates,
-		main.wire_manager.wires,
+		selection_manager.selected_gates,
+		wire_manager.wires,
 		pin_mappings
 	)
 	
-	for gate in main.selection_manager.selected_gates.duplicate(): # Delete selected gates
-		main.gate_manager.delete_gate(gate)
-	main.selection_manager.selected_gates.clear()
+	for gate in selection_manager.selected_gates.duplicate(): # Delete selected gates
+		gate_manager.delete_gate(gate)
+	selection_manager.selected_gates.clear()
 	
 	# Create an instance of the new component
-	main.gate_manager.create_custom_component(component_name, center_pos)
+	gate_manager.create_custom_component(component_name, center_pos)
 	
 	# Refresh the UI
-	main.component_library_manager.populate_components_section()
+	component_library_manager.populate_components_section()
 	component_dialog_backdrop.visible = false
 	current_component_pin_data = {}

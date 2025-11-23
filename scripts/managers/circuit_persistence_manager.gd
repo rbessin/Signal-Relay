@@ -2,8 +2,13 @@ class_name CircuitPersistenceManager
 extends Node
 
 var main: Node2D # Reference to main script
+var gate_manager: GateManager # Manager references
+var wire_manager: WireManager
 
 var file_name_input: LineEdit # UI references
+var clear_button: Button
+var save_button: Button
+var load_button: Button
 
 func _init(main_node: Node2D):
 	main = main_node
@@ -12,6 +17,9 @@ func _init(main_node: Node2D):
 func setup_ui_references():
 	var simulation_base = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent')
 	file_name_input = simulation_base.get_node('FileNameInput')
+	clear_button = simulation_base.get_node('Clear Scene')
+	save_button = simulation_base.get_node('Save')
+	load_button = simulation_base.get_node('Load')
 
 func handle_save():
 	on_save_button_pressed()
@@ -22,7 +30,7 @@ func handle_load():
 func on_save_button_pressed():
 	var circuit_name = file_name_input.text # Retrieve name and save circuit to json using helper
 	if circuit_name == "": circuit_name = "unnamed_circuit"
-	CircuitSerializer.save_to_json(main.gate_manager.gates, main.wire_manager.wires, circuit_name)
+	CircuitSerializer.save_to_json(gate_manager.gates, wire_manager.wires, circuit_name)
 
 func on_load_button_pressed():
 	var circuit_name = file_name_input.text # Retrieve name and load circuit from json using helper
@@ -38,7 +46,7 @@ func load_circuit(circuit_name: String):
 	var gates_by_uid: Dictionary = {}
 
 	for gate in circuit_dict["gates"]: # Create circuit gates
-		var new_gate = main.gate_manager.create_gate(
+		var new_gate = gate_manager.create_gate(
 			gate["type"], 
 			Vector2(gate["x"], gate["y"]),
 			gate["uid"]
@@ -59,11 +67,11 @@ func load_circuit(circuit_name: String):
 		new_wire.from_pin = source_pin
 		new_wire.to_pin = destination_pin
 		main.add_child(new_wire)
-		main.wire_manager.wires.append(new_wire)
+		wire_manager.wires.append(new_wire)
 		
 		source_pin.connected_wires.append(new_wire)
 		destination_pin.connected_wires.append(new_wire)
 
 func empty_circuit():
-	for child in main.gate_manager.gates.duplicate(): # Empty current scene
-		main.gate_manager.delete_gate(child)
+	for child in gate_manager.gates.duplicate(): # Empty current scene
+		gate_manager.delete_gate(child)
