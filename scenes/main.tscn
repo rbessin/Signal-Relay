@@ -1,31 +1,28 @@
-[gd_scene load_steps=85 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=94 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
 [ext_resource type="Texture2D" uid="uid://41qqq5hsseb3" path="res://assets/art/button_normal_48x72.png" id="2_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://dka8gtvv1tta5" path="res://assets/art/Sidebar_400x1080.png" id="3_a8y0u"]
-[ext_resource type="Texture2D" uid="uid://bnogbcp61fbhu" path="res://assets/art/button_pressed_48x72.png" id="3_tefeu"]
-[ext_resource type="Texture2D" uid="uid://bf6fvkrxuefsj" path="res://assets/art/button_hover_48x72.png" id="4_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://olvop1ic7hre" path="res://assets/art/yellow_section_368x64.png" id="5_a8y0u"]
 [ext_resource type="FontFile" uid="uid://cgx0y6mhjsptv" path="res://assets/fonts/DigitalDisco.ttf" id="5_tipki"]
-[ext_resource type="Texture2D" uid="uid://jwjx3w3hswyl" path="res://assets/art/border_368x16.png" id="6_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://bwmfanspbfajh" path="res://assets/art/header_light_green_368x32.png" id="8_jkv2x"]
 [ext_resource type="Script" uid="uid://c3hkknfkvabqv" path="res://scripts/ui/collapsible_section.gd" id="8_tipki"]
 [ext_resource type="Texture2D" uid="uid://8yt7vbli3mdc" path="res://assets/art/header_lightest_green_368x32.png" id="9_muem4"]
 [ext_resource type="Texture2D" uid="uid://3hs5skrhnl0i" path="res://assets/art/header_lighter_green_368x32.png" id="10_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://dt4gyqfey1euq" path="res://assets/art/cancel_button_normal_48x72.png" id="10_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://c66wn2n5n7j5y" path="res://assets/art/confirm_button_normal_48x72.png" id="11_eb6dy"]
+[ext_resource type="Texture2D" uid="uid://k0cp5wr701hd" path="res://assets/art/button_blue_368x32.png" id="11_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://37b1v6h8jxuc" path="res://assets/art/cancel_button_pressed_48x72.png" id="12_trceg"]
+[ext_resource type="Texture2D" uid="uid://hk3hlufp0oqo" path="res://assets/art/button_lighter_blue_368x32.png" id="12_yc10j"]
 [ext_resource type="Texture2D" uid="uid://bgawjit3qiwej" path="res://assets/art/cancel_button_hover_48x72.png" id="13_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://xyejoduyeoj" path="res://assets/art/button_light_blue_368x32.png" id="13_jscy8"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tm6hj"]
 texture = ExtResource("3_a8y0u")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_choun"]
 texture = ExtResource("5_a8y0u")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kf5aa"]
-texture = ExtResource("6_a8y0u")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t5ykj"]
 texture = ExtResource("8_jkv2x")
@@ -37,53 +34,25 @@ texture = ExtResource("9_muem4")
 texture = ExtResource("10_dp3eg")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o6xl0"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tipki"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_eb6dy"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cjqg0"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vchkt"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_txyw0"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_chjal"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e755i"]
 texture = ExtResource("8_jkv2x")
@@ -95,214 +64,94 @@ texture = ExtResource("9_muem4")
 texture = ExtResource("10_dp3eg")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trceg"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a8y0u"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkv2x"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jbj1t"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_muem4"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dp3eg"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0ld40"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gqmmt"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yc10j"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jscy8"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pm3ni"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y6deb"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og1vs"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2wyq8"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vxglm"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2f3dj"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yq6so"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fv21b"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tel4y"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qkpxi"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5q0nq"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dgi5k"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j8jky"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kmb1v"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fuf3a"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pibwh"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6pm6"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5he1u"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5poiv"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2cjbq"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ro3en"]
 texture = ExtResource("8_jkv2x")
@@ -314,25 +163,13 @@ texture = ExtResource("9_muem4")
 texture = ExtResource("10_dp3eg")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nvyfr"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty1g6"]
-texture = ExtResource("3_tefeu")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j2jfr"]
-texture = ExtResource("4_o6xl0")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_od4ux"]
 texture = ExtResource("8_jkv2x")
@@ -342,6 +179,36 @@ texture = ExtResource("9_muem4")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gdvew"]
 texture = ExtResource("10_dp3eg")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kf5aa"]
+texture = ExtResource("11_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kjtvk"]
+texture = ExtResource("12_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrs0c"]
+texture = ExtResource("13_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xljpf"]
+texture = ExtResource("11_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4bwh"]
+texture = ExtResource("12_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ksmap"]
+texture = ExtResource("13_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ygd8o"]
+texture = ExtResource("11_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2s0kr"]
+texture = ExtResource("12_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xaipn"]
+texture = ExtResource("13_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ndrjj"]
+texture = ExtResource("11_gqmmt")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85g3d"]
 bg_color = Color(0, 0, 0, 0.7)
@@ -459,11 +326,6 @@ text = "Circuit Editor"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Border" type="Panel" parent="UICanvas/UIControl/Inspector/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_kf5aa")
-
 [node name="ScrollableContent" type="ScrollContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -475,6 +337,7 @@ theme_override_constants/separation = 0
 
 [node name="ToolsSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
+theme_override_constants/separation = 0
 script = ExtResource("8_tipki")
 
 [node name="ToolsHeader" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
@@ -490,31 +353,39 @@ alignment = 0
 
 [node name="ToolsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="Select" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Select"
 
 [node name="Wire" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Wire"
 
 [node name="Simulate" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Simulate"
 
 [node name="CreateComponentButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_cjqg0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_vchkt")
 theme_override_styles/hover = SubResource("StyleBoxTexture_txyw0")
@@ -522,11 +393,15 @@ disabled = true
 text = "Create Component"
 
 [node name="Current_Mode" type="Label" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_chjal")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GatesSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
+theme_override_constants/separation = 0
 script = ExtResource("8_tipki")
 
 [node name="GatesHeader" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection"]
@@ -542,73 +417,93 @@ alignment = 0
 
 [node name="GatesContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="ANDButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_trceg")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_a8y0u")
 theme_override_styles/hover = SubResource("StyleBoxTexture_jkv2x")
 text = "AND"
 
 [node name="NANDButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_jbj1t")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_muem4")
 theme_override_styles/hover = SubResource("StyleBoxTexture_dp3eg")
 text = "NAND"
 
 [node name="NORButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_0ld40")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_gqmmt")
 theme_override_styles/hover = SubResource("StyleBoxTexture_yc10j")
 text = "NOR"
 
 [node name="NOTButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_jscy8")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_pm3ni")
 theme_override_styles/hover = SubResource("StyleBoxTexture_y6deb")
 text = "NOT"
 
 [node name="ORButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_og1vs")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_2wyq8")
 theme_override_styles/hover = SubResource("StyleBoxTexture_vxglm")
 text = "OR"
 
 [node name="XORButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_2f3dj")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_yq6so")
 theme_override_styles/hover = SubResource("StyleBoxTexture_fv21b")
 text = "XOR"
 
 [node name="INPUTButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_tel4y")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_qkpxi")
 theme_override_styles/hover = SubResource("StyleBoxTexture_5q0nq")
 text = "INPUT"
 
 [node name="CLOCKButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_dgi5k")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_j8jky")
 theme_override_styles/hover = SubResource("StyleBoxTexture_kmb1v")
 text = "CLOCK"
 
 [node name="OUTPUTButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_fuf3a")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_pibwh")
 theme_override_styles/hover = SubResource("StyleBoxTexture_c6pm6")
 text = "OUTPUT"
 
 [node name="D_FLIPFLOPButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_5he1u")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5poiv")
 theme_override_styles/hover = SubResource("StyleBoxTexture_2cjbq")
@@ -616,6 +511,7 @@ text = "D_FLIPFLOP"
 
 [node name="ComponentsSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
+theme_override_constants/separation = 0
 script = ExtResource("8_tipki")
 
 [node name="ComponentsHeader" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection"]
@@ -634,6 +530,7 @@ layout_mode = 2
 theme_override_constants/separation = 2
 
 [node name="BrowseComponentsButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_nvyfr")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ty1g6")
@@ -642,6 +539,7 @@ text = "Browse All..."
 
 [node name="SimulationSection2" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
+theme_override_constants/separation = 0
 script = ExtResource("8_tipki")
 
 [node name="SimulationHeader" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2"]
@@ -657,22 +555,38 @@ alignment = 0
 
 [node name="SimulationContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="Clear Scene" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_kf5aa")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kjtvk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_xrs0c")
 text = "Clear Scene"
 
 [node name="Save" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_xljpf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_j4bwh")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ksmap")
 text = "Save"
 
 [node name="Load" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_ygd8o")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2s0kr")
+theme_override_styles/hover = SubResource("StyleBoxTexture_xaipn")
 text = "Load"
 
 [node name="FileNameInput" type="LineEdit" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent"]
+custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ndrjj")
 placeholder_text = "circuit_name"
 
 [node name="ComponentDialogBackdrop" type="Panel" parent="UICanvas/UIControl"]
