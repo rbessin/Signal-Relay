@@ -26,7 +26,8 @@ func _init(main_node: Node2D):
 func setup_ui_references():
 	var dialog_base = main.get_node('UICanvas/UIControl/ComponentDialogBackdrop')
 	var dialog_content = dialog_base.get_node('ComponentDialog/DialogContent')
-	var inspector_tools = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent')
+	var _primary_tools = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent')
+	var secondary_tools = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent')
 	
 	component_dialog_backdrop = dialog_base
 	component_name_input = dialog_content.get_node('ComponentNameInput')
@@ -34,15 +35,13 @@ func setup_ui_references():
 	outputs_container = dialog_content.get_node('OutputsList/OutputsContainer')
 	create_button = dialog_content.get_node('CreateButton')
 	cancel_button = dialog_content.get_node('CancelButton')
-	create_component_button = inspector_tools.get_node('CreateComponentButton')
+	create_component_button = secondary_tools.get_node('CreateComponentButton')
 
 func update_create_component_button():
-	if selection_manager.selected_gates.size() >= 2: # Enable button if at least two gates are selected
-		create_component_button.disabled = false
-		create_component_button.modulate = Color(1, 1, 1, 1)
-	else: # Disable button if less than two gates (0 | 1) are selected
-		create_component_button.disabled = true
-		create_component_button.modulate = Color(1, 1, 1, 0.5)
+	if selection_manager.selected_gates.size() >= 2: # Show button if at least two gates are selected
+		create_component_button.visible = true
+	else: # Hide button if less than two gates (0 | 1) are selected
+		create_component_button.visible = false
 
 func on_create_component_button_pressed():
 	if selection_manager.selected_gates.size() < 2: # Stop component creation if less than two gates are selected

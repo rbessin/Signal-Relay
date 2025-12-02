@@ -60,10 +60,29 @@ func populate_components_section():
 	
 	var components = get_available_components() # Retrieve component names
 
+	# Load your textures
+	var tex_normal = load("res://assets/art/button_yellow_368x32.png")
+	var tex_hover = load("res://assets/art/button_light_yellow_368x32.png")
+	var tex_pressed = load("res://assets/art/button_lighter_yellow_368x32.png")
+
+	# Create themes
+	var style_normal = StyleBoxTexture.new()
+	style_normal.texture = tex_normal
+	var style_hover = StyleBoxTexture.new()
+	style_hover.texture = tex_hover
+	var style_pressed = StyleBoxTexture.new()
+	style_pressed.texture = tex_pressed
+
 	for component_name in components: # Create component buttons
 		var button = Button.new()
 		button.text = component_name
+		button.custom_minimum_size = Vector2(368, 32)
+		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(on_component_button_pressed.bind(component_name))
+
+		button.add_theme_stylebox_override("normal", style_normal) # Apply themes
+		button.add_theme_stylebox_override("hover", style_hover)
+		button.add_theme_stylebox_override("pressed", style_pressed)
 
 		components_content.add_child(button)
 		components_content.move_child(button, components_content.get_child_count() - 2)

@@ -24,7 +24,7 @@ var circuit_persistence_manager: CircuitPersistenceManager
 # ============================================================================
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
-@onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Current_Mode')
+@onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent/Current_Mode')
 
 # ============================================================================
 # LIFECYCLE
@@ -247,7 +247,7 @@ func _set_mode(new_mode: Mode, gate_name: String = ''):
 	
 	# Update mode
 	current_mode = new_mode
-	mode_label.text = str(current_mode)
+	mode_label.text = "MODE [" + Mode.keys()[current_mode] + "]"
 
 	# Enter new mode
 	match new_mode:

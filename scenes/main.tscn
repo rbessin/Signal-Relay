@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=97 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
@@ -16,7 +16,10 @@
 [ext_resource type="Texture2D" uid="uid://37b1v6h8jxuc" path="res://assets/art/cancel_button_pressed_48x72.png" id="12_trceg"]
 [ext_resource type="Texture2D" uid="uid://hk3hlufp0oqo" path="res://assets/art/button_lighter_blue_368x32.png" id="12_yc10j"]
 [ext_resource type="Texture2D" uid="uid://bgawjit3qiwej" path="res://assets/art/cancel_button_hover_48x72.png" id="13_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://chkjy8unydog3" path="res://assets/art/button_yellow_368x32.png" id="13_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://xyejoduyeoj" path="res://assets/art/button_light_blue_368x32.png" id="13_jscy8"]
+[ext_resource type="Texture2D" uid="uid://dpd7n7ra2c0qv" path="res://assets/art/button_lighter_yellow_368x32.png" id="14_yc10j"]
+[ext_resource type="Texture2D" uid="uid://wtmaa6k8ccbo" path="res://assets/art/button_light_yellow_368x32.png" id="15_jscy8"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tm6hj"]
 texture = ExtResource("3_a8y0u")
@@ -64,94 +67,94 @@ texture = ExtResource("9_muem4")
 texture = ExtResource("10_dp3eg")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trceg"]
-texture = ExtResource("11_gqmmt")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a8y0u"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkv2x"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jbj1t"]
-texture = ExtResource("11_gqmmt")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_muem4"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dp3eg"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0ld40"]
-texture = ExtResource("11_gqmmt")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gqmmt"]
-texture = ExtResource("12_yc10j")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yc10j"]
-texture = ExtResource("13_jscy8")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jscy8"]
-texture = ExtResource("11_gqmmt")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pm3ni"]
-texture = ExtResource("12_yc10j")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y6deb"]
-texture = ExtResource("13_jscy8")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og1vs"]
-texture = ExtResource("11_gqmmt")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2wyq8"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vxglm"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("14_yc10j")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2f3dj"]
-texture = ExtResource("11_gqmmt")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yc10j"]
+texture = ExtResource("15_jscy8")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yq6so"]
-texture = ExtResource("12_yc10j")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jscy8"]
+texture = ExtResource("13_gqmmt")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fv21b"]
-texture = ExtResource("13_jscy8")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pm3ni"]
+texture = ExtResource("14_yc10j")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tel4y"]
-texture = ExtResource("11_gqmmt")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y6deb"]
+texture = ExtResource("15_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og1vs"]
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2wyq8"]
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qkpxi"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("15_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2f3dj"]
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yq6so"]
+texture = ExtResource("14_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fv21b"]
+texture = ExtResource("15_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tel4y"]
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ih3m7"]
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5q0nq"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dgi5k"]
-texture = ExtResource("11_gqmmt")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j8jky"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kmb1v"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fuf3a"]
-texture = ExtResource("11_gqmmt")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pibwh"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6pm6"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5he1u"]
-texture = ExtResource("11_gqmmt")
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5poiv"]
-texture = ExtResource("12_yc10j")
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2cjbq"]
-texture = ExtResource("13_jscy8")
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ro3en"]
 texture = ExtResource("8_jkv2x")
@@ -351,12 +354,12 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_1epgm")
 text = " ▶ Tools"
 alignment = 0
 
-[node name="ToolsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
+[node name="PrimaryToolsContent" type="HBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Select" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
-custom_minimum_size = Vector2(368, 32)
+[node name="Select" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent"]
+custom_minimum_size = Vector2(122, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
@@ -364,8 +367,8 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Select"
 
-[node name="Wire" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
-custom_minimum_size = Vector2(368, 32)
+[node name="Wire" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent"]
+custom_minimum_size = Vector2(124, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
@@ -373,8 +376,8 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Wire"
 
-[node name="Simulate" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
-custom_minimum_size = Vector2(368, 32)
+[node name="Simulate" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent"]
+custom_minimum_size = Vector2(122, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_o6xl0")
@@ -382,20 +385,25 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_tipki")
 theme_override_styles/hover = SubResource("StyleBoxTexture_eb6dy")
 text = "Simulate"
 
-[node name="CreateComponentButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+[node name="SecondaryToolsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CreateComponentButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent"]
+visible = false
 custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_cjqg0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_vchkt")
 theme_override_styles/hover = SubResource("StyleBoxTexture_txyw0")
-disabled = true
 text = "Create Component"
 
-[node name="Current_Mode" type="Label" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent"]
+[node name="Current_Mode" type="Label" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent"]
 custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_chjal")
+text = "MODE [SELECT]"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -442,7 +450,7 @@ custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_0ld40")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_gqmmt")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vxglm")
 theme_override_styles/hover = SubResource("StyleBoxTexture_yc10j")
 text = "NOR"
 
@@ -461,7 +469,7 @@ layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_og1vs")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_2wyq8")
-theme_override_styles/hover = SubResource("StyleBoxTexture_vxglm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qkpxi")
 text = "OR"
 
 [node name="XORButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
@@ -478,7 +486,7 @@ custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_tel4y")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_qkpxi")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ih3m7")
 theme_override_styles/hover = SubResource("StyleBoxTexture_5q0nq")
 text = "INPUT"
 
@@ -527,7 +535,7 @@ alignment = 0
 
 [node name="ComponentsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="BrowseComponentsButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent"]
 custom_minimum_size = Vector2(368, 32)
@@ -762,10 +770,10 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_dnhof")
 text = "Confirm"
 
-[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Select" to="." method="select_select"]
-[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Wire" to="." method="select_wire"]
-[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/Simulate" to="." method="select_simulate"]
-[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/ToolsContent/CreateComponentButton" to="." method="_on_create_component_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Select" to="." method="select_select"]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Wire" to="." method="select_wire"]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Simulate" to="." method="select_simulate"]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent/CreateComponentButton" to="." method="_on_create_component_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/ANDButton" to="." method="select_place" binds= ["AND"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/NANDButton" to="." method="select_place" binds= ["NAND"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/NORButton" to="." method="select_place" binds= ["NOR"]]
