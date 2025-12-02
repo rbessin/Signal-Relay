@@ -15,11 +15,13 @@ func _init(main_node: Node2D):
 	print("CircuitPersistenceManager instantiated.")
 
 func setup_ui_references():
-	var simulation_base = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection2/SimulationContent')
-	file_name_input = simulation_base.get_node('FileNameInput')
-	clear_button = simulation_base.get_node('Clear Scene')
-	save_button = simulation_base.get_node('Save')
-	load_button = simulation_base.get_node('Load')
+	var simulation_base = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection')
+	var simulation_primary = simulation_base.get_node('PrimarySimulationContent')
+	var simulation_secondary = simulation_base.get_node('SecondarySimulationContent')
+	file_name_input = simulation_secondary.get_node('FileNameInput')
+	clear_button = simulation_primary.get_node('Clear Scene')
+	save_button = simulation_primary.get_node('Save')
+	load_button = simulation_primary.get_node('Load')
 
 func handle_save():
 	on_save_button_pressed()
