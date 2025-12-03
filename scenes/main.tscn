@@ -1,7 +1,8 @@
-[gd_scene load_steps=98 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=100 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
+[ext_resource type="Script" uid="uid://bys2k1yqjorub" path="res://scripts/core/grid_background.gd" id="2_jscy8"]
 [ext_resource type="Texture2D" uid="uid://41qqq5hsseb3" path="res://assets/art/button_normal_48x72.png" id="2_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://dka8gtvv1tta5" path="res://assets/art/Sidebar_400x1080.png" id="3_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://olvop1ic7hre" path="res://assets/art/yellow_section_368x64.png" id="5_a8y0u"]
@@ -20,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://xyejoduyeoj" path="res://assets/art/button_light_blue_368x32.png" id="13_jscy8"]
 [ext_resource type="Texture2D" uid="uid://dpd7n7ra2c0qv" path="res://assets/art/button_lighter_yellow_368x32.png" id="14_yc10j"]
 [ext_resource type="Texture2D" uid="uid://wtmaa6k8ccbo" path="res://assets/art/button_light_yellow_368x32.png" id="15_jscy8"]
+[ext_resource type="Texture2D" uid="uid://dffmkgx2l36eo" path="res://assets/art/input_selected_green_368x32.png" id="16_yc10j"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tm6hj"]
 texture = ExtResource("3_a8y0u")
@@ -214,7 +216,11 @@ texture = ExtResource("13_jscy8")
 texture = ExtResource("10_dp3eg")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_11yus"]
-texture = ExtResource("9_muem4")
+texture = ExtResource("16_yc10j")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85g3d"]
 bg_color = Color(0, 0, 0, 0.7)
@@ -273,6 +279,9 @@ texture = ExtResource("11_eb6dy")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
+
+[node name="GridBackground" type="Node2D" parent="."]
+script = ExtResource("2_jscy8")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
@@ -580,6 +589,7 @@ text = "Clear"
 [node name="Save" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent"]
 custom_minimum_size = Vector2(124, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_xljpf")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_j4bwh")
 theme_override_styles/hover = SubResource("StyleBoxTexture_ksmap")
@@ -601,11 +611,10 @@ theme_override_constants/separation = 0
 [node name="FileNameInput" type="LineEdit" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/SecondarySimulationContent"]
 custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0, 0, 0, 0.6)
 theme_override_styles/normal = SubResource("StyleBoxTexture_ndrjj")
 theme_override_styles/focus = SubResource("StyleBoxTexture_11yus")
 placeholder_text = "circuit_name"
+alignment = 1
 
 [node name="ComponentDialogBackdrop" type="Panel" parent="UICanvas/UIControl"]
 visible = false

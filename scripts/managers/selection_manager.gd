@@ -20,7 +20,9 @@ func drag():
 	if is_dragging and selected_gates.size() > 0: # Check if dragging and existance of selected gates
 		var mouse_pos = main.get_global_mouse_position()
 		for gate in selected_gates:
-			if gate in drag_offsets: gate.global_position = mouse_pos + drag_offsets[gate] # Drag each gate by its offset from the mouse
+			if gate in drag_offsets: 
+				var target_pos = mouse_pos + drag_offsets[gate] # Drag each gate by its offset from the mouse
+				gate.global_position = GridBackground.snap_to_grid(target_pos, 32)
 
 func select_gate_instance(gate_instance: Gate):
 	if main.current_mode == main.Mode.SIMULATE: # Toggle inputs if in SIMULATE

@@ -15,10 +15,12 @@ var width: int = 4
 var preview_end_position: Vector2 = Vector2.ZERO
 var is_preview: bool = false
 
+# Grid snapping
+const GRID_SIZE: int = 32
+
 # Collision parameters (area, shapes, signal)
 var area_2d: Area2D
-var collision_shape: CollisionShape2D
-var rectangle_shape: RectangleShape2D
+var collision_shapes: Array[CollisionShape2D] = []
 signal wire_clicked(wire_instance)
 
 # Functions on mount and every frame
@@ -35,18 +37,58 @@ func _process(_delta):
 	update_visuals()
 	update_collision()
 
-# Updates visuals (accounts for gate movements)
+# Calculate orthogonal path between two points
+func calculate_orthogonal_path(start: Vector2, end: Vector2) -> Array[Vector2]:
+	var path: Array[Vector2] = []
+	
+	# Start point
+	path.append(start)
+	
+	# Calculate offset
+	var dx = end.x - start.x
+	var dy = end.y - start.y
+	
+	# Snap midpoints to grid for cleaner routing
+	var mid_x = GridBackground.snap_to_grid(Vector2(start.x + dx / 2, 0), GRID_SIZE).x
+	var mid_y = GridBackground.snap_to_grid(Vector2(0, start.y + dy / 2), GRID_SIZE).y
+	
+	# Route based on which direction is dominant
+	if abs(dx) > abs(dy):
+		# Horizontal first, then vertical
+		path.append(Vector2(mid_x, start.y))
+		path.append(Vector2(mid_x, end.y))
+	else:
+		# Vertical first, then horizontal
+		path.append(Vector2(start.x, mid_y))
+		path.append(Vector2(end.x, mid_y))
+	
+	# End point
+	path.append(end)
+	
+	return path
+
+# Updates visuals (accounts for gate movements and orthogonal routing)
 func update_visuals():
-	if from_pin == null: return
+	if from_pin == null:
+		return
 	
 	var start_position = to_local(from_pin.global_position)
 	var end_position: Vector2
 
-	if is_preview: end_position = to_local(preview_end_position)
-	elif to_pin != null: end_position = to_local(to_pin.global_position)
-	else: return
+	if is_preview:
+		end_position = to_local(preview_end_position)
+	elif to_pin != null:
+		end_position = to_local(to_pin.global_position)
+	else:
+		return
 
-	line.points = [start_position, end_position]
+	# Calculate orthogonal path
+	var path = calculate_orthogonal_path(start_position, end_position)
+	
+	# Update line points
+	line.clear_points()
+	for point in path:
+		line.add_point(point)
 
 # Set collisions
 func set_collisions():
@@ -55,61 +97,65 @@ func set_collisions():
 	area_2d.input_pickable = true
 	add_child(area_2d)
 	area_2d.input_event.connect(_on_area_input_event)
-	
-	# Create rectangle shape 2d
-	rectangle_shape = RectangleShape2D.new()
 
-	# Create collision shape 2d
-	collision_shape = CollisionShape2D.new()
-	collision_shape.shape = rectangle_shape
-	area_2d.add_child(collision_shape)
-	
-	update_collision() # Update collisions
-
-# Update collisions (accounts for gate movements)
+# Update collisions (accounts for gate movements and multiple segments)
 func update_collision():
-	if from_pin == null: return
-
-	var start_pos: Vector2
-	var end_pos: Vector2
-
-	if is_preview: # Handles wire preview
-		start_pos = to_local(from_pin.global_position)
-		end_pos = to_local(preview_end_position)
-	elif to_pin != null: # Handles instantiated wire
-		start_pos = to_local(from_pin.global_position)
-		end_pos = to_local(to_pin.global_position)
-	else: return # Handles non-complete wire
+	if from_pin == null:
+		return
 	
-	# Line calculations
-	var line_length = start_pos.distance_to(end_pos)
-	var line_angle = start_pos.angle_to_point(end_pos)
-	var line_center = (start_pos + end_pos) / 2
+	# Clear old collision shapes
+	for shape in collision_shapes:
+		shape.queue_free()
+	collision_shapes.clear()
 	
-	# Collision shape updates
-	rectangle_shape.size = Vector2(line_length, width)
-	collision_shape.position = line_center
-	collision_shape.rotation = line_angle
+	# Wait for line points to be updated
+	if line.get_point_count() < 2:
+		return
+	
+	# Create collision shape for each line segment
+	for i in range(line.get_point_count() - 1):
+		var p1 = line.get_point_position(i)
+		var p2 = line.get_point_position(i + 1)
+		
+		# Calculate segment properties
+		var line_length = p1.distance_to(p2)
+		var line_angle = p1.angle_to_point(p2)
+		var line_center = (p1 + p2) / 2
+		
+		# Create collision shape for this segment
+		var rectangle_shape = RectangleShape2D.new()
+		rectangle_shape.size = Vector2(line_length, width + 2)  # Slightly wider for easier clicking
+		
+		var collision_shape = CollisionShape2D.new()
+		collision_shape.shape = rectangle_shape
+		collision_shape.position = line_center
+		collision_shape.rotation = line_angle
+		
+		area_2d.add_child(collision_shape)
+		collision_shapes.append(collision_shape)
 
-# Functions to handle gate
-func set_selected(is_selected: bool): # Set selection
+# Functions to handle selection
+func set_selected(is_selected: bool):
 	selected = is_selected
-	if selected: 
+	if selected:
 		line.default_color = Color.YELLOW
 		line.width = width + 1
-	else: 
+	else:
 		line.default_color = color
 		line.width = width
 
-func _on_area_input_event(_viewport, event, _shape_idx): # Detect click on area 2d
+func _on_area_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT: wire_clicked.emit(self)
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			wire_clicked.emit(self)
 
 # Functions to handle signal propagation
-func propagate(): # Propagates signal from start pin to end pin
-	# Sets line color
-	if from_pin.signal_state == true: line.default_color = Color.LIGHT_YELLOW
-	else: line.default_color = Color.BLACK
+func propagate():
+	# Sets line color based on signal state
+	if from_pin.signal_state == true:
+		line.default_color = Color.LIGHT_YELLOW
+	else:
+		line.default_color = Color.BLACK
 
 	# Sets pin states
 	to_pin.signal_state = from_pin.signal_state
