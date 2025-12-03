@@ -75,5 +75,6 @@ func load_circuit(circuit_name: String):
 		destination_pin.connected_wires.append(new_wire)
 
 func empty_circuit():
+	main.selection_manager.clear_selection() # Clear selection
 	for child in gate_manager.gates.duplicate(): # Empty current scene
 		gate_manager.delete_gate(child)

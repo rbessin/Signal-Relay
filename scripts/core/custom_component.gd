@@ -15,7 +15,8 @@ var output_mappings: Array = []
 func _init():
 	# Set component-specific defaults
 	type = "CUSTOM"
-	color = Color(0.58, 0.24, 0.62)  # Purple to distinguish from base gates
+	color = Color(0.85, 0.65, 0.13)  # Purple to distinguish from base gates
+	border_color = Color(0.65, 0.45, 0.08)
 
 # Override _ready to handle component-specific setup
 func _ready():

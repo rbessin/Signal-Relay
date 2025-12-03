@@ -36,9 +36,8 @@ func instantiate_gate():
 	var snapped_pos = GridBackground.snap_to_grid(mouse_pos, 32)
 
 	# Build file path and instantiate component/gate
-	var component_file = "user://components/" + gate_type_to_place + ".json"
-	if FileAccess.file_exists(component_file): create_custom_component(gate_type_to_place, snapped_pos)
-	else: create_gate(gate_type_to_place, snapped_pos)
+	if gate_type_to_place in gate_prefabs: create_gate(gate_type_to_place, snapped_pos)
+	else: create_custom_component(gate_type_to_place, snapped_pos)
 
 func create_gate(gate_type: String, pos: Vector2, uid: String = "") -> Gate:
 	if gate_type not in gate_prefabs: return null # Return if there exists no hard-coded gate
