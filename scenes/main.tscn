@@ -1,9 +1,8 @@
-[gd_scene load_steps=100 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=115 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Theme" uid="uid://djff3ht8pnvol" path="res://assets/themes/ui_theme.tres" id="2_85g3d"]
 [ext_resource type="Script" uid="uid://bys2k1yqjorub" path="res://scripts/core/grid_background.gd" id="2_jscy8"]
-[ext_resource type="Texture2D" uid="uid://41qqq5hsseb3" path="res://assets/art/button_normal_48x72.png" id="2_tbgi4"]
 [ext_resource type="Texture2D" uid="uid://dka8gtvv1tta5" path="res://assets/art/Sidebar_400x1080.png" id="3_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://olvop1ic7hre" path="res://assets/art/yellow_section_368x64.png" id="5_a8y0u"]
 [ext_resource type="FontFile" uid="uid://cgx0y6mhjsptv" path="res://assets/fonts/DigitalDisco.ttf" id="5_tipki"]
@@ -11,17 +10,16 @@
 [ext_resource type="Script" uid="uid://c3hkknfkvabqv" path="res://scripts/ui/collapsible_section.gd" id="8_tipki"]
 [ext_resource type="Texture2D" uid="uid://8yt7vbli3mdc" path="res://assets/art/header_lightest_green_368x32.png" id="9_muem4"]
 [ext_resource type="Texture2D" uid="uid://3hs5skrhnl0i" path="res://assets/art/header_lighter_green_368x32.png" id="10_dp3eg"]
-[ext_resource type="Texture2D" uid="uid://dt4gyqfey1euq" path="res://assets/art/cancel_button_normal_48x72.png" id="10_ya4ey"]
-[ext_resource type="Texture2D" uid="uid://c66wn2n5n7j5y" path="res://assets/art/confirm_button_normal_48x72.png" id="11_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://k0cp5wr701hd" path="res://assets/art/button_blue_368x32.png" id="11_gqmmt"]
-[ext_resource type="Texture2D" uid="uid://37b1v6h8jxuc" path="res://assets/art/cancel_button_pressed_48x72.png" id="12_trceg"]
 [ext_resource type="Texture2D" uid="uid://hk3hlufp0oqo" path="res://assets/art/button_lighter_blue_368x32.png" id="12_yc10j"]
-[ext_resource type="Texture2D" uid="uid://bgawjit3qiwej" path="res://assets/art/cancel_button_hover_48x72.png" id="13_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://chkjy8unydog3" path="res://assets/art/button_yellow_368x32.png" id="13_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://xyejoduyeoj" path="res://assets/art/button_light_blue_368x32.png" id="13_jscy8"]
 [ext_resource type="Texture2D" uid="uid://dpd7n7ra2c0qv" path="res://assets/art/button_lighter_yellow_368x32.png" id="14_yc10j"]
 [ext_resource type="Texture2D" uid="uid://wtmaa6k8ccbo" path="res://assets/art/button_light_yellow_368x32.png" id="15_jscy8"]
 [ext_resource type="Texture2D" uid="uid://dffmkgx2l36eo" path="res://assets/art/input_selected_green_368x32.png" id="16_yc10j"]
+[ext_resource type="Texture2D" uid="uid://b7bb0kugcfsge" path="res://assets/art/modal_400x500.png" id="18_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://b82at0dbkgxo4" path="res://assets/art/modal_500x600.png" id="21_y6deb"]
+[ext_resource type="Texture2D" uid="uid://co8on5rdgfmmh" path="res://assets/art/modal_300x112.png" id="22_jscy8"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tm6hj"]
 texture = ExtResource("3_a8y0u")
@@ -226,56 +224,92 @@ texture_margin_bottom = 4.0
 bg_color = Color(0, 0, 0, 0.7)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vc5cj"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("18_pm3ni")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sgvw8"]
+texture = ExtResource("8_jkv2x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6nfnn"]
+texture = ExtResource("8_jkv2x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4ue30"]
+texture = ExtResource("16_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k42av"]
+texture = ExtResource("8_jkv2x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gr8w0"]
+texture = ExtResource("8_jkv2x")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bu4jf"]
-texture = ExtResource("10_ya4ey")
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gqmmt"]
+texture = ExtResource("14_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_673bd"]
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o7ddy"]
-texture = ExtResource("11_eb6dy")
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_akjxb"]
+texture = ExtResource("14_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vrx01"]
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_choun"]
 bg_color = Color(0, 0, 0, 0.7)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bjg73"]
-texture = ExtResource("2_tbgi4")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("21_y6deb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b6ruc"]
+texture = ExtResource("8_jkv2x")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0loja"]
-texture = ExtResource("10_ya4ey")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("13_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1v6qk"]
-texture = ExtResource("12_trceg")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
-texture_margin_bottom = 4.0
+texture = ExtResource("14_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_augu2"]
-texture = ExtResource("13_a8y0u")
-texture_margin_left = 4.0
-texture_margin_top = 4.0
-texture_margin_right = 4.0
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ya4ey"]
 bg_color = Color(0, 0, 0, 0.7019608)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v0wtd"]
+texture = ExtResource("22_jscy8")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ids8r"]
-texture = ExtResource("10_ya4ey")
+texture = ExtResource("8_jkv2x")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_155or"]
+texture = ExtResource("16_yc10j")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vtx2l"]
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_63lxy"]
+texture = ExtResource("14_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fjhjs"]
+texture = ExtResource("15_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dnhof"]
-texture = ExtResource("11_eb6dy")
+texture = ExtResource("13_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bfu41"]
+texture = ExtResource("14_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r4ag1"]
+texture = ExtResource("15_jscy8")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0wfyh")
@@ -552,6 +586,7 @@ theme_override_constants/separation = 0
 [node name="BrowseComponentsButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent"]
 custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_nvyfr")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ty1g6")
 theme_override_styles/hover = SubResource("StyleBoxTexture_j2jfr")
@@ -642,55 +677,89 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_vc5cj")
 
-[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog"]
+[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog"]
 layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="Title" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_sgvw8")
 text = "Create Component"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ComponentName" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="ComponentNameInput" type="LineEdit" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-text = "Component Name :"
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_6nfnn")
+theme_override_styles/focus = SubResource("StyleBoxTexture_4ue30")
+placeholder_text = "Component Name"
+alignment = 1
 
-[node name="ComponentNameInput" type="LineEdit" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="ExternalInputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-placeholder_text = "MyComponent"
-
-[node name="ExternalInputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
-layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_k42av")
 text = "External Inputs :"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="InputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
-custom_minimum_size = Vector2(0, 150)
+[node name="InputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="InputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/InputsList"]
+[node name="InputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/InputsList"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
-[node name="ExternalOutputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="ExternalOutputs" type="Label" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_gr8w0")
 text = "External Outputs :"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="OutputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="OutputsList" type="ScrollContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="OutputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/OutputsList"]
+[node name="OutputsContainer" type="VBoxContainer" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/OutputsList"]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
-[node name="CancelButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="CancelButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_bu4jf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_gqmmt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_673bd")
 text = "Cancel"
 
-[node name="CreateButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent"]
+[node name="CreateButton" type="Button" parent="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_o7ddy")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_akjxb")
+theme_override_styles/hover = SubResource("StyleBoxTexture_vrx01")
 text = "Create"
 
 [node name="BrowseComponentsBackdrop" type="Panel" parent="UICanvas/UIControl"]
@@ -711,31 +780,48 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -250.0
+offset_top = -331.0
+offset_right = 250.0
+offset_bottom = 331.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_bjg73")
 
-[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog"]
+[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+[node name="Title" type="Label" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_b6ruc")
 text = "Components Library"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ComponentsList" type="ScrollContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+[node name="ComponentsList" type="ScrollContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
 custom_minimum_size = Vector2(0, 600)
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="ComponentsContainer" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/ComponentsList"]
+[node name="ComponentsContainer" type="VBoxContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent/ComponentsList"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent"]
+[node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_0loja")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1v6qk")
 theme_override_styles/hover = SubResource("StyleBoxTexture_augu2")
@@ -752,7 +838,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ya4ey")
 
 [node name="RenameDialog" type="PanelContainer" parent="UICanvas/UIControl/RenameComponentBackdrop"]
-custom_minimum_size = Vector2(300, 150)
+custom_minimum_size = Vector2(300, 112)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -765,29 +851,64 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_v0wtd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog"]
+[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog"]
 layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
 
-[node name="Title" type="Label" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer"]
 layout_mode = 2
-text = "Rename Component :"
+theme_override_constants/separation = 0
 
-[node name="RenameInput" type="LineEdit" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
+[node name="Title" type="Label" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 32)
 layout_mode = 2
+text = "Rename Component"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer"]
-layout_mode = 2
-
-[node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
+[node name="RenameInput" type="LineEdit" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(134, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_ids8r")
+theme_override_styles/focus = SubResource("StyleBoxTexture_155or")
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_vtx2l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_63lxy")
+theme_override_styles/hover = SubResource("StyleBoxTexture_fjhjs")
 text = "Cancel"
 
-[node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer"]
+[node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_dnhof")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_bfu41")
+theme_override_styles/hover = SubResource("StyleBoxTexture_r4ag1")
 text = "Confirm"
+
+[node name="CursorPositionLabel" type="Label" parent="UICanvas/UIControl"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -23.0
+offset_right = 127.0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_tipki")
+text = "POSITION  [0,0]"
 
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Select" to="." method="select_select"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Wire" to="." method="select_wire"]
@@ -807,8 +928,8 @@ text = "Confirm"
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent/Clear Scene" to="." method="_empty_circuit"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent/Save" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent/Load" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CancelButton" to="." method="_on_cancel_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/DialogContent/CreateButton" to="." method="_on_create_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent/CloseButton" to="." method="_on_browse_close_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameCancelButton" to="." method="_on_rename_cancel_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer/HBoxContainer/RenameConfirmButton" to="." method="_on_rename_confirm_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent/CloseButton" to="." method="_on_browse_close_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameCancelButton" to="." method="_on_rename_cancel_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameConfirmButton" to="." method="_on_rename_confirm_button_pressed"]

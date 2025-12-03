@@ -23,8 +23,8 @@ func _init(main_node: Node2D):
 
 func setup_ui_references():
 	var inspector_base = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer')
-	var browse_dialog = main.get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/DialogContent')
-	var rename_dialog = main.get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/VBoxContainer')
+	var browse_dialog = main.get_node('UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent')
+	var rename_dialog = main.get_node('UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer')
 	
 	components_content = inspector_base.get_node('ComponentsSection/ComponentsContent')
 	browse_components_button = components_content.get_node('BrowseComponentsButton')
@@ -64,6 +64,7 @@ func populate_components_section():
 	var tex_normal = load("res://assets/art/button_yellow_368x32.png")
 	var tex_hover = load("res://assets/art/button_light_yellow_368x32.png")
 	var tex_pressed = load("res://assets/art/button_lighter_yellow_368x32.png")
+	var custom_font = load("res://assets/fonts/DigitalDisco.ttf")
 
 	# Create themes
 	var style_normal = StyleBoxTexture.new()
@@ -83,6 +84,7 @@ func populate_components_section():
 		button.add_theme_stylebox_override("normal", style_normal) # Apply themes
 		button.add_theme_stylebox_override("hover", style_hover)
 		button.add_theme_stylebox_override("pressed", style_pressed)
+		button.add_theme_font_override("font", custom_font)
 
 		components_content.add_child(button)
 		components_content.move_child(button, components_content.get_child_count() - 2)
@@ -110,40 +112,83 @@ func populate_browse_dialog():
 		browse_components_container.add_child(label)
 		return
 	
+	var button_texture_normal = load("res://assets/art/button_blue_368x32.png")
+	var button_texture_hover = load("res://assets/art/button_light_blue_368x32.png")
+	var button_texture_pressed = load("res://assets/art/button_lighter_blue_368x32.png")
+	var custom_font = load("res://assets/fonts/DigitalDisco.ttf")
+	
 	for component_name in components: # Create entries for each component
+		# Create margin container first
+		var entry_margin = MarginContainer.new()
+		entry_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		entry_margin.add_theme_constant_override("margin_left", 16)
+		entry_margin.add_theme_constant_override("margin_right", 16)
+		entry_margin.add_theme_constant_override("margin_top", 4)
+		entry_margin.add_theme_constant_override("margin_bottom", 4)
+		
+		# Create entry HBox
 		var entry = HBoxContainer.new()
-		entry.add_theme_constant_override("seperation", 8)
+		entry.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		entry.add_theme_constant_override("separation", 0)
 
 		var name_label = Label.new() # Add component name to entry
 		name_label.text = component_name
-		name_label.custom_minimum_size = Vector2(150, 0)
+		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		name_label.add_theme_font_override("font", custom_font)
 		entry.add_child(name_label)
 
-		var place_button = Button.new() # Add place button to entry
-		place_button.text = "Place"
-		place_button.custom_minimum_size = Vector2(60, 0)
+		var buttons_container = HBoxContainer.new()
+		buttons_container.size_flags_horizontal = Control.SIZE_SHRINK_END
+		buttons_container.add_theme_constant_override("separation", 0)
+
+		var place_button = create_styled_button("Place", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
 		place_button.pressed.connect(on_browse_place_pressed.bind(component_name))
-		entry.add_child(place_button)
+		buttons_container.add_child(place_button)
 
-		var preview_button = Button.new() # Add preview button to entry
-		preview_button.text = "Preview"
-		preview_button.custom_minimum_size = Vector2(70, 0)
+		var preview_button = create_styled_button("Preview", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
 		preview_button.disabled = true
-		entry.add_child(preview_button)
+		buttons_container.add_child(preview_button)
 
-		var delete_btn = Button.new() # Add delete button to entry
-		delete_btn.text = "Delete"
-		delete_btn.custom_minimum_size = Vector2(60, 0)
+		var delete_btn = create_styled_button("Delete", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
 		delete_btn.pressed.connect(on_browse_delete_pressed.bind(component_name))
-		entry.add_child(delete_btn)
+		buttons_container.add_child(delete_btn)
 		
-		var rename_btn = Button.new() # Add rename button to entry
-		rename_btn.text = "Rename"
-		rename_btn.custom_minimum_size = Vector2(70, 0)
+		var rename_btn = create_styled_button("Rename", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
 		rename_btn.pressed.connect(on_browse_rename_pressed.bind(component_name))
-		entry.add_child(rename_btn)
+		buttons_container.add_child(rename_btn)
 
-		browse_components_container.add_child(entry) # Add to component options
+		entry.add_child(buttons_container)
+
+		entry_margin.add_child(entry)
+		browse_components_container.add_child(entry_margin)
+
+func create_styled_button(text: String, size: Vector2, tex_normal: Texture2D, tex_hover: Texture2D, tex_pressed: Texture2D, font: Font) -> Button:
+	var button = Button.new() # Function to create a textured button with consistent styling
+	button.text = text
+	button.custom_minimum_size = size
+	button.focus_mode = Control.FOCUS_NONE
+	
+	# Create StyleBoxTexture for each state
+	var style_normal = StyleBoxTexture.new()
+	style_normal.texture = tex_normal
+	style_normal.draw_center = true
+	
+	var style_hover = StyleBoxTexture.new()
+	style_hover.texture = tex_hover
+	style_hover.draw_center = true
+	
+	var style_pressed = StyleBoxTexture.new()
+	style_pressed.texture = tex_pressed
+	style_pressed.draw_center = true
+	
+	# Apply styles to button
+	button.add_theme_stylebox_override("normal", style_normal)
+	button.add_theme_stylebox_override("hover", style_hover)
+	button.add_theme_stylebox_override("pressed", style_pressed)
+	button.add_theme_font_override("font", font)
+	
+	return button
 
 func on_browse_place_pressed(component_name: String):
 	browse_backdrop.visible = false # Close dialog and select component

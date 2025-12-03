@@ -25,7 +25,7 @@ func _init(main_node: Node2D):
 
 func setup_ui_references():
 	var dialog_base = main.get_node('UICanvas/UIControl/ComponentDialogBackdrop')
-	var dialog_content = dialog_base.get_node('ComponentDialog/DialogContent')
+	var dialog_content = dialog_base.get_node('ComponentDialog/MarginContainer/DialogContent')
 	var _primary_tools = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent')
 	var secondary_tools = main.get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent')
 	
@@ -103,14 +103,43 @@ func show_component_dialog():
 	for child in outputs_container.get_children():
 		child.queue_free()
 	
+	var label_texture = load("res://assets/art/button_blue_368x32.png")
+	var custom_font = load("res://assets/fonts/DigitalDisco.ttf")
+	
 	for input_data in current_component_pin_data.inputs: # Add current component input data
 		var label = Label.new()
 		label.text = "Input: " + input_data.pin_name
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.custom_minimum_size = Vector2(0, 32)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		# Create texture background style
+		var style = StyleBoxTexture.new()
+		style.texture = label_texture
+		style.draw_center = true
+		
+		label.add_theme_stylebox_override("normal", style)
+		label.add_theme_font_override("font", custom_font)
+
 		inputs_container.add_child(label)
 	
 	for output_data in current_component_pin_data.outputs: # Add current component output data
 		var label = Label.new()
 		label.text = "Output: " + output_data.pin_name
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.custom_minimum_size = Vector2(0, 32)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		# Create texture background style
+		var style = StyleBoxTexture.new()
+		style.texture = label_texture
+		style.draw_center = true
+		
+		label.add_theme_stylebox_override("normal", style)
+		label.add_theme_font_override("font", custom_font)
+
 		outputs_container.add_child(label)
 	
 	component_dialog_backdrop.visible = true # Show component dialog to user

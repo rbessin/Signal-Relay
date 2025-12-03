@@ -25,6 +25,7 @@ var circuit_persistence_manager: CircuitPersistenceManager
 enum Mode { SELECT, PLACE, WIRE, SIMULATE }
 var current_mode: Mode = Mode.SELECT
 @onready var mode_label: Label = get_node('UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/SecondaryToolsContent/Current_Mode')
+@onready var cursor_position_label: Label = get_node('UICanvas/UIControl/CursorPositionLabel')
 
 # ============================================================================
 # LIFECYCLE
@@ -38,6 +39,7 @@ func _process(delta):
 	selection_manager.drag()
 	wire_manager.position_wire_preview()
 	_move_camera(delta)
+	_update_cursor_position_label()
 
 # ============================================================================
 # MANAGER INITIALIZATION
@@ -173,6 +175,8 @@ func _handle_delete():
 		for gate in selection_manager.selected_gates.duplicate():
 			gate_manager.delete_gate(gate)
 		selection_manager.selected_gates.clear()
+
+		selection_manager.update_create_component_button()
 		
 		# Delete selected wire
 		if selection_manager.selected_wire_instance != null:
@@ -272,6 +276,11 @@ func select_simulate():
 # ============================================================================
 # CAMERA CONTROLS
 # ============================================================================
+
+func _update_cursor_position_label():
+	var mouse_pos = get_global_mouse_position()
+	var snapped_pos = GridBackground.snap_to_grid(mouse_pos, 32)
+	cursor_position_label.text = "Position: (%d, %d)" % [snapped_pos.x, snapped_pos.y]
 
 func _move_camera(delta):
 	# Zoom
