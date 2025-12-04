@@ -36,7 +36,7 @@ func complete_wire_creation(end_pin: Pin):
 		return
 	else: # Complete wire creation
 		wire_preview.to_pin = end_pin # Remove wire preview and convert to real wire
-		wire_preview.is_preview = false
+		wire_preview.convert_to_real_wire()
 
 		wire_preview.wire_clicked.connect(selection_manager.select_wire_instance) # Add wire signals and add instance to trackers
 		wire_start_pin.connected_wires.append(wire_preview)

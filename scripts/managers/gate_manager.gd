@@ -13,6 +13,7 @@ var gate_prefabs: Dictionary = {
 	"NOR": preload("res://scenes/gates/nor_gate.tscn"),
 	"NOT": preload("res://scenes/gates/not_gate.tscn"),
 	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
+	"BUFFER": preload("res://scenes/gates/buffer_gate.tscn"),
 	"INPUT": preload("res://scenes/complex/input.tscn"),
 	"OUTPUT": preload("res://scenes/complex/output_display.tscn"),
 	"CLOCK": preload("res://scenes/complex/clock.tscn"),

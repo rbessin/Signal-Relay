@@ -9,6 +9,7 @@ var file_name_input: LineEdit # UI references
 var clear_button: Button
 var save_button: Button
 var load_button: Button
+var step_clock_button: Button
 
 func _init(main_node: Node2D):
 	main = main_node
@@ -22,6 +23,7 @@ func setup_ui_references():
 	clear_button = simulation_primary.get_node('Clear Scene')
 	save_button = simulation_primary.get_node('Save')
 	load_button = simulation_primary.get_node('Load')
+	step_clock_button = simulation_secondary.get_node('StepClockButton')
 
 func handle_save():
 	on_save_button_pressed()
@@ -78,3 +80,31 @@ func empty_circuit():
 	main.selection_manager.clear_selection() # Clear selection
 	for child in gate_manager.gates.duplicate(): # Empty current scene
 		gate_manager.delete_gate(child)
+	
+	if main.current_mode == main.Mode.SIMULATE:
+		update_step_clock_button_visibility()
+
+func step_manual_clocks(): # Step all clocks that are in manual mode
+	var stepped_count = 0
+	for gate in gate_manager.gates:
+		if gate.type == "CLOCK" and gate.has_method("manual_step"):
+			if gate.manual_mode and gate.is_running:
+				gate.manual_step()
+				stepped_count += 1
+	
+	if stepped_count > 0: print("Stepped ", stepped_count, " clock(s)")
+	else: print("No manual clocks to step")
+
+func update_step_clock_button_visibility(): # Show button in SIMULATE and manual modes
+	if main.current_mode != main.Mode.SIMULATE:
+		step_clock_button.visible = false
+		return
+	
+	# Check if any manual clocks exist
+	var has_manual_clock = false
+	for gate in gate_manager.gates:
+		if gate.type == "CLOCK" and gate.manual_mode:
+			has_manual_clock = true
+			break
+	
+	step_clock_button.visible = has_manual_clock

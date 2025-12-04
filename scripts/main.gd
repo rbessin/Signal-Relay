@@ -114,6 +114,8 @@ func _connect_manager_signals():
 		circuit_persistence_manager.on_save_button_pressed)
 	circuit_persistence_manager.load_button.pressed.connect(
 		circuit_persistence_manager.on_load_button_pressed)
+	circuit_persistence_manager.step_clock_button.pressed.connect(
+		circuit_persistence_manager.step_manual_clocks)
 
 # ============================================================================
 # PIN SIGNAL BRIDGE
@@ -181,6 +183,15 @@ func _handle_delete():
 		# Delete selected wire
 		if selection_manager.selected_wire_instance != null:
 			wire_manager.delete_selected_wire()
+	
+	elif current_mode == Mode.SIMULATE:
+		# Delete selected gates in simulate mode
+		for gate in selection_manager.selected_gates.duplicate():
+			gate_manager.delete_gate(gate)
+		selection_manager.selected_gates.clear()
+		
+		# Update step clock button visibility
+		circuit_persistence_manager.update_step_clock_button_visibility()
 
 func _handle_stop():
 	if current_mode == Mode.WIRE:
@@ -225,6 +236,8 @@ func _enter_simulate():
 	for gate in gate_manager.gates:
 		if gate.type == "CLOCK":
 			gate.start_clock()
+	
+	circuit_persistence_manager.update_step_clock_button_visibility()
 
 func _exit_select():
 	selection_manager.clear_selection()
@@ -240,6 +253,8 @@ func _exit_simulate():
 	for gate in gate_manager.gates:
 		if gate.type == "CLOCK":
 			gate.stop_clock()
+	
+	circuit_persistence_manager.step_clock_button.visible = false
 
 func _set_mode(new_mode: Mode, gate_name: String = ''):
 	# Exit current mode

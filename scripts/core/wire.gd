@@ -23,6 +23,9 @@ var area_2d: Area2D
 var collision_shapes: Array[CollisionShape2D] = []
 signal wire_clicked(wire_instance)
 
+# Track last path to avoid unnecessary updates
+var last_path: Array[Vector2] = []
+
 # Functions on mount and every frame
 func _ready():
 	line = Line2D.new()
@@ -30,12 +33,12 @@ func _ready():
 	line.width = width
 	add_child(line)
 	
-	set_collisions()
+	if not is_preview: set_collisions() # Only add collision for real wires
+	
 	update_visuals()
 
 func _process(_delta):
 	update_visuals()
-	update_collision()
 
 # Calculate orthogonal path between two points
 func calculate_orthogonal_path(start: Vector2, end: Vector2) -> Array[Vector2]:
@@ -69,8 +72,7 @@ func calculate_orthogonal_path(start: Vector2, end: Vector2) -> Array[Vector2]:
 
 # Updates visuals (accounts for gate movements and orthogonal routing)
 func update_visuals():
-	if from_pin == null:
-		return
+	if from_pin == null: return
 	
 	var start_position = to_local(from_pin.global_position)
 	var end_position: Vector2
@@ -79,16 +81,30 @@ func update_visuals():
 		end_position = to_local(preview_end_position)
 	elif to_pin != null:
 		end_position = to_local(to_pin.global_position)
-	else:
-		return
+	else: return
 
 	# Calculate orthogonal path
 	var path = calculate_orthogonal_path(start_position, end_position)
 	
-	# Update line points
-	line.clear_points()
-	for point in path:
-		line.add_point(point)
+	# Check if path changed
+	var path_changed = false
+	if path.size() != last_path.size(): path_changed = true
+	else:
+		for i in range(path.size()):
+			if path[i].distance_to(last_path[i]) > 0.1:  # Tolerance for floating point
+				path_changed = true
+				break
+	
+	# Only update if path changed
+	if path_changed:
+		# Update line points
+		line.clear_points()
+		for point in path: line.add_point(point)
+		
+		# Update collision for real wires only
+		if not is_preview: update_collision()
+		
+		last_path = path
 
 # Set collisions
 func set_collisions():
@@ -100,7 +116,7 @@ func set_collisions():
 
 # Update collisions (accounts for gate movements and multiple segments)
 func update_collision():
-	if from_pin == null:
+	if from_pin == null or is_preview or area_2d == null:
 		return
 	
 	# Clear old collision shapes
@@ -112,19 +128,24 @@ func update_collision():
 	if line.get_point_count() < 2:
 		return
 	
+	print("Creating collision for wire with ", line.get_point_count(), " points")  # ADD THIS
+	
 	# Create collision shape for each line segment
 	for i in range(line.get_point_count() - 1):
 		var p1 = line.get_point_position(i)
 		var p2 = line.get_point_position(i + 1)
 		
-		# Calculate segment properties
+		# Skip very short segments
 		var line_length = p1.distance_to(p2)
+		if line_length < 1.0: continue
+		
+		# Calculate segment properties
 		var line_angle = p1.angle_to_point(p2)
 		var line_center = (p1 + p2) / 2
 		
 		# Create collision shape for this segment
 		var rectangle_shape = RectangleShape2D.new()
-		rectangle_shape.size = Vector2(line_length, width + 2)  # Slightly wider for easier clicking
+		rectangle_shape.size = Vector2(line_length, width + 4)  # Wider hitbox for easier clicking
 		
 		var collision_shape = CollisionShape2D.new()
 		collision_shape.shape = rectangle_shape
@@ -133,6 +154,8 @@ func update_collision():
 		
 		area_2d.add_child(collision_shape)
 		collision_shapes.append(collision_shape)
+	
+	print("Created ", collision_shapes.size(), " collision shapes")
 
 # Functions to handle selection
 func set_selected(is_selected: bool):
@@ -144,9 +167,17 @@ func set_selected(is_selected: bool):
 		line.default_color = color
 		line.width = width
 
+func convert_to_real_wire(): # Converts a preview wire to a real wire
+	is_preview = false
+	set_collisions()  # Now set up collision!
+	update_collision()  # Create initial collision shapes
+
 func _on_area_input_event(_viewport, event, _shape_idx):
+	print("Wire input event detected!")  # ADD THIS
 	if event is InputEventMouseButton:
+		print("Mouse button event on wire!")  # ADD THIS
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			print("Left click on wire - emitting signal!")  # ADD THIS
 			wire_clicked.emit(self)
 
 # Functions to handle signal propagation
@@ -154,8 +185,7 @@ func propagate():
 	# Sets line color based on signal state
 	if from_pin.signal_state == true:
 		line.default_color = Color.LIGHT_YELLOW
-	else:
-		line.default_color = Color.BLACK
+	else: line.default_color = Color.BLACK
 
 	# Sets pin states
 	to_pin.signal_state = from_pin.signal_state
