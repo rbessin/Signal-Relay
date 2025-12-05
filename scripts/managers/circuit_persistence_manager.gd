@@ -49,12 +49,22 @@ func load_circuit(circuit_name: String):
 
 	var gates_by_uid: Dictionary = {}
 
-	for gate in circuit_dict["gates"]: # Create circuit gates
-		var new_gate = gate_manager.create_gate(
-			gate["type"], 
-			Vector2(gate["x"], gate["y"]),
-			gate["uid"]
-		)
+	for gate in circuit_dict["gates"]:
+		var new_gate: Gate = null
+		
+		var component_file = "user://components/" + gate["type"] + ".json"
+		if FileAccess.file_exists(component_file): # Check if it's a custom component
+			new_gate = gate_manager.create_custom_component(gate["type"], Vector2(gate["x"], gate["y"]))
+			if new_gate: # Override the auto-generated UID with the saved one
+				new_gate.uid = gate["uid"]
+				new_gate.name = gate["type"] + '_' + gate["uid"]
+		else: # It's a hardcoded gate
+			new_gate = gate_manager.create_gate(
+				gate["type"],
+				Vector2(gate["x"], gate["y"]),
+				gate["uid"]
+			)
+		
 		if new_gate != null: gates_by_uid[gate["uid"]] = new_gate
 	
 	await main.get_tree().process_frame

@@ -10,17 +10,14 @@ func _ready() -> void:
 	super._ready()
 
 func evaluate():
-	if input_values.size() > 0:
-		output_value = input_values[0]  # Just pass through the input
-		update_visual()
+	update_visual()
 
 func update_visual():
-	if output_value:
+	if input_values.size() > 0 and input_values[0]:
 		color_rect.modulate = Color('#4A8F6F')
 		label.text = "True"
 	else:
 		color_rect.modulate = Color('#5C1F1A')
 		label.text = "False"
 
-func get_default_input_name(_index: int) -> String:
-	return "In_0"
+func get_default_input_name(_index: int) -> String: return "In"

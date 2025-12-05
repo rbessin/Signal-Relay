@@ -6,15 +6,15 @@ var previous_clock_state: bool = false
 func _ready():
 	type = "D_FLIPFLOP"
 	num_inputs = 2
+	num_outputs = 1
 	input_values = [false, false]
-	output_value = false
 	color = Color('#4F3D5C')
 	border_color = Color('#8FB3A8')
 	super._ready()
 
 func evaluate() -> void:
 	if previous_clock_state == false and input_values[1] == true:
-		output_value = input_values[0]
+		output_values[0] = input_values[0]
 	previous_clock_state = input_values[1]
 
 func get_default_input_name(index: int) -> String:

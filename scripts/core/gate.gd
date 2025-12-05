@@ -8,8 +8,7 @@ extends Node2D
 
 # State parameters (input, output)
 @export var input_values: Array[bool] = []
-var previous_output_value: bool = false
-@export var output_value: bool = false
+@export var output_values: Array[bool] = []
 
 # Structure parameters (# of inputs, # of outputs)
 @export var num_inputs: int = 0
@@ -33,6 +32,9 @@ signal gate_clicked(gate_instance)
 
 # Functions on mount and every frame
 func _ready() -> void: # Sets visuals, collisions and pins when added to the scene
+	output_values.resize(num_outputs)
+	for i in range(num_outputs): output_values[i] = false
+
 	set_visuals()
 	set_collisions()
 	create_pins()
@@ -42,11 +44,19 @@ func evaluate() -> void: # Evaluates inputs to set output (to be overriden by su
 	pass
 
 func evaluate_with_propagation() -> void: # Gets inputs, evaluates inputs, sets output (evaluation cycle)
-	var old_output = output_value
+	var old_outputs = output_values.duplicate()
+
 	read_inputs_from_pins()
 	evaluate()
 	write_output_to_pin()
-	if output_value != old_output: propagate_to_wires()
+
+	var changed = false
+	for i in range(output_values.size()):
+		if i < old_outputs.size() and output_values[i] != old_outputs[i]:
+			changed = true
+			break
+	
+	if changed: propagate_to_wires()
 
 func propagate_to_wires(): # Propagate output to wires
 	for child in get_children():
@@ -166,7 +176,9 @@ func set_input(index, value) -> void: # Set input state
 	evaluate()
 
 func get_output() -> bool: # Get output state
-	return output_value
+	if output_values.size() > 0:
+		return output_values[0]
+	return false
 
 func read_inputs_from_pins() -> void: # Read inputs from pins
 	var input_num: int = 0
@@ -177,12 +189,13 @@ func read_inputs_from_pins() -> void: # Read inputs from pins
 				input_num += 1
 
 func write_output_to_pin() -> void: # Write output to pin
+	var output_num: int = 0
 	for child in get_children():
-		if child is Pin:
-			if child.pin_type == Pin.PinType.OUTPUT:
-				child.signal_state = output_value
+		if child is Pin and child.pin_type == Pin.PinType.OUTPUT:
+			if output_num < output_values.size():
+				child.signal_state = output_values[output_num]
 				child.update_visuals()
-				return
+			output_num += 1
 
 # Functions to handle pins
 func create_pins(): # Create pins

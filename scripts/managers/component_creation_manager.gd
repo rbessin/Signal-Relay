@@ -93,6 +93,21 @@ func detect_external_pins(selected_gate_list: Array[Gate]) -> Dictionary:
 						"pin_name": child.pin_name
 					})
 
+	# Sort pins spatially (top-to-bottom, then left-to-right)
+	external_inputs.sort_custom(func(a, b):
+		var pos_a = a["pin"].global_position
+		var pos_b = b["pin"].global_position
+		if abs(pos_a.y - pos_b.y) > 16: return pos_a.y < pos_b.y
+		return pos_a.x < pos_b.x
+	)
+	
+	external_outputs.sort_custom(func(a, b):
+		var pos_a = a["pin"].global_position
+		var pos_b = b["pin"].global_position
+		if abs(pos_a.y - pos_b.y) > 16: return pos_a.y < pos_b.y
+		return pos_a.x < pos_b.x
+	)
+
 	return {"inputs": external_inputs, "outputs": external_outputs} # Return external inputs and outputs for component
 
 func show_component_dialog():
@@ -149,9 +164,10 @@ func on_cancel_button_pressed():
 	current_component_pin_data = {} # Reset pin data tracker
 
 func on_create_button_pressed():
-	var component_name = component_name_input.text.strip_edges() # Retrieve name without whitespace
+	var component_name = component_name_input.text.strip_edges()
 	
-	if component_name == "": return # Stop component creation if component doesn't have a name
+	if component_name == "":
+		return
 	
 	# Calculate center position of component
 	var center_pos = Vector2.ZERO
@@ -162,7 +178,7 @@ func on_create_button_pressed():
 	# Transform pin data to match ComponentSerializer's expected format
 	var pin_mappings = {"inputs": [], "outputs": []}
 	
-	for input_data in current_component_pin_data["inputs"]: # Tranform input pin data
+	for input_data in current_component_pin_data["inputs"]:
 		var gate = input_data["gate"]
 		var pin = input_data["pin"]
 		var pin_index = gate.get_pin_index(pin)
@@ -173,7 +189,7 @@ func on_create_button_pressed():
 			"pin_index": pin_index
 		})
 
-	for output_data in current_component_pin_data["outputs"]: # Tranform output pin data
+	for output_data in current_component_pin_data["outputs"]:
 		var gate = output_data["gate"]
 		var pin = output_data["pin"]
 		var pin_index = gate.get_pin_index(pin)
@@ -184,21 +200,35 @@ func on_create_button_pressed():
 			"pin_index": pin_index
 		})
 	
-	ComponentSerializer.save_component( # Save component using helper functions
+	# DEBUG OUTPUT - ADD THIS
+	print("=== DEBUG COMPONENT CREATION ===")
+	print("Selected gates:")
+	for gate in selection_manager.selected_gates:
+		print("  UID: ", gate.uid, " Type: ", gate.type)
+	
+	print("All wires in circuit:")
+	for wire in wire_manager.wires:
+		if wire.from_pin and wire.to_pin:
+			var from_gate = wire.from_pin.parent_gate
+			var to_gate = wire.to_pin.parent_gate
+			print("  Wire from: ", from_gate.uid, " (", from_gate.type, ") to: ", to_gate.uid, " (", to_gate.type, ")")
+			print("    From in selection? ", from_gate in selection_manager.selected_gates)
+			print("    To in selection? ", to_gate in selection_manager.selected_gates)
+	print("================================")
+	
+	ComponentSerializer.save_component(
 		component_name,
 		selection_manager.selected_gates,
 		wire_manager.wires,
 		pin_mappings
 	)
 	
-	for gate in selection_manager.selected_gates.duplicate(): # Delete selected gates
+	for gate in selection_manager.selected_gates.duplicate():
 		gate_manager.delete_gate(gate)
 	selection_manager.selected_gates.clear()
 	
-	# Create an instance of the new component
 	gate_manager.create_custom_component(component_name, center_pos)
 	
-	# Refresh the UI
 	component_library_manager.populate_components_section()
 	component_dialog_backdrop.visible = false
 	current_component_pin_data = {}

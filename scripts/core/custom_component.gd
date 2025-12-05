@@ -44,11 +44,15 @@ func _load_and_build_component():
 	for i in range(num_inputs):
 		input_values[i] = false
 	
+	# Initialize output_values array
+	output_values.resize(num_outputs)
+	for i in range(num_outputs):
+		output_values[i] = false
+	
 	# Call parent's _ready to set up visuals, collisions, and create external pins
 	super._ready()
-	
-	# Now build the internal circuit
-	_build_internal_circuit()
+	await _build_internal_circuit() # Build the internal circuit
+	_update_pin_names() # Update pin names from mappings
 
 # Build the internal circuit from the component definition
 func _build_internal_circuit():
@@ -78,6 +82,24 @@ func _build_internal_circuit():
 	
 	print("Internal circuit built for component: ", component_data["name"])
 
+# Update external pin names from loaded mappings
+func _update_pin_names():
+	# Update input pin names
+	var input_num = 0
+	for child in get_children():
+		if child is Pin and child.pin_type == Pin.PinType.INPUT:
+			if input_num < input_mappings.size():
+				child.pin_name = input_mappings[input_num]["name"]
+			input_num += 1
+	
+	# Update output pin names
+	var output_num = 0
+	for child in get_children():
+		if child is Pin and child.pin_type == Pin.PinType.OUTPUT:
+			if output_num < output_mappings.size():
+				child.pin_name = output_mappings[output_num]["name"]
+			output_num += 1
+
 # Initialize internal circuit state
 func _initialize_internal_circuit():
 	# Initialize all internal gates' outputs
@@ -90,6 +112,7 @@ func _initialize_internal_circuit():
 
 	_read_internal_outputs()
 	write_output_to_pin()
+	propagate_to_wires()
 
 # Create an internal gate from definition data
 func _create_internal_gate(gate_data: Dictionary) -> Gate:
@@ -101,6 +124,7 @@ func _create_internal_gate(gate_data: Dictionary) -> Gate:
 		"NOR": preload("res://scenes/gates/nor_gate.tscn"),
 		"NOT": preload("res://scenes/gates/not_gate.tscn"),
 		"XOR": preload("res://scenes/gates/xor_gate.tscn"),
+		"BUFFER": preload("res://scenes/gates/buffer_gate.tscn"),
 		"INPUT": preload("res://scenes/complex/input.tscn"),
 		"OUTPUT": preload("res://scenes/complex/output_display.tscn"),
 		"CLOCK": preload("res://scenes/complex/clock.tscn"),
@@ -232,14 +256,30 @@ func read_inputs_from_pins() -> void:
 func evaluate() -> void:
 	_read_internal_outputs()
 
+# Override evaluation cycle for custom components
+func evaluate_with_propagation() -> void:
+	var old_outputs = output_values.duplicate()
+	
+	read_inputs_from_pins()
+	_read_internal_outputs()
+	write_output_to_pin()
+	
+	var changed = false
+	for i in range(output_values.size()):
+		if i < old_outputs.size() and output_values[i] != old_outputs[i]:
+			changed = true
+			break
+	
+	if changed: propagate_to_wires()
+
 # Read internal output pins and set component's output
 func _read_internal_outputs():
 	for i in range(output_mappings.size()):
 		var mapping = output_mappings[i]
 		var internal_pin = mapping["internal_pin"]
 		
-		if internal_pin:
-			if i == 0: output_value = internal_pin.signal_state
+		if internal_pin and i < output_values.size():
+			output_values[i] = internal_pin.signal_state
 
 # Override write output to handle multiple outputs if needed
 func write_output_to_pin() -> void:
@@ -247,9 +287,7 @@ func write_output_to_pin() -> void:
 	for child in get_children():
 		if child is Pin and child.pin_type == Pin.PinType.OUTPUT:
 			# Set external output pin from the mapped internal pin
-			if output_num < output_mappings.size():
-				var internal_pin = output_mappings[output_num]["internal_pin"]
-				if internal_pin:
-					child.signal_state = internal_pin.signal_state
-					child.update_visuals()
+			if output_num < output_values.size():
+				child.signal_state = output_values[output_num]
+				child.update_visuals()
 			output_num += 1

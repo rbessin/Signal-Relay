@@ -4,11 +4,11 @@ extends Gate
 func _ready():
 	type = "AND"
 	num_inputs = 2
+	num_outputs = 1
 	input_values = [false, false]
-	output_value = false
 	color = Color('#1E4D5C')
 	border_color = Color('#8FB3A8')
 	super._ready()
 
 func evaluate() -> void:
-	output_value = input_values[0] and input_values[1]
+	output_values[0] = input_values[0] and input_values[1]

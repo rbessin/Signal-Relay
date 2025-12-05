@@ -221,6 +221,11 @@ func _enter_wire():
 
 func _enter_simulate():
 	await get_tree().process_frame
+
+	# Update INPUT visuals
+	for gate in gate_manager.gates:
+		if gate.type == "INPUT" and gate.has_method("update_visual"):
+			gate.update_visual()
 	
 	# Initialize all gate outputs
 	for gate in gate_manager.gates:

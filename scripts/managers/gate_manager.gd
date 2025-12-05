@@ -62,7 +62,9 @@ func create_custom_component(component_name: String, pos: Vector2) -> CustomComp
 
 	# Set custom component properties
 	new_component.component_definition_name = component_name
+	new_component.uid = generate_uid()
 	new_component.global_position = pos
+	new_component.name = component_name + '_' + new_component.uid
 	main.add_child(new_component)
 	new_component.gate_clicked.connect(selection_manager.select_gate_instance)
 	main.call_deferred("_connect_gate_pins", new_component)
