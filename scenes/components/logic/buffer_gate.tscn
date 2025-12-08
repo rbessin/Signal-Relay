@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dwvb76wqet28f"]
 
-[ext_resource type="Script" uid="uid://c3ar2f23vr2me" path="res://scripts/gates/buffer_gate.gd" id="1_nxvn6"]
+[ext_resource type="Script" uid="uid://c3ar2f23vr2me" path="res://scripts/components/logic/buffer_gate.gd" id="1_nxvn6"]
 
 [node name="Buffer" type="Node2D"]
 script = ExtResource("1_nxvn6")

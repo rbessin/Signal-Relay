@@ -1,6 +1,0 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://djff3ht8pnvol"]
-
-[ext_resource type="FontFile" uid="uid://cgx0y6mhjsptv" path="res://assets/fonts/DigitalDisco.ttf" id="1_ndjfm"]
-
-[resource]
-default_font = ExtResource("1_ndjfm")

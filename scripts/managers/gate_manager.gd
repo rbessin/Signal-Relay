@@ -7,17 +7,17 @@ var wire_manager: WireManager
 
 # Hard-coded gate prefabs
 var gate_prefabs: Dictionary = {
-	"AND": preload("res://scenes/gates/and_gate.tscn"),
-	"NAND": preload("res://scenes/gates/nand_gate.tscn"),
-	"OR": preload("res://scenes/gates/or_gate.tscn"),
-	"NOR": preload("res://scenes/gates/nor_gate.tscn"),
-	"NOT": preload("res://scenes/gates/not_gate.tscn"),
-	"XOR": preload("res://scenes/gates/xor_gate.tscn"),
-	"BUFFER": preload("res://scenes/gates/buffer_gate.tscn"),
-	"INPUT": preload("res://scenes/complex/input.tscn"),
-	"OUTPUT": preload("res://scenes/complex/output_display.tscn"),
-	"CLOCK": preload("res://scenes/complex/clock.tscn"),
-	"D_FLIPFLOP": preload("res://scenes/complex/d_flipflop.tscn"),
+	"AND": preload("res://scenes/components/logic/and_gate.tscn"),
+	"NAND": preload("res://scenes/components/logic/nand_gate.tscn"),
+	"OR": preload("res://scenes/components/logic/or_gate.tscn"),
+	"NOR": preload("res://scenes/components/logic/nor_gate.tscn"),
+	"NOT": preload("res://scenes/components/logic/not_gate.tscn"),
+	"XOR": preload("res://scenes/components/logic/xor_gate.tscn"),
+	"BUFFER": preload("res://scenes/components/logic/buffer_gate.tscn"),
+	"INPUT": preload("res://scenes/components/io/input.tscn"),
+	"OUTPUT": preload("res://scenes/components/io/output_display.tscn"),
+	"CLOCK": preload("res://scenes/components/io/clock.tscn"),
+	"D_FLIPFLOP": preload("res://scenes/components/sequential/d_flipflop.tscn"),
 }
 
 # Placement

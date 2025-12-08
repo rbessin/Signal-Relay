@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bq6a1ucf7mkcw"]
 
-[ext_resource type="Script" uid="uid://cpnjimiaavhrr" path="res://scripts/gates/nor_gate.gd" id="1_hjtpe"]
+[ext_resource type="Script" uid="uid://cpnjimiaavhrr" path="res://scripts/components/logic/nor_gate.gd" id="1_hjtpe"]
 
 [node name="NorGate" type="Node2D"]
 script = ExtResource("1_hjtpe")

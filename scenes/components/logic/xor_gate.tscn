@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://pxb805rtun0a"]
 
-[ext_resource type="Script" uid="uid://cpksheg7qf851" path="res://scripts/gates/xor_gate.gd" id="1_8cynv"]
+[ext_resource type="Script" uid="uid://cpksheg7qf851" path="res://scripts/components/logic/xor_gate.gd" id="1_8cynv"]
 
 [node name="XorGate" type="Node2D"]
 script = ExtResource("1_8cynv")

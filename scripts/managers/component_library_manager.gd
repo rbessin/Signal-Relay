@@ -105,9 +105,12 @@ func populate_browse_dialog():
 
 	var components = get_available_components() # Retrieve component names
 
+	var custom_font = load("res://assets/fonts/DigitalDisco.ttf")
+
 	if components.size() == 0: # Display label if there are no components
 		var label = Label.new()
 		label.text = "No components yet. Create one!"
+		label.add_theme_font_override("font", custom_font)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		browse_components_container.add_child(label)
 		return
@@ -115,7 +118,6 @@ func populate_browse_dialog():
 	var button_texture_normal = load("res://assets/art/button_blue_368x32.png")
 	var button_texture_hover = load("res://assets/art/button_light_blue_368x32.png")
 	var button_texture_pressed = load("res://assets/art/button_lighter_blue_368x32.png")
-	var custom_font = load("res://assets/fonts/DigitalDisco.ttf")
 	
 	for component_name in components: # Create entries for each component
 		# Create margin container first

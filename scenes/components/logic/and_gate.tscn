@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bbaoduu3plf8a"]
 
-[ext_resource type="Script" uid="uid://ckyp34v21inwv" path="res://scripts/gates/and_gate.gd" id="1_78v84"]
+[ext_resource type="Script" uid="uid://ckyp34v21inwv" path="res://scripts/components/logic/and_gate.gd" id="1_78v84"]
 
 [node name="AndGate" type="Node2D"]
 script = ExtResource("1_78v84")
