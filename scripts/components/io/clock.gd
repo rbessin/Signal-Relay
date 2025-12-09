@@ -2,7 +2,7 @@ extends Gate
 
 # Clock control
 @export var tick_rate: float = 0.5  # Seconds per tick
-@export var manual_mode: bool = true  # Enable manual stepping
+@export var manual_mode: bool = false  # Enable manual stepping
 var is_running: bool = false
 
 @onready var timer: Timer

@@ -116,6 +116,8 @@ func _connect_manager_signals():
 		circuit_persistence_manager.on_load_button_pressed)
 	circuit_persistence_manager.step_clock_button.pressed.connect(
 		circuit_persistence_manager.step_manual_clocks)
+	circuit_persistence_manager.clock_mode_toggle_button.pressed.connect(
+		circuit_persistence_manager.toggle_clock_mode)
 
 # ============================================================================
 # PIN SIGNAL BRIDGE
@@ -243,6 +245,7 @@ func _enter_simulate():
 			gate.start_clock()
 	
 	circuit_persistence_manager.update_step_clock_button_visibility()
+	circuit_persistence_manager.update_clock_mode_button_text()
 
 func _exit_select():
 	selection_manager.clear_selection()

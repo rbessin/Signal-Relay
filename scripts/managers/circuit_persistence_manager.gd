@@ -10,6 +10,7 @@ var clear_button: Button
 var save_button: Button
 var load_button: Button
 var step_clock_button: Button
+var clock_mode_toggle_button: Button
 
 func _init(main_node: Node2D):
 	main = main_node
@@ -24,6 +25,7 @@ func setup_ui_references():
 	save_button = simulation_primary.get_node('Save')
 	load_button = simulation_primary.get_node('Load')
 	step_clock_button = simulation_secondary.get_node('StepClockButton')
+	clock_mode_toggle_button = simulation_secondary.get_node('ClockModeButton')
 
 func handle_save():
 	on_save_button_pressed()
@@ -85,11 +87,15 @@ func load_circuit(circuit_name: String):
 		
 		source_pin.connected_wires.append(new_wire)
 		destination_pin.connected_wires.append(new_wire)
+	
+	update_clock_mode_button_text()
 
 func empty_circuit():
 	main.selection_manager.clear_selection() # Clear selection
 	for child in gate_manager.gates.duplicate(): # Empty current scene
 		gate_manager.delete_gate(child)
+	
+	update_clock_mode_button_text()
 	
 	if main.current_mode == main.Mode.SIMULATE:
 		update_step_clock_button_visibility()
@@ -118,3 +124,33 @@ func update_step_clock_button_visibility(): # Show button in SIMULATE and manual
 			break
 	
 	step_clock_button.visible = has_manual_clock
+
+func toggle_clock_mode(): # Find all clocks and toggle their mode
+	var has_clocks = false
+	var new_mode = null
+	
+	for gate in gate_manager.gates:
+		if gate.type == "CLOCK":
+			has_clocks = true
+			if new_mode == null: new_mode = !gate.manual_mode  # Flip the mode
+			if gate.is_running: gate.stop_clock()
+	
+	if has_clocks:
+		for gate in gate_manager.gates:
+			if gate.type == "CLOCK": 
+				gate.manual_mode = new_mode
+				# Restart clock if in simulate mode
+				if main.current_mode == main.Mode.SIMULATE: gate.start_clock()
+		
+		# Update button text
+		clock_mode_toggle_button.text = "Clock: Manual" if new_mode else "Clock: Auto"
+		update_step_clock_button_visibility()
+
+func update_clock_mode_button_text(): # Update clock mode button text
+	var is_manual = false
+	for gate in gate_manager.gates:
+		if gate.type == "CLOCK":
+			is_manual = gate.manual_mode
+			break
+
+	clock_mode_toggle_button.text = "Clock [MANUAL]" if is_manual else "Clock [AUTO]"

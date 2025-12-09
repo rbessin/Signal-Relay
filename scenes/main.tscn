@@ -1,4 +1,4 @@
-[gd_scene load_steps=119 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=122 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Script" uid="uid://bys2k1yqjorub" path="res://scripts/world/grid_background.gd" id="2_jscy8"]
@@ -230,6 +230,15 @@ texture = ExtResource("11_gqmmt")
 texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_73205"]
+texture = ExtResource("13_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0tljd"]
+texture = ExtResource("11_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mgpkq"]
+texture = ExtResource("12_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xmrkg"]
 texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85g3d"]
@@ -682,6 +691,15 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_1uevf")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tc087")
 theme_override_styles/hover = SubResource("StyleBoxTexture_73205")
 text = "Clock Step"
+
+[node name="ClockModeButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/SecondarySimulationContent"]
+custom_minimum_size = Vector2(368, 32)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_0tljd")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_mgpkq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_xmrkg")
+text = "Clock [AUTO]"
 
 [node name="ComponentDialogBackdrop" type="Panel" parent="UICanvas/UIControl"]
 visible = false
