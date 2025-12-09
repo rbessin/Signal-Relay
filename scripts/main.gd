@@ -9,6 +9,7 @@ var wire_manager: WireManager
 var component_creation_manager: ComponentCreationManager
 var component_library_manager: ComponentLibraryManager
 var circuit_persistence_manager: CircuitPersistenceManager
+var circuit_library_manager: CircuitLibraryManager
 
 # ============================================================================
 # CAMERA SYSTEM
@@ -53,11 +54,13 @@ func _initialize_managers():
 	component_creation_manager = ComponentCreationManager.new(self)
 	component_library_manager = ComponentLibraryManager.new(self)
 	circuit_persistence_manager = CircuitPersistenceManager.new(self)
+	circuit_library_manager = CircuitLibraryManager.new(self)
 
 	# Setup UI references
 	component_creation_manager.setup_ui_references()
 	component_library_manager.setup_ui_references()
 	circuit_persistence_manager.setup_ui_references()
+	circuit_library_manager.setup_ui_references()
 
 	# Connect managers to each other
 	_setup_manager_references()
@@ -88,6 +91,9 @@ func _setup_manager_references():
 	# WireManager needs SelectionManager
 	wire_manager.selection_manager = selection_manager
 
+	# CircuitLibraryManager needs CircuitPersistenceManager
+	circuit_library_manager.circuit_persistence_manager = circuit_persistence_manager
+
 func _connect_manager_signals():
 	# Component creation dialog
 	component_creation_manager.create_component_button.pressed.connect(
@@ -106,6 +112,16 @@ func _connect_manager_signals():
 		component_library_manager.on_rename_confirm_button_pressed)
 	component_library_manager.rename_cancel_button.pressed.connect(
 		component_library_manager.on_rename_cancel_button_pressed)
+	
+	# Circuit library browser
+	circuit_library_manager.browse_circuits_button.pressed.connect(
+		circuit_library_manager.on_browse_circuits_button_pressed)
+	circuit_library_manager.browse_close_button.pressed.connect(
+		circuit_library_manager.on_browse_close_button_pressed)
+	circuit_library_manager.rename_confirm_button.pressed.connect(
+		circuit_library_manager.on_rename_confirm_button_pressed)
+	circuit_library_manager.rename_cancel_button.pressed.connect(
+		circuit_library_manager.on_rename_cancel_button_pressed)
 
 	# Circuit save/load/clear
 	circuit_persistence_manager.clear_button.pressed.connect(

@@ -1,4 +1,4 @@
-[gd_scene load_steps=122 format=3 uid="uid://m3qhfvy2no0e"]
+[gd_scene load_steps=125 format=3 uid="uid://m3qhfvy2no0e"]
 
 [ext_resource type="Script" uid="uid://fgnoswscu548" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="Script" uid="uid://bys2k1yqjorub" path="res://scripts/world/grid_background.gd" id="2_jscy8"]
@@ -211,6 +211,15 @@ texture = ExtResource("11_gqmmt")
 texture = ExtResource("12_yc10j")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xaipn"]
+texture = ExtResource("13_jscy8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wvlrk"]
+texture = ExtResource("11_gqmmt")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_engxj"]
+texture = ExtResource("12_yc10j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_raiwf"]
 texture = ExtResource("13_jscy8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ndrjj"]
@@ -621,7 +630,7 @@ focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_nvyfr")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ty1g6")
 theme_override_styles/hover = SubResource("StyleBoxTexture_j2jfr")
-text = "Browse All..."
+text = "Browse Components..."
 
 [node name="SimulationSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
@@ -673,6 +682,15 @@ text = "Load"
 [node name="SecondarySimulationContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection"]
 layout_mode = 2
 theme_override_constants/separation = 0
+
+[node name="BrowseCircuitsButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/SecondarySimulationContent"]
+custom_minimum_size = Vector2(368, 32)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_wvlrk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_engxj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_raiwf")
+text = "Browse Circuits..."
 
 [node name="FileNameInput" type="LineEdit" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/SecondarySimulationContent"]
 custom_minimum_size = Vector2(368, 32)
@@ -865,6 +883,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
 [node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
 custom_minimum_size = Vector2(0, 32)
@@ -876,7 +895,73 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_1v6qk")
 theme_override_styles/hover = SubResource("StyleBoxTexture_augu2")
 text = "Close"
 
-[node name="RenameComponentBackdrop" type="Panel" parent="UICanvas/UIControl"]
+[node name="BrowseCircuitsBackdrop" type="Panel" parent="UICanvas/UIControl"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_choun")
+
+[node name="BrowseDialog" type="PanelContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop"]
+custom_minimum_size = Vector2(500, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -331.0
+offset_right = 250.0
+offset_bottom = 331.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bjg73")
+
+[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="DialogContent" type="VBoxContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_b6ruc")
+text = "Circuits Library"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CircuitsList" type="ScrollContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CircuitsContainer" type="VBoxContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer/DialogContent/CircuitsList"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="CloseButton" type="Button" parent="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer/DialogContent"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("5_tipki")
+theme_override_styles/normal = SubResource("StyleBoxTexture_0loja")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1v6qk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_augu2")
+text = "Close"
+
+[node name="RenameBackdrop" type="Panel" parent="UICanvas/UIControl"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -886,7 +971,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ya4ey")
 
-[node name="RenameDialog" type="PanelContainer" parent="UICanvas/UIControl/RenameComponentBackdrop"]
+[node name="RenameDialog" type="PanelContainer" parent="UICanvas/UIControl/RenameBackdrop"]
 custom_minimum_size = Vector2(300, 112)
 layout_mode = 1
 anchors_preset = 8
@@ -902,36 +987,36 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_v0wtd")
 
-[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog"]
+[node name="MarginContainer" type="MarginContainer" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog"]
 layout_mode = 2
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Title" type="Label" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 32)
 layout_mode = 2
 text = "Rename Component"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RenameInput" type="LineEdit" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+[node name="RenameInput" type="LineEdit" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(134, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_ids8r")
 theme_override_styles/focus = SubResource("StyleBoxTexture_155or")
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="RenameCancelButton" type="Button" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_vtx2l")
@@ -939,7 +1024,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_63lxy")
 theme_override_styles/hover = SubResource("StyleBoxTexture_fjhjs")
 text = "Cancel"
 
-[node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="RenameConfirmButton" type="Button" parent="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 32)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_dnhof")
@@ -981,5 +1066,6 @@ text = "POSITION  [0,0]"
 [connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/CancelButton" to="." method="_on_cancel_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/ComponentDialogBackdrop/ComponentDialog/MarginContainer/DialogContent/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/BrowseComponentsBackdrop/BrowseDialog/MarginContainer/DialogContent/CloseButton" to="." method="_on_browse_close_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameCancelButton" to="." method="_on_rename_cancel_button_pressed"]
-[connection signal="pressed" from="UICanvas/UIControl/RenameComponentBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameConfirmButton" to="." method="_on_rename_confirm_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/BrowseCircuitsBackdrop/BrowseDialog/MarginContainer/DialogContent/CloseButton" to="." method="_on_browse_close_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameCancelButton" to="." method="_on_rename_cancel_button_pressed"]
+[connection signal="pressed" from="UICanvas/UIControl/RenameBackdrop/RenameDialog/MarginContainer/VBoxContainer/HBoxContainer/RenameConfirmButton" to="." method="_on_rename_confirm_button_pressed"]
