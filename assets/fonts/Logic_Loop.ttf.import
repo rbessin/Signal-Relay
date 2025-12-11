@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cgx0y6mhjsptv"
-path="res://.godot/imported/DigitalDisco.ttf-ae203d9ded67e9418ad6c7273dc0616a.fontdata"
+uid="uid://dc3e18d6au141"
+path="res://.godot/imported/Logic_Loop.ttf-54ad8374b247642c757346c8e1a6e3f1.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/DigitalDisco.ttf"
-dest_files=["res://.godot/imported/DigitalDisco.ttf-ae203d9ded67e9418ad6c7273dc0616a.fontdata"]
+source_file="res://assets/fonts/Logic_Loop.ttf"
+dest_files=["res://.godot/imported/Logic_Loop.ttf-54ad8374b247642c757346c8e1a6e3f1.fontdata"]
 
 [params]
 
