@@ -121,8 +121,8 @@ func show_tooltip():
 
 	# Position based on pin type
 	if pin_type == PinType.INPUT:
-		tooltip_label.position = Vector2(-tooltip_label.size.x - 8, -tooltip_label.size.y / 2)
-	else: tooltip_label.position = Vector2(8, -tooltip_label.size.y / 2)
+		tooltip_label.position = Vector2(-tooltip_label.size.x - 10, -tooltip_label.size.y / 2)
+	else: tooltip_label.position = Vector2(10, -tooltip_label.size.y / 2)
 
 func hide_tooltip():
 	tooltip_label.visible = false
