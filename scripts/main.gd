@@ -179,8 +179,11 @@ func _unhandled_input(event):
 	
 	# Debug quit
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_X:
-			get_tree().quit()
+		match event.keycode:
+			KEY_X: get_tree().quit()
+			KEY_R: reset_camera()
+			KEY_F: zoom_to_fit_circuit()
+			KEY_O: center_on_origin()
 
 func _handle_click():
 	if current_mode == Mode.PLACE:
@@ -318,6 +321,55 @@ func select_simulate():
 # ============================================================================
 # CAMERA CONTROLS
 # ============================================================================
+
+func reset_camera(): # Reset zoom
+	camera.zoom = Vector2(1.0, 1.0)
+
+func center_on_origin(): # Reset position
+	camera.position = Vector2.ZERO
+
+func zoom_to_fit_circuit(): # Fit all gates in camera view
+	if gate_manager.gates.size() == 0:
+		reset_camera()
+		center_on_origin()
+		return
+	
+	# Calculate bounding box of all gates
+	var min_pos = Vector2(INF, INF)
+	var max_pos = Vector2(-INF, -INF)
+	
+	for gate in gate_manager.gates:
+		var pos = gate.global_position
+		var half_size = gate.size / 2
+		min_pos.x = min(min_pos.x, pos.x - half_size.x)
+		min_pos.y = min(min_pos.y, pos.y - half_size.y)
+		max_pos.x = max(max_pos.x, pos.x + half_size.x)
+		max_pos.y = max(max_pos.y, pos.y + half_size.y)
+	
+	# Calculate center and size
+	var circuit_center = (min_pos + max_pos) / 2
+	var circuit_size = max_pos - min_pos
+	
+	# Get viewport size
+	var viewport_size = get_viewport_rect().size
+	var sidebar_width = 400
+	var visible_width = viewport_size.x - sidebar_width
+	
+	# Calculate zoom
+	var padding = 1.2
+	var zoom_x = visible_width / (circuit_size.x * padding)
+	var zoom_y = viewport_size.y / (circuit_size.y * padding)
+	var target_zoom = min(zoom_x, zoom_y)
+	
+	# Clamp to min/max zoom
+	target_zoom = clamp(target_zoom, min_zoom, max_zoom)
+
+	var sidebar_offset_in_world = (sidebar_width / 2.0) / target_zoom
+	var adjusted_camera_pos = circuit_center + Vector2(sidebar_offset_in_world, 0)
+	
+	# Apply camera transform
+	camera.position = adjusted_camera_pos
+	camera.zoom = Vector2(target_zoom, target_zoom)
 
 func center_camera_on_circuit(): # Move camera to center of all gates in the scene
 	if gate_manager.gates.size() == 0:
