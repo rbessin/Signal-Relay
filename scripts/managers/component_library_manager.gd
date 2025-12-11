@@ -2,6 +2,7 @@ class_name ComponentLibraryManager
 extends Node
 
 var main: Node2D # Reference to main script
+var circuit_persistence_manager: CircuitPersistenceManager # Manager references
 
 # UI references
 var components_content: VBoxContainer
@@ -148,9 +149,9 @@ func populate_browse_dialog():
 		place_button.pressed.connect(on_browse_place_pressed.bind(component_name))
 		buttons_container.add_child(place_button)
 
-		var preview_btn = create_styled_button("Preview", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
-		preview_btn.disabled = true
-		buttons_container.add_child(preview_btn)
+		var view_btn = create_styled_button("View", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
+		view_btn.pressed.connect(on_browse_view_pressed.bind(component_name))
+		buttons_container.add_child(view_btn)
 
 		var delete_btn = create_styled_button("Delete", Vector2(80, 32), button_texture_normal, button_texture_hover, button_texture_pressed, custom_font)
 		delete_btn.pressed.connect(on_browse_delete_pressed.bind(component_name))
@@ -195,6 +196,71 @@ func create_styled_button(text: String, size: Vector2, tex_normal: Texture2D, te
 func on_browse_place_pressed(component_name: String):
 	browse_backdrop.visible = false # Close dialog and select component
 	main.select_place(component_name)
+
+func on_browse_view_pressed(component_name: String):
+	# Clear the scene
+	circuit_persistence_manager.empty_circuit()
+	
+	# Load component data
+	var component_data = ComponentSerializer.load_component(component_name)
+	
+	# Create gates from component
+	var gates_by_uid: Dictionary = {}
+	
+	for gate_data in component_data["gates"]:
+		var gate_type = gate_data["type"]
+		var new_gate: Gate = null
+		
+		# Check if it's a custom component
+		var component_file = "user://components/" + gate_type + ".json"
+		if FileAccess.file_exists(component_file):
+			new_gate = main.gate_manager.create_custom_component(
+				gate_type,
+				Vector2(gate_data["x"], gate_data["y"])
+			)
+			if new_gate:
+				new_gate.uid = gate_data["uid"]
+				new_gate.name = gate_type + '_' + gate_data["uid"]
+		else: # It's a hardcoded gate
+			new_gate = main.gate_manager.create_gate(
+				gate_type,
+				Vector2(gate_data["x"], gate_data["y"]),
+				gate_data["uid"]
+			)
+		
+		if new_gate:
+			gates_by_uid[gate_data["uid"]] = new_gate
+	
+	# Wait for pins to be created
+	await main.get_tree().process_frame
+	
+	# Create wires
+	for wire_data in component_data["wires"]:
+		var from_gate = gates_by_uid[wire_data["from_gate"]]
+		var to_gate = gates_by_uid[wire_data["to_gate"]]
+		
+		if not from_gate or not to_gate:
+			continue
+		
+		var from_pin = from_gate.get_pin_by_index(Pin.PinType.OUTPUT, wire_data["from_pin"])
+		var to_pin = to_gate.get_pin_by_index(Pin.PinType.INPUT, wire_data["to_pin"])
+		
+		if not from_pin or not to_pin:
+			continue
+		
+		var new_wire = Wire.new()
+		new_wire.from_pin = from_pin
+		new_wire.to_pin = to_pin
+		main.add_child(new_wire)
+		main.wire_manager.wires.append(new_wire)
+		
+		from_pin.connected_wires.append(new_wire)
+		to_pin.connected_wires.append(new_wire)
+	
+	# Close the browse dialog
+	main.center_camera_on_circuit()
+	browse_backdrop.visible = false
+	main.select_select()
 
 func on_browse_delete_pressed(component_name: String):
 	var file_path = "user://components/" + component_name + ".json" # Delete component

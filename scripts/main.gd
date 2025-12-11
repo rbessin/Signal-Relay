@@ -94,6 +94,9 @@ func _setup_manager_references():
 	# CircuitLibraryManager needs CircuitPersistenceManager
 	circuit_library_manager.circuit_persistence_manager = circuit_persistence_manager
 
+	# ComponentLibraryManager needs CircuitPersistenceManager
+	component_library_manager.circuit_persistence_manager = circuit_persistence_manager
+
 func _connect_manager_signals():
 	# Component creation dialog
 	component_creation_manager.create_component_button.pressed.connect(
@@ -315,6 +318,27 @@ func select_simulate():
 # ============================================================================
 # CAMERA CONTROLS
 # ============================================================================
+
+func center_camera_on_circuit(): # Move camera to center of all gates in the scene
+	if gate_manager.gates.size() == 0:
+		# No gates, move to origin
+		camera.position = Vector2.ZERO
+		return
+	
+	# Calculate bounding box center
+	var min_pos = Vector2(INF, INF)
+	var max_pos = Vector2(-INF, -INF)
+	
+	for gate in gate_manager.gates:
+		var pos = gate.global_position
+		min_pos.x = min(min_pos.x, pos.x)
+		min_pos.y = min(min_pos.y, pos.y)
+		max_pos.x = max(max_pos.x, pos.x)
+		max_pos.y = max(max_pos.y, pos.y)
+	
+	# Center is the midpoint of the bounding box
+	var center = (min_pos + max_pos) / 2
+	camera.position = center
 
 func _update_cursor_position_label():
 	var mouse_pos = get_global_mouse_position()

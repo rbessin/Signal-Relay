@@ -88,6 +88,7 @@ func load_circuit(circuit_name: String):
 		source_pin.connected_wires.append(new_wire)
 		destination_pin.connected_wires.append(new_wire)
 	
+	main.center_camera_on_circuit()
 	update_clock_mode_button_text()
 
 func empty_circuit():

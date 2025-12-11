@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://wtmaa6k8ccbo" path="res://assets/art/button_light_yellow_368x32.png" id="15_jscy8"]
 [ext_resource type="Texture2D" uid="uid://dffmkgx2l36eo" path="res://assets/art/input_selected_green_368x32.png" id="16_yc10j"]
 [ext_resource type="Texture2D" uid="uid://b7bb0kugcfsge" path="res://assets/art/modal_400x500.png" id="18_pm3ni"]
-[ext_resource type="Texture2D" uid="uid://b82at0dbkgxo4" path="res://assets/art/modal_500x600.png" id="21_y6deb"]
+[ext_resource type="Texture2D" uid="uid://cbg1f3w34y0jw" path="res://assets/art/modal_800x600.png" id="19_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://co8on5rdgfmmh" path="res://assets/art/modal_300x112.png" id="22_jscy8"]
 
 [sub_resource type="Theme" id="Theme_yc10j"]
@@ -293,7 +293,7 @@ texture = ExtResource("15_jscy8")
 bg_color = Color(0, 0, 0, 0.7)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bjg73"]
-texture = ExtResource("21_y6deb")
+texture = ExtResource("19_gqmmt")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b6ruc"]
 texture = ExtResource("8_jkv2x")
@@ -840,7 +840,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_choun")
 
 [node name="BrowseDialog" type="PanelContainer" parent="UICanvas/UIControl/BrowseComponentsBackdrop"]
-custom_minimum_size = Vector2(500, 600)
+custom_minimum_size = Vector2(800, 600)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -906,7 +906,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_choun")
 
 [node name="BrowseDialog" type="PanelContainer" parent="UICanvas/UIControl/BrowseCircuitsBackdrop"]
-custom_minimum_size = Vector2(500, 600)
+custom_minimum_size = Vector2(800, 600)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
