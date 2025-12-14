@@ -1053,9 +1053,9 @@ offset_bottom = 26.0
 theme_override_fonts/font = ExtResource("5_tipki")
 text = "WASD [Move Camera]
 Q/E [Zoom Camera]
-R [Reset Camera]
-F [Fit Zoom]
-O [Center Camera]"
+R [Reset Zoom]
+O [Reset Position]
+F [Fit Scene]"
 
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Select" to="." method="select_select"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Wire" to="." method="select_wire"]
