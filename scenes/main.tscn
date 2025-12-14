@@ -601,7 +601,7 @@ focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxTexture_5he1u")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5poiv")
 theme_override_styles/hover = SubResource("StyleBoxTexture_2cjbq")
-text = "D_FLIPFLOP"
+text = "D-FLIPFLOP"
 
 [node name="ComponentsSection" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer"]
 layout_mode = 2
@@ -1071,7 +1071,7 @@ O [Center Camera]"
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/INPUTButton" to="." method="select_place" binds= ["INPUT"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/CLOCKButton" to="." method="select_place" binds= ["CLOCK"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
-[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/D_FLIPFLOPButton" to="." method="select_place" binds= ["D_FLIPFLOP"]]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/D_FLIPFLOPButton" to="." method="select_place" binds= ["D-FLIPFLOP"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton" to="." method="_on_browse_components_button_pressed"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent/Clear Scene" to="." method="_empty_circuit"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection/PrimarySimulationContent/Save" to="." method="_on_save_button_pressed"]

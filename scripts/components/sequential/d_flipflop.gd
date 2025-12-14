@@ -4,7 +4,7 @@ var previous_clock_state: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	type = "D_FLIPFLOP"
+	type = "D-FLIPFLOP"
 	num_inputs = 2
 	num_outputs = 1
 	input_values = [false, false]

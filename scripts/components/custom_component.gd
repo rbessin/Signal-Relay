@@ -128,7 +128,7 @@ func _create_internal_gate(gate_data: Dictionary) -> Gate:
 		"INPUT": preload("res://scenes/components/io/input.tscn"),
 		"OUTPUT": preload("res://scenes/components/io/output_display.tscn"),
 		"CLOCK": preload("res://scenes/components/io/clock.tscn"),
-		"D_FLIPFLOP": preload("res://scenes/components/sequential/d_flipflop.tscn"),
+		"D-FLIPFLOP": preload("res://scenes/components/sequential/d_flipflop.tscn"),
 	}
 	
 	# Check if it's a base gate
