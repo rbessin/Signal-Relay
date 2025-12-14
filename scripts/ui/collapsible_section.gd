@@ -2,7 +2,7 @@ extends Control
 
 @export var header_button: Button
 @export var content_containers: Array[Control] = []
-var is_collapsed: bool = true
+var is_collapsed: bool = false
 
 func _ready():
 	# Auto-find header button if not set

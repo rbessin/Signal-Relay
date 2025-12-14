@@ -428,7 +428,7 @@ theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_t5ykj")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_xhfw6")
 theme_override_styles/hover = SubResource("StyleBoxTexture_1epgm")
-text = " ▶ Tools"
+text = " ▼ Tools"
 alignment = 0
 
 [node name="PrimaryToolsContent" type="HBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection"]
@@ -497,7 +497,7 @@ theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_e755i")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_152kg")
 theme_override_styles/hover = SubResource("StyleBoxTexture_r4e17")
-text = " ▶ Gates"
+text = " ▼ Gates"
 alignment = 0
 
 [node name="GatesContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection"]
@@ -616,7 +616,7 @@ theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ro3en")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_y57op")
 theme_override_styles/hover = SubResource("StyleBoxTexture_mlv25")
-text = " ▶ Components"
+text = " ▼ Components"
 alignment = 0
 
 [node name="ComponentsContent" type="VBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection"]
@@ -645,7 +645,7 @@ theme_override_fonts/font = ExtResource("5_tipki")
 theme_override_styles/normal = SubResource("StyleBoxTexture_od4ux")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_a82wo")
 theme_override_styles/hover = SubResource("StyleBoxTexture_gdvew")
-text = " ▶ Simulation"
+text = " ▼ Simulation"
 alignment = 0
 
 [node name="PrimarySimulationContent" type="HBoxContainer" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/SimulationSection"]
