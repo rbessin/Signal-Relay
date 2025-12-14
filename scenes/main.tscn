@@ -1044,6 +1044,19 @@ grow_vertical = 0
 theme_override_fonts/font = ExtResource("5_tipki")
 text = "POSITION  [0,0]"
 
+[node name="ShortcutLabel" type="Label" parent="UICanvas/UIControl"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 45.0
+offset_bottom = 26.0
+theme_override_fonts/font = ExtResource("5_tipki")
+text = "WASD [Move Camera]
+Q/E [Zoom Camera]
+R [Reset Camera]
+F [Fit Zoom]
+O [Center Camera]"
+
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Select" to="." method="select_select"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Wire" to="." method="select_wire"]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ToolsSection/PrimaryToolsContent/Simulate" to="." method="select_simulate"]
