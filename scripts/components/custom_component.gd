@@ -79,8 +79,6 @@ func _build_internal_circuit():
 	
 	# Set up pin mappings
 	_setup_pin_mappings(internal_gates_by_uid)
-	
-	print("Internal circuit built for component: ", component_data["name"])
 
 # Update external pin names from loaded mappings
 func _update_pin_names():
@@ -102,13 +100,23 @@ func _update_pin_names():
 
 # Initialize internal circuit state
 func _initialize_internal_circuit():
-	# Initialize all internal gates' outputs
+	# Single pass: Initialize all base gates
 	for child in internal_circuit_container.get_children():
-		if child is Gate: child.write_output_to_pin()
+		if child is Gate:
+			child.write_output_to_pin()
+			child.propagate_to_wires()
 	
-	# Propagate initial states through internal wires
+	# Initialize nested components recursively
 	for child in internal_circuit_container.get_children():
-		if child is Gate: child.propagate_to_wires()
+		if child is CustomComponent:
+			child._initialize_internal_circuit()
+	
+	# Second pass: Re-evaluate now that nested components are ready
+	for child in internal_circuit_container.get_children():
+		if child is Gate:
+			child.evaluate()
+			child.write_output_to_pin()
+			child.propagate_to_wires()
 
 	_read_internal_outputs()
 	write_output_to_pin()

@@ -245,26 +245,23 @@ func _enter_wire():
 
 func _enter_simulate():
 	await get_tree().process_frame
-
-	# Update INPUT visuals
-	for gate in gate_manager.gates:
-		if gate.type == "INPUT" and gate.has_method("update_visual"):
-			gate.update_visual()
 	
-	# Initialize all gate outputs
+	# Initialize all gates
 	for gate in gate_manager.gates:
+		# Update INPUT visuals specifically
+		if gate.type == "INPUT": gate.update_visual()
+		
+		# Write and propagate for all gates
 		gate.write_output_to_pin()
 		gate.propagate_to_wires()
 	
 	# Initialize custom component internal circuits
 	for gate in gate_manager.gates:
-		if gate is CustomComponent:
-			gate._initialize_internal_circuit()
+		if gate is CustomComponent: gate._initialize_internal_circuit()
 	
 	# Start clocks
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK":
-			gate.start_clock()
+		if gate.type == "CLOCK": gate.start_clock()
 	
 	circuit_persistence_manager.update_step_clock_button_visibility()
 	circuit_persistence_manager.update_clock_mode_button_text()

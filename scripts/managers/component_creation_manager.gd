@@ -200,22 +200,6 @@ func on_create_button_pressed():
 			"pin_index": pin_index
 		})
 	
-	# DEBUG OUTPUT - ADD THIS
-	print("=== DEBUG COMPONENT CREATION ===")
-	print("Selected gates:")
-	for gate in selection_manager.selected_gates:
-		print("  UID: ", gate.uid, " Type: ", gate.type)
-	
-	print("All wires in circuit:")
-	for wire in wire_manager.wires:
-		if wire.from_pin and wire.to_pin:
-			var from_gate = wire.from_pin.parent_gate
-			var to_gate = wire.to_pin.parent_gate
-			print("  Wire from: ", from_gate.uid, " (", from_gate.type, ") to: ", to_gate.uid, " (", to_gate.type, ")")
-			print("    From in selection? ", from_gate in selection_manager.selected_gates)
-			print("    To in selection? ", to_gate in selection_manager.selected_gates)
-	print("================================")
-	
 	ComponentSerializer.save_component(
 		component_name,
 		selection_manager.selected_gates,

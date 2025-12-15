@@ -128,8 +128,6 @@ func update_collision():
 	if line.get_point_count() < 2:
 		return
 	
-	print("Creating collision for wire with ", line.get_point_count(), " points")  # ADD THIS
-	
 	# Create collision shape for each line segment
 	for i in range(line.get_point_count() - 1):
 		var p1 = line.get_point_position(i)
@@ -154,8 +152,6 @@ func update_collision():
 		
 		area_2d.add_child(collision_shape)
 		collision_shapes.append(collision_shape)
-	
-	print("Created ", collision_shapes.size(), " collision shapes")
 
 # Functions to handle selection
 func set_selected(is_selected: bool):
@@ -173,11 +169,8 @@ func convert_to_real_wire(): # Converts a preview wire to a real wire
 	update_collision()  # Create initial collision shapes
 
 func _on_area_input_event(_viewport, event, _shape_idx):
-	print("Wire input event detected!")  # ADD THIS
 	if event is InputEventMouseButton:
-		print("Mouse button event on wire!")  # ADD THIS
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			print("Left click on wire - emitting signal!")  # ADD THIS
 			wire_clicked.emit(self)
 
 # Functions to handle signal propagation
