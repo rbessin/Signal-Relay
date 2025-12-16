@@ -244,24 +244,33 @@ func _enter_wire():
 	pass
 
 func _enter_simulate():
+	# STEP 1: Instantiate all custom component internal circuits
+	for gate in gate_manager.gates:
+		if gate is CustomComponent:
+			await gate.instantiate_internal_circuit()
+	
+	# Wait a frame for all circuits to be built
 	await get_tree().process_frame
 	
-	# Initialize all gates
+	# STEP 2: Initialize all gates
 	for gate in gate_manager.gates:
 		# Update INPUT visuals specifically
-		if gate.type == "INPUT": gate.update_visual()
+		if gate.type == "INPUT":
+			gate.update_visual()
 		
 		# Write and propagate for all gates
 		gate.write_output_to_pin()
 		gate.propagate_to_wires()
 	
-	# Initialize custom component internal circuits
+	# STEP 3: Initialize custom component internal circuits
 	for gate in gate_manager.gates:
-		if gate is CustomComponent: gate._initialize_internal_circuit()
+		if gate is CustomComponent:
+			gate._initialize_internal_circuit()
 	
-	# Start clocks
+	# STEP 4: Start clocks
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK": gate.start_clock()
+		if gate.type == "CLOCK":
+			gate.start_clock()
 	
 	circuit_persistence_manager.update_step_clock_button_visibility()
 	circuit_persistence_manager.update_clock_mode_button_text()
@@ -277,9 +286,15 @@ func _exit_wire():
 	wire_manager.cancel_wire_creation()
 
 func _exit_simulate():
+	# Stop clocks
 	for gate in gate_manager.gates:
 		if gate.type == "CLOCK":
 			gate.stop_clock()
+	
+	# Cleanup all custom component internal circuits
+	for gate in gate_manager.gates:
+		if gate is CustomComponent:
+			gate.cleanup_internal_circuit()
 	
 	circuit_persistence_manager.step_clock_button.visible = false
 
