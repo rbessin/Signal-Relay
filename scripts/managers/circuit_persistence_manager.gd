@@ -104,7 +104,7 @@ func empty_circuit():
 func step_manual_clocks(): # Step all clocks that are in manual mode
 	var stepped_count = 0
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK" and gate.has_method("manual_step"):
+		if (gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK") and gate.has_method("manual_step"):
 			if gate.manual_mode and gate.is_running:
 				gate.manual_step()
 				stepped_count += 1
@@ -120,7 +120,7 @@ func update_step_clock_button_visibility(): # Show button in SIMULATE and manual
 	# Check if any manual clocks exist
 	var has_manual_clock = false
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK" and gate.manual_mode:
+		if (gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK") and gate.manual_mode:
 			has_manual_clock = true
 			break
 	
@@ -131,14 +131,14 @@ func toggle_clock_mode(): # Find all clocks and toggle their mode
 	var new_mode = null
 	
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK":
+		if gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK":
 			has_clocks = true
 			if new_mode == null: new_mode = !gate.manual_mode  # Flip the mode
 			if gate.is_running: gate.stop_clock()
 	
 	if has_clocks:
 		for gate in gate_manager.gates:
-			if gate.type == "CLOCK": 
+			if gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK":
 				gate.manual_mode = new_mode
 				# Restart clock if in simulate mode
 				if main.current_mode == main.Mode.SIMULATE: gate.start_clock()
@@ -150,7 +150,7 @@ func toggle_clock_mode(): # Find all clocks and toggle their mode
 func update_clock_mode_button_text(): # Update clock mode button text
 	var is_manual = false
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK":
+		if gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK":
 			is_manual = gate.manual_mode
 			break
 

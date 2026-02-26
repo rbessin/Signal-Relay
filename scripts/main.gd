@@ -269,7 +269,7 @@ func _enter_simulate():
 	
 	# STEP 4: Start clocks
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK":
+		if gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK":
 			gate.start_clock()
 	
 	circuit_persistence_manager.update_step_clock_button_visibility()
@@ -288,7 +288,7 @@ func _exit_wire():
 func _exit_simulate():
 	# Stop clocks
 	for gate in gate_manager.gates:
-		if gate.type == "CLOCK":
+		if gate.type == "CLOCK" or gate.type == "RANDOM_CLOCK":
 			gate.stop_clock()
 	
 	# Cleanup all custom component internal circuits

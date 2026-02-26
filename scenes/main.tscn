@@ -585,6 +585,15 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_j8jky")
 theme_override_styles/hover = SubResource("StyleBoxTexture_kmb1v")
 text = "CLOCK"
 
+[node name="RANDOM_CLOCKButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
+custom_minimum_size = Vector2(368, 32)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_dgi5k")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_j8jky")
+theme_override_styles/hover = SubResource("StyleBoxTexture_kmb1v")
+text = "RANDOM-CLOCK"
+
 [node name="OUTPUTButton" type="Button" parent="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent"]
 custom_minimum_size = Vector2(368, 32)
 layout_mode = 2
@@ -1070,6 +1079,7 @@ F [Fit Scene]"
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/BUFFERButton" to="." method="select_place" binds= ["BUFFER"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/INPUTButton" to="." method="select_place" binds= ["INPUT"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/CLOCKButton" to="." method="select_place" binds= ["CLOCK"]]
+[connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/RANDOM_CLOCKButton" to="." method="select_place" binds= ["RANDOM_CLOCK"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/OUTPUTButton" to="." method="select_place" binds= ["OUTPUT"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/GatesSection/GatesContent/D_FLIPFLOPButton" to="." method="select_place" binds= ["D-FLIPFLOP"]]
 [connection signal="pressed" from="UICanvas/UIControl/Inspector/VBoxContainer/ScrollableContent/ContentContainer/ComponentsSection/ComponentsContent/BrowseComponentsButton" to="." method="_on_browse_components_button_pressed"]

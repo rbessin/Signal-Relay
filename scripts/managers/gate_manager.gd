@@ -17,6 +17,7 @@ var gate_prefabs: Dictionary = {
 	"INPUT": preload("res://scenes/components/io/input.tscn"),
 	"OUTPUT": preload("res://scenes/components/io/output_display.tscn"),
 	"CLOCK": preload("res://scenes/components/io/clock.tscn"),
+	"RANDOM_CLOCK": preload("res://scenes/components/io/random_clock.tscn"),
 	"D-FLIPFLOP": preload("res://scenes/components/sequential/d_flipflop.tscn"),
 }
 
