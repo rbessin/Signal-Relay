@@ -16,7 +16,7 @@ Signal Relay is a logic simulator that lets you build digital circuits from basi
 
 - **7 Logic Gates**: AND, OR, NOT, NAND, NOR, XOR, BUFFER
 - **Sequential Gates**: D-FLIPFLOP
-- **Input/Output**: INPUT, OUTPUT, CLOCK
+- **Input/Output**: INPUT, OUTPUT, CLOCK, RANDOM-CLOCK
 
 - **Interactive Canvas**: Place, select, move, and delete gates on an infinite canvas
 - **Component & Circuit Saving**: Save components and circuits to load as required
